@@ -1,5 +1,5 @@
-#ifndef VESSEL_MANAGEMENT_STATE_H
-#define VESSEL_MANAGEMENT_STATE_H
+#ifndef VESSEL_MANAGEMENT_STATE_HPP
+#define VESSEL_MANAGEMENT_STATE_HPP
 
 #include "state.hpp"
 
@@ -15,4 +15,4 @@ public:
     void onExit() override;
 };
 
-#endif // VESSEL_MANAGEMENT_STATE_H
+#endif // VESSEL_MANAGEMENT_STATE_HPP

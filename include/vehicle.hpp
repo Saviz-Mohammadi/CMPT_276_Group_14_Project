@@ -1,5 +1,5 @@
-#ifndef VEHICLE_H
-#define VEHICLE_H
+#ifndef VEHICLE_HPP
+#define VEHICLE_HPP
 
 #include <string>
 
@@ -18,4 +18,4 @@ public:
     double height;
 };
 
-#endif // VEHICLE_H
+#endif // VEHICLE_HPP

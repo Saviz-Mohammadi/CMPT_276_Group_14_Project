@@ -1,5 +1,5 @@
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INPUT_HPP
+#define INPUT_HPP
 
 #include <string>
 #include <vector>
@@ -11,4 +11,4 @@ void promptForCharacter(const std::string& input_prompt, const std::vector<char>
 void promptForString(const std::string& input_prompt, std::string& acquired_string, bool& is_successful, std::string& outcome_message);
 void promptForString(const std::string& input_prompt, const std::regex& pattern, std::string& acquired_string, bool& is_successful, std::string& outcome_message);
 
-#endif // INPUT_H
+#endif // INPUT_HPP

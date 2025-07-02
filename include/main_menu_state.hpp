@@ -1,5 +1,5 @@
-#ifndef MAIN_MENU_STATE_H
-#define MAIN_MENU_STATE_H
+#ifndef MAIN_MENU_STATE_HPP
+#define MAIN_MENU_STATE_HPP
 
 #include "state.hpp"
 
@@ -15,4 +15,4 @@ public:
     void onExit() override;
 };
 
-#endif // MAIN_MENU_STATE_H
+#endif // MAIN_MENU_STATE_HPP

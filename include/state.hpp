@@ -1,7 +1,8 @@
-#ifndef STATE_H
-#define STATE_H
+#ifndef STATE_HPP
+#define STATE_HPP
 
 class StateManager;
+class Database;
 
 class State
 {
@@ -10,7 +11,7 @@ public:
     virtual ~State();
     
 public:
-    void init(StateManager* state_manager);
+    void init(StateManager* state_manager, Database* database);
 
 public:
     virtual void onEnter() = 0;
@@ -19,6 +20,7 @@ public:
     
 protected:
     StateManager* m_state_manager;
+    Database* m_database;
 };
 
-#endif // STATE_H
+#endif // STATE_HPP

@@ -1,5 +1,5 @@
-#ifndef VESSEL_H
-#define VESSEL_H
+#ifndef VESSEL_HPP
+#define VESSEL_HPP
 
 #include <string>
 
@@ -17,4 +17,4 @@ public:
     double high_ceiling_lane_length;
 };
 
-#endif // VESSEL_H
+#endif // VESSEL_HPP
