@@ -1,5 +1,5 @@
-#ifndef RESERVATION_H
-#define RESERVATION_H
+#ifndef RESERVATION_HPP
+#define RESERVATION_HPP
 
 struct Reservation
 {
@@ -15,4 +15,4 @@ public:
     bool reserved_for_low_lane;
 };
 
-#endif // RESERVATION_H
+#endif // RESERVATION_HPP

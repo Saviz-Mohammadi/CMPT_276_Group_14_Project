@@ -1,5 +1,5 @@
-#ifndef SAILING_H
-#define SAILING_H
+#ifndef SAILING_HPP
+#define SAILING_HPP
 
 #include <string>
 
@@ -20,4 +20,4 @@ public:
     double high_remaining_length;
 };
 
-#endif // SAILING_H
+#endif // SAILING_HPP
