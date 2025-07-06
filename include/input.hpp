@@ -1,3 +1,30 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Input Module
+ *
+ *
+ * [FILE NAME]
+ *
+ * input.hpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [PURPOSE]
+ *
+ * This file is responsible for providing a centralized location for I/O functionality.
+*/
+
+// ============================================================================
+// ============================================================================
+
 #ifndef INPUT_HPP
 #define INPUT_HPP
 

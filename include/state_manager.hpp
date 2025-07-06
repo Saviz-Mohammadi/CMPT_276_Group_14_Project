@@ -1,3 +1,30 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Finite State Machine Module
+ *
+ *
+ * [FILE NAME]
+ *
+ * state_manager.hpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [PURPOSE]
+ *
+ * This file is responsible for providing a centralized location for orchestrating all states and managing transitions between them.
+*/
+
+// ============================================================================
+// ============================================================================
+
 #ifndef STATEMANAGER_HPP
 #define STATEMANAGER_HPP
 

@@ -1,3 +1,30 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Finite State Machine Module
+ *
+ *
+ * [FILE NAME]
+ *
+ * state.hpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [PURPOSE]
+ *
+ * This file is responsible for providing a base for all other states to inherit from and adhere to.
+*/
+
+// ============================================================================
+// ============================================================================
+
 #ifndef STATE_HPP
 #define STATE_HPP
 

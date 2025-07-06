@@ -1,3 +1,30 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Database Module
+ *
+ *
+ * [FILE NAME]
+ *
+ * database.hpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [PURPOSE]
+ *
+ * This file is responsible for providing a centralized location for orchestrating all database related functionality.
+*/
+
+// ============================================================================
+// ============================================================================
+
 #ifndef DATABASE_HPP
 #define DATABASE_HPP
 
