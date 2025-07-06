@@ -100,8 +100,11 @@ int main(int argc, char *argv[])
 -- We will use the following major divider per each file at the very top to explain the definition of the module:
 // ============================================================================
 
--- We will use the following divider per each major section of our code to categorize long logical parts:
+-- We will use the following divider to seperate each function:
 // ----------------------------------------------------------------------------
+
+-- We will use the following divider per each major section of our code to categorize long logical parts:
+// ****************************************************************************
 
 
 [File conventions]
@@ -113,6 +116,9 @@ int main(int argc, char *argv[])
 -- Static types will use 'Snake Case' with a 's_' prefix. (s_my_variable)
 -- Constant types will use 'Snake Case' with a 'c_' prefix. (c_my_variable)
 -- Static and Constant types combined will use 'Snake Case' with a 'sc_' prefix. (sc_my_variable)
+
+//Example: (Not meant to be in final i put this in for saviz)
+-- Variables passed by referenced will be suffixed with a &
 
 
 [Class conventions]
