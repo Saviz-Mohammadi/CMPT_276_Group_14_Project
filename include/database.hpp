@@ -28,33 +28,47 @@
 #ifndef DATABASE_HPP
 #define DATABASE_HPP
 
-#include <string>
 #include <sqlite3.h>
+#include <string>
 #include <vector>
 #include "containers.hpp"
-
-struct Vessel
-{
-public:
-    explicit Vessel();
-    explicit Vessel(const int vessel_id, const std::string& vessel_name, const double low_ceiling_lane_length, const double high_ceiling_lane_length);
-    ~Vessel();
-
-public:
-    int vessel_id;
-    std::string vessel_name;
-    double low_ceiling_lane_length;
-    double high_ceiling_lane_length;
-};
 
 class Database
 {
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Constructor for the Database class, used to instantiate a physical object in memory.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     explicit Database();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Destructor for the Database class, responsible for deallocating the object from memory.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     ~Database();
+    // ----------------------------------------------------------------------------
 
 public:
-
     // ----------------------------------------------------------------------------
     /*
     *   [Description]
@@ -63,30 +77,20 @@ public:
     *   Otherwise, it creates a new file from scratch and initializes it with the appropriate schema.
     *   It is important to call this function before any other database-related function, as the others rely on an active database connection and will not work if one has not been established.
     *
-    *   [Parameters]
-    *   @ <const std::string& path> [In]
-    *       The path to the database file where the connection is to be established.
-    *   @ <bool& is_successful> [Out]
-    *       The outcome status of the operation, indicating whether it was successful or not.
-    *   @ <std::string& outcome_message> [Out]
-    *       A descriptive message explaining the result of the operation.
-    *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   @ <Invalid vessel data>
-    *       If the input vessel is missing, incomplete, or invalid, the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
-    *   @ <Vessel already exists>
-    *       If a vessel with the exact provided data already exists, the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
-    *   @ <Not enough space>
-    *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
+    *   @ <Invalid path>
+    *       If the input path is missing, incomplete, or invalid, the operation will terminate with a failure status and provide an appropriate error message saying "Invalid path!".
+    *   @ <Connection already exists>
+    *       If the method has already been called and a connection exists, the operation will terminate with a failure status and provide an appropriate error message saying "Connection already exists!".
     */
 
     void openConnection(
-        const std::string& path,
-        bool& is_successful,
-        std::string& outcome_message
+        const std::string& path,     // [IN]  | The path to the database file where the connection is to be established.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
     // ----------------------------------------------------------------------------
 
@@ -95,105 +99,326 @@ public:
     // ----------------------------------------------------------------------------
     /*
     *   [Description]
-    *   This function attempts to close the SQLite database connection and release any associated resources.
+    *   This function attempts to close the SQLite database connection to the file.
     *   It is important to call this function before closing the program to ensure all resources are freed.
-    *
-    *   [Parameters]
-    *   @ <const std::string& path> [In]
-    *       The path to the database file where the connection is to be established.
-    *   @ <bool& is_successful> [Out]
-    *       The outcome status of the operation, indicating whether it was successful or not.
-    *   @ <std::string& outcome_message> [Out]
-    *       A descriptive message explaining the result of the operation.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   @ <Invalid vessel data>
-    *       If the input vessel is missing, incomplete, or invalid, the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
+    *   @ <Connection does not exist>
+    *       If this method is called without an existing connection, the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
+    */
+
+    void cutConnection(
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   This function attempts to create and insert a new vessel into the database using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid vessel>
+    *       If the input vessel is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid vessel!".
     *   @ <Vessel already exists>
-    *       If a vessel with the exact provided data already exists, the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
+    *       If a vessel with the exact provided data already exists, the operation will terminate with a failure status and provide an appropriate error message saying "Record already exists!".
     *   @ <Not enough space>
     *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
 
-    /*
-    DEVELOPER COMMENT: Destroys the existing connection, all resources will be freed for the file system.
-    
-    */
-    void cutConnection(bool& is_successful, std::string& outcome_message);
-
-
-
-
-
-    // ----------------------------------------------------------------------------
-    /*
-        Description: Adds a vessel to the database, upon completion it will return status and outcome message
-        Return: void
-        Exceptions: Not a vessel object, unitialized vessel object, vessel object already exists
-    */
     void addVessel( 
-        Vessel vessel, // [IN] Vessel object
-        bool& is_successful, //  [OUT] Indicates if operation was successful
-        std::string& outcome_message // [OUT] Status message of the operation
-    );
+        Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
 
 
-    /*
-    DEVELOPER COMMENT: Takes in a vessel id, searches it then returns corresponding vessel in the vessel reference
-    */
-    void getVesselByID(int id, Vessel& vessel, bool& is_successful, std::string& outcome_message); 
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENT: Takes in count and offset, returns count vessels starting from offset, outcome_message says "nothing to retrieve"
-    if the returned vessels vector has 0 length
+    *   [Description]
+    *   This function attempts to search for and retrieve a vessel by its ID using SQL queries.
+    *   It is useful for verifying the existence of a vessel before performing other operations.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Empty table>
+    *       If the database contains no records in the vessel table, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    *   @ <Invalid ID>
+    *       If a vessel with the exact provided ID does not exist in the database, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
-    void getVessels(int count, int offset, std::vector<Vessel>& vessels, bool& is_successful, std::string& outcome_message);
+
+    void getVesselByID(
+        int vessel_id,               // [IN]  | The ID of vessel to be searched for.
+        Vessel& vessel,              // [OUT] | The vessel that is found.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENT: Takes in a sailing object, checks if it already exists, and it is within 28 days. Returns respective
-    status bool and outcome message
+    *   [Description]
+    *   This function attempts to retrieve a list of vessels (usually of length '5') using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Empty table>
+    *       If the database contains no records in the vessel table, the operation will terminate with a failure status and provide an appropriate error message saying "No records available!".
+    *   @ <Empty list due to offset>
+    *       If the given offset results in no remaining vessels in the table and the returned list is empty, the operation will terminate with a failure status and provide an appropriate error message saying "Empty list!".
     */
-    void addSailing(Sailing sailing, bool& is_successful, std::string& outcome_message);
+
+    void getVessels(
+        int count,                    // [IN]  | The number of vessels to be retrieved.
+        int offset,                   // [IN]  | Determines the starting point the retrieve query.
+        std::vector<Vessel>& vessels, // [OUT] | The list of vessels that were retrieved.
+        bool& is_successful,          // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message  // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENTS: Takes in a sailing objective, checks if it exists, returns status bool and outcome message
+    *   [Description]
+    *   This function attempts to create and insert a new sailing into the database using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid sailing>
+    *       If the input sailing is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid sailing!".
+    *       The check for the validity of the 'vessel_id' used in the sailing will be already conducted in the state layer via the 'getVesselByID()' invokation.
+    *   @ <Invalid date>
+    *       If the input sailing includes a date that is not within the next 28 days, the operation will terminate with a failure status and provide an appropriate error message saying "Invalid date!".
+    *   @ <Sailing already exists>
+    *       If a sailing with the exact provided data already exists, the operation will terminate with a failure status and provide an appropriate error message saying "Record already exists!".
+    *   @ <Not enough space>
+    *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
-    void removeSailing(Sailing sailing, bool& is_successful, std::string& outcome_message);
+
+    void addSailing(
+        Sailing sailing,             // [IN]  | Data for the new sailing that will be created.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
     // ----------------------------------------------------------------------------
-    /* 
-    DEVELOPER COMMENT: Taking in count and offset, returns count sailings at offset in sailings reference
-    */
-    void getSailingReports(int count, int offset, std::vector<SailingReport>& sailing_reports, bool& is_successful, std::string& outcome_message);
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENT: takes in 3 parts of the sailing id then look up in database then gets back sailing report
+    *   [Description]
+    *   This function attempts to delete a sailing from the database using SQL queries.
+    *   Note that this method will also delete any associated reservations as a side effect.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid sailing>
+    *       If the input sailing is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid sailing!".
+    *   @ <Sailing does not exist>
+    *       If a sailing with the exact provided data does not exist, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
-    void getSailingReportByID(std::string departure_terminal, int departure_day, int departure_hour, SailingReport& sailing_report, bool& is_successful, std::string& outcome_message);
+
+    void removeSailing(
+        Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENT: takes in sailing id, vehicle, then creates reservation. If vehicle exist then it creates one, also changes remaining length of sailing
+    *   [Description]
+    *   This function attempts to retrieve a list of sailing reports (usually of length '5') using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Empty tables>
+    *       If the database contains no records for sailing report to be generated, the operation will terminate with a failure status and provide an appropriate error message saying "No records available!".
+    *   @ <Empty list due to offset>
+    *       If the given offset results in no remaining sailing reports in the table and the returned list is empty, the operation will terminate with a failure status and provide an appropriate error message saying "Empty list!".
     */
-    void addReservation(Sailing sailing, Vehicle vehicle, bool& is_successful, std::string& outcome_message);
+
+    void getSailingReports(
+        int count,                                   // [IN]  | The number of sailing reports to be retrieved.
+        int offset,                                  // [IN]  | Determines the starting point the retrieve query.
+        std::vector<SailingReport>& sailing_reports, // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,                         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message                 // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVLOPER COMMENT: takes in sailing id, license plate, looks up in reservation table, cancels if it exists, then changes remaining length of sailing
+    *   [Description]
+    *   This function attempts to retrieve a sailing report by ID using SQL queries.
+    *   Note that a sailing ID is composed of three elements: departure terminal, departure day, and departure hour.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Empty tables>
+    *       If the database contains no records for sailing report to be generated, the operation will terminate with a failure status and provide an appropriate error message saying "No records available!".
     */
-    void removeReservation(std::string departure_terminal, int departure_day, int departure_hour, std::string license_plate, bool& is_successful, std::string& outcome_message);
+
+    void getSailingReportByID(
+        std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
+        int departure_day,              // [IN]  | The departure day of the sailing in the form of 2 digits.
+        int departure_hour,             // [IN]  | The departure hour of the sailing in the form of 2 digits.
+        SailingReport& sailing_report,  // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENT: takes in sailing id, license plate, looks up reservation if it exists then boards them. If reservation doesnt exist then you can like prompt back to make reservation or something
+    *   [Description]
+    *   This function attempts to create a reservation by using SQL queries.
+    *   Note that this method will also create a vehicle (if not existing already) and decrement remaining length of sailing as a side effect.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid sailing>
+    *       If the input sailing is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid sailing!".
+    *   @ <Invalid vehicle>
+    *       If the input vehicle is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid vehicle!".
+    *   @ <Reservation already exists>
+    *       If a reservation with the exact provided data already exists, the operation will terminate with a failure status and provide an appropriate error message saying "Record already exists!".
+    *   @ <Not enough space>
+    *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
-    void completeBoarding(std::string departure_terminal, int departure_day, int departure_hour, std::string license_plate, bool& is_successful, std::string& outcome_message);
+
+    void addReservation(
+        Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
+        Vehicle vehicle,             // [IN]  | Data about the vehicle of the reservation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
     // ----------------------------------------------------------------------------
     /*
-    DEVELOPER COMMENT: takes in license plate then looks up the vehicle, returns if it exists
+    *   [Description]
+    *   This function attempts to delete a reservation by using SQL queries.
+    *   Note that a sailing ID is composed of three elements: departure terminal, departure day, and departure hour.
+    *   Note that this method will also increment remaining length of sailing as a side effect.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid ID>
+    *       If an invalid sailing ID is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
-    void getVehicleByID(std::string license_plate, Vehicle& vehicle, bool& is_successful, std::string& outcome_message);
+
+    void removeReservation(
+        std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
+        int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
+        int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
+        std::string license_plate,      // [IN]  | The license plate of the vehicle associated with the reservation.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   This function attempts to complete the boarding for a reservation by using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid ID>
+    *       If an invalid sailing ID is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    *   @ <Invalid license plate>
+    *       If an invalid license plate is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    */
+
+    void completeBoarding(
+        std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
+        int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
+        int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
+        std::string license_plate,      // [IN]  | The license plate of the vehicle associated with the reservation.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   This function attempts to search and retrieve a vehicle with a license plate (ID) by using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid license plate>
+    *       If an invalid license plate is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    *   @ <Empty tables>
+    *       If the database contains no records for vehicles, the operation will terminate with a failure status and provide an appropriate error message saying "No records available!".
+    */
+
+    void getVehicleByID(
+        std::string license_plate,      // [IN]  | The license plate of the vehicle targeted for search and retrieval.
+        Vehicle& vehicle,               // [OUT] | The retrieved vehicle data.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        );
+    // ----------------------------------------------------------------------------
 
 private:
+    // The SQLite connection entity. (Used as a means to interact with the underlying database)
     sqlite3* m_sqlite3;
 };
 
