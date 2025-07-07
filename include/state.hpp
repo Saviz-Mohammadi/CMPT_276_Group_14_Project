@@ -73,7 +73,7 @@ public:
     // ----------------------------------------------------------------------------
     /*
     *   [Description]
-    *   This function attempts to initialize the required member fields with data..
+    *   This function attempts to initialize the required member fields with data.
     *   It is important to call this method before invoking anything else in the State.
     *
     *   [Return]

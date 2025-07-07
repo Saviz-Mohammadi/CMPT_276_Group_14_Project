@@ -33,17 +33,127 @@
 class VesselManagementState : public State
 {
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Constructor for the VesselManagementState class. used to instantiate a physical object in memory.
+    *   Won't do any heavy work.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     explicit VesselManagementState();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Destructor for the VesselManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     ~VesselManagementState() override;
+    // ----------------------------------------------------------------------------
     
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when entering the vessel management state. Use this method to display menus,
+    *   initialize UI components, or reset state-specific variables.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onEnter() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Main processing loop for the vessel management state. Handles user input,
+    *   delegates actions such as creating or listing vessels, and determines state transitions.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onProcess() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when exiting the vessel management state. Perform any necessary cleanup,
+    *   such as clearing buffers or saving temporary data.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onExit() override;
+    // ----------------------------------------------------------------------------
 
 private:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for creating a new vessel entry.
+    *   Obtains and validates input with the help of the input module.
+    *   In addition, interacts with the database module to persist the new vessel.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void creatVessel();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for listing vessels (with a count limit).
+    *   Interacts with the database module to obtain the list of vessels.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void listVessels();
+    // ----------------------------------------------------------------------------
 };
 
 #endif // VESSEL_MANAGEMENT_STATE_HPP

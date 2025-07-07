@@ -33,17 +33,129 @@
 class ReservationManagementState : public State
 {
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Constructor for the ReservationManagementState class. used to instantiate a physical object in memory.
+    *   Won't do any heavy work.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     explicit ReservationManagementState();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Destructor for the ReservationManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     ~ReservationManagementState() override;
-    
+    // ----------------------------------------------------------------------------
+
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when entering the reservation management state. Use this method to display menus,
+    *   initialize UI components, or reset state-specific variables.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onEnter() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Main processing loop for the reservation management state. Handles user input,
+    *   delegates actions such as creating, deleting reservations.
+    *   Also, determines state transitions.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onProcess() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when exiting the reservation management state. Perform any necessary cleanup,
+    *   such as clearing buffers or saving temporary data.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onExit() override;
+    // ----------------------------------------------------------------------------
 
 private:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for creating a reservation entry (sailing remaining length will be reduced as a result of this).
+    *   Obtains and validates input with the help of input module.
+    *   In addition, interacts with the databse module to create the reservation.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void createReservation();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for deleting a reservation entry (sailing remaining length will be increased as a result of this).
+    *   Obtains and validates input with the help of input module.
+    *   In addition, interacts with the databse module to delete the reservation.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void deleteReservation();
+    // ----------------------------------------------------------------------------
 };
 
 #endif // RESERVATION_MANAGEMENT_STATE_HPP

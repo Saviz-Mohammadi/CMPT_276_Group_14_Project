@@ -32,20 +32,165 @@
 
 class SailingManagementState : public State
 {
-public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Constructor for the SailingManagementState class. used to instantiate a physical object in memory.
+    *   Won't do any heavy work.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     explicit SailingManagementState();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Destructor for the SailingManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     ~SailingManagementState() override;
-    
+    // ----------------------------------------------------------------------------
+
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when entering the sailing management state. Use this method to display menus,
+    *   initialize UI components, or reset state-specific variables.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onEnter() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Main processing loop for the sailing management state. Handles user input,
+    *   delegates actions such as creating, deleting sailings, and listing sailing reports.
+    *   Also, determines state transitions.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onProcess() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when exiting the sailing management state. Perform any necessary cleanup,
+    *   such as clearing buffers or saving temporary data.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onExit() override;
+    // ----------------------------------------------------------------------------
 
 private:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for creating a new sailing entry.
+    *   Obtains and validates input with the help of input module.
+    *   In addition, interacts with the databse module to persist the sailing.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void createSailing();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for deleting a sailing entry.
+    *   Obtains and validates input with the help of input module.
+    *   In addition, interacts with the databse module to delete the sailing as well as reservations associated with the sailing.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void deleteSailing();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for retrieving and displaying a summary of sailing reports (with a certain count).
+    *   Accomplishes this by interacting with the databse module to obtain the list of sailing reports.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void listSailingReports();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the workflow for retrieving and displaying a summary of sailing report (just one).
+    *   Accomplishes this by interacting with the databse module to obtain the sailing report.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void listSailingReport();
+    // ----------------------------------------------------------------------------
 };
 
 #endif // SAILING_MANAGEMENT_STATE_HPP

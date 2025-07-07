@@ -33,16 +33,108 @@
 class BoardingState : public State
 {
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Constructor for the BoardingState class. used to instantiate a physical object in memory.
+    *   Won't do any heavy work.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     explicit BoardingState();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Destructor for the BoardingState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     ~BoardingState() override;
+    // ----------------------------------------------------------------------------
     
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when entering the boarding state. Use this method to display menus,
+    *   initialize UI components, or reset state-specific variables.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onEnter() override;
+    // ----------------------------------------------------------------------------
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Main processing loop for the boarding state. Handles user input,
+    *   delegates actions such as start boarding, and determines state transitions.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onProcess() override;
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Called when exiting the boarding state. Perform any necessary cleanup,
+    *   such as clearing buffers or saving temporary data.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void onExit() override;
+    // ----------------------------------------------------------------------------
 
 private:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Initiates the boarding process for passengers.
+    *   Obtains and validates input with the help of the input module.
+    *   In addition, interacts with the Database to record boardings.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void startBoarding();
+    // ----------------------------------------------------------------------------
 };
 
 #endif // BOARDING_STATE_HPP

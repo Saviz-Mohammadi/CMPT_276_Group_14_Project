@@ -37,6 +37,7 @@
 
 class Database;
 
+// An enum used to refer to each State when attempting to make a transition.
 enum class States
 {
     MainMenuState,
@@ -50,18 +51,102 @@ enum class States
 class StateManager
 {
 public:
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Constructor for the StateManager class. used to instantiate a physical object in memory.
+    *   Won't do any heavy work.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     explicit StateManager();
-    ~StateManager();
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   Destructor for the StateManager class. Ensures proper cleanup of resources and polymorphic destruction.
+    *
+    *   [Return]
+    *   N/A
+    *
+    *   [Errors]
+    *   N/A
+    */
+
+    ~StateManager() override;
+    // ----------------------------------------------------------------------------
     
 public:
-    void init(Database* database);
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   This function attempts to initialize the required member fields with data.
+    *   It will create each underlying State and make sure they get pointers/references to the data that they require.
+    *   It is important to call this method before invoking anything else in the StateManager.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
+    void init(
+        Database* database // [IN] | A pointer to the database instance that each underlying State will require.
+        );
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   This function triggers the main Finite State Machine loop by calling the 'onEnter()', 'onProcess()', and 'onExit()' methods of each underlying state.
+    *   The loop begins with the initial state, which is MainMenuState.
+    *   It is important to call 'init()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
     void run();
-    void selectNextState(States next_state);
+    // ----------------------------------------------------------------------------
+
+
+
+    // ----------------------------------------------------------------------------
+    /*
+    *   [Description]
+    *   This function allows each underlying state to specify the next state that the StateManager should transition to.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   N/A
+    */
+
+    void selectNextState(
+        States next_state // [IN] | An enum indicating the next State to transition to.
+        );
+    // ----------------------------------------------------------------------------
 
 private:
+    // A polymorphic instance to reference each state.
     State* m_state;
 
-    // Concrete instances:
+    // Concrete instances of each state.
     MainMenuState m_main_menu_state;
     VesselManagementState m_vessel_management_state;
     SailingManagementState m_sailing_management_state;
