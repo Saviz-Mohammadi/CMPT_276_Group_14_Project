@@ -86,10 +86,7 @@ target_sources(${EXECUTABLE_NAME}
     "${CMAKE_CURRENT_SOURCE_DIR}/include/input.hpp"
 
     # Containers
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/reservation.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/sailing.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/vessel.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/vehicle.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/containers.hpp"
 
     # Database
     "${CMAKE_CURRENT_SOURCE_DIR}/include/database.hpp"

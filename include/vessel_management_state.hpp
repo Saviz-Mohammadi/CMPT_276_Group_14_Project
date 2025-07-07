@@ -40,6 +40,10 @@ public:
     void onEnter() override;
     void onProcess() override;
     void onExit() override;
+
+private:
+    void creatVessel();
+    void listVessels();
 };
 
 #endif // VESSEL_MANAGEMENT_STATE_HPP

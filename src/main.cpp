@@ -117,9 +117,6 @@ int main(int argc, char *argv[])
 -- Constant types will use 'Snake Case' with a 'c_' prefix. (c_my_variable)
 -- Static and Constant types combined will use 'Snake Case' with a 'sc_' prefix. (sc_my_variable)
 
-//Example: (Not meant to be in final i put this in for saviz)
--- Variables passed by referenced will be suffixed with a &
-
 
 [Class conventions]
 -- Class signature names will use 'Pascal Case' as the naming convention where multiple words are joined together with no underscores or spaces, and each word starts with a capital letter. (ThisIsPascalCase)

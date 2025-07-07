@@ -40,6 +40,9 @@ public:
     void onEnter() override;
     void onProcess() override;
     void onExit() override;
+
+private:
+    void startBoarding();
 };
 
 #endif // BOARDING_STATE_HPP

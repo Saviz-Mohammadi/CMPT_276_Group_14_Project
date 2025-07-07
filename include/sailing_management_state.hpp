@@ -40,6 +40,12 @@ public:
     void onEnter() override;
     void onProcess() override;
     void onExit() override;
+
+private:
+    void createSailing();
+    void deleteSailing();
+    void listSailingReports();
+    void listSailingReport();
 };
 
 #endif // SAILING_MANAGEMENT_STATE_HPP
