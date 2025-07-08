@@ -28,6 +28,8 @@
 // ============================================================================
 
 #include <sqlite3.h>
+#include "state_manager.hpp"
+#include "database.hpp"
 
 int main(int argc, char *argv[])
 {

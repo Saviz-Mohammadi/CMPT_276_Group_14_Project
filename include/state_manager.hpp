@@ -70,7 +70,7 @@ public:
 
 
     // ----------------------------------------------------------------------------
-    ~StateManager() override;
+    ~StateManager();
 
     /*
     *   [Description]
