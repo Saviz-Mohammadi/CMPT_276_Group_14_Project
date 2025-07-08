@@ -100,7 +100,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   N/A
+    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   N/A
+    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -138,7 +138,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   N/A
+    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
