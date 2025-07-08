@@ -34,6 +34,8 @@ class MainMenuState : public State
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit MainMenuState();
+
     /*
     *   [Description]
     *   Constructor for the MainMenuState class. used to instantiate a physical object in memory.
@@ -45,13 +47,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit MainMenuState();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~MainMenuState() override;
+
     /*
     *   [Description]
     *   Destructor for the MainMenuState class. Ensures proper cleanup of resources and polymorphic destruction.
@@ -62,12 +64,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    ~MainMenuState() override;
     // ----------------------------------------------------------------------------
 
 public:
     // ----------------------------------------------------------------------------
+    void onEnter() override;
+
     /*
     *   [Description]
     *   Called when entering the main menu state. Use this method to display menus,
@@ -79,13 +81,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onEnter() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onProcess() override;
+
     /*
     *   [Description]
     *   Main processing loop for the main menu state. Handles user input,
@@ -97,13 +99,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onProcess() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onExit() override;
+
     /*
     *   [Description]
     *   Called when exiting the main menu state. Perform any necessary cleanup,
@@ -115,8 +117,6 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onExit() override;
     // ----------------------------------------------------------------------------
 };
 

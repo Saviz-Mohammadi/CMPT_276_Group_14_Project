@@ -14,7 +14,7 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 - 2025/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer/07
+ * Rev 1 - 2025/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *
  *
  * [PURPOSE]
@@ -37,6 +37,8 @@ class Database
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit Database();
+
     /*
     *   [Description]
     *   Constructor for the Database class, used to instantiate a physical object in memory.
@@ -47,13 +49,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit Database();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~Database();
+
     /*
     *   [Description]
     *   Destructor for the Database class, responsible for deallocating the object from memory.
@@ -64,12 +66,16 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    ~Database();
     // ----------------------------------------------------------------------------
 
 public:
     // ----------------------------------------------------------------------------
+    void openConnection(
+        const std::string& path,     // [IN]  | The path to the database file where the connection is to be established.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+
     /*
     *   [Description]
     *   This function attempts to establish a connection to an SQLite database file.
@@ -86,17 +92,16 @@ public:
     *   @ <Connection already exists>
     *       If the method has already been called and a connection exists, the operation will terminate with a failure status and provide an appropriate error message saying "Connection already exists!".
     */
+    // ----------------------------------------------------------------------------
 
-    void openConnection(
-        const std::string& path,     // [IN]  | The path to the database file where the connection is to be established.
+
+
+    // ----------------------------------------------------------------------------
+    void cutConnection(
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to close the SQLite database connection to the file.
@@ -109,16 +114,17 @@ public:
     *   @ <Connection does not exist>
     *       If this method is called without an existing connection, the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
+    // ----------------------------------------------------------------------------
 
-    void cutConnection(
+
+
+    // ----------------------------------------------------------------------------
+    void addVessel(
+        Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to create and insert a new vessel into the database using SQL queries.
@@ -135,17 +141,18 @@ public:
     *   @ <Not enough space>
     *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
+    // ----------------------------------------------------------------------------
 
-    void addVessel( 
-        Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
+
+
+    // ----------------------------------------------------------------------------
+    void getVesselByID(
+        int vessel_id,               // [IN]  | The ID of vessel to be searched for.
+        Vessel& vessel,              // [OUT] | The vessel that is found.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to search for and retrieve a vessel by its ID using SQL queries.
@@ -161,18 +168,19 @@ public:
     *   @ <Invalid ID>
     *       If a vessel with the exact provided ID does not exist in the database, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
+    // ----------------------------------------------------------------------------
 
-    void getVesselByID(
-        int vessel_id,               // [IN]  | The ID of vessel to be searched for.
-        Vessel& vessel,              // [OUT] | The vessel that is found.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+
+
+    // ----------------------------------------------------------------------------
+    void getVessels(
+        int count,                    // [IN]  | The number of vessels to be retrieved.
+        int offset,                   // [IN]  | Determines the starting point the retrieve query.
+        std::vector<Vessel>& vessels, // [OUT] | The list of vessels that were retrieved.
+        bool& is_successful,          // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message  // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to retrieve a list of vessels (usually of length '5') using SQL queries.
@@ -187,18 +195,17 @@ public:
     *   @ <Empty list due to offset>
     *       If the given offset results in no remaining vessels in the table and the returned list is empty, the operation will terminate with a failure status and provide an appropriate error message saying "Empty list!".
     */
+    // ----------------------------------------------------------------------------
 
-    void getVessels(
-        int count,                    // [IN]  | The number of vessels to be retrieved.
-        int offset,                   // [IN]  | Determines the starting point the retrieve query.
-        std::vector<Vessel>& vessels, // [OUT] | The list of vessels that were retrieved.
-        bool& is_successful,          // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message  // [OUT] | A descriptive message explaining the result of the operation.
+
+
+    // ----------------------------------------------------------------------------
+    void addSailing(
+        Sailing sailing,             // [IN]  | Data for the new sailing that will be created.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to create and insert a new sailing into the database using SQL queries.
@@ -218,16 +225,17 @@ public:
     *   @ <Not enough space>
     *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
+    // ----------------------------------------------------------------------------
 
-    void addSailing(
-        Sailing sailing,             // [IN]  | Data for the new sailing that will be created.
+
+
+    // ----------------------------------------------------------------------------
+    void removeSailing(
+        Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to delete a sailing from the database using SQL queries.
@@ -243,17 +251,19 @@ public:
     *   @ <Sailing does not exist>
     *       If a sailing with the exact provided data does not exist, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
+    // ----------------------------------------------------------------------------
 
-    void removeSailing(
-        Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+
+
+    // ----------------------------------------------------------------------------
+    void getSailingReports(
+        int count,                                   // [IN]  | The number of sailing reports to be retrieved.
+        int offset,                                  // [IN]  | Determines the starting point the retrieve query.
+        std::vector<SailingReport>& sailing_reports, // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,                         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message                 // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to retrieve a list of sailing reports (usually of length '5') using SQL queries.
@@ -268,18 +278,20 @@ public:
     *   @ <Empty list due to offset>
     *       If the given offset results in no remaining sailing reports in the table and the returned list is empty, the operation will terminate with a failure status and provide an appropriate error message saying "Empty list!".
     */
+    // ----------------------------------------------------------------------------
 
-    void getSailingReports(
-        int count,                                   // [IN]  | The number of sailing reports to be retrieved.
-        int offset,                                  // [IN]  | Determines the starting point the retrieve query.
-        std::vector<SailingReport>& sailing_reports, // [OUT] | The list of sailing reports that were retrieved.
-        bool& is_successful,                         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message                 // [OUT] | A descriptive message explaining the result of the operation.
+
+
+    // ----------------------------------------------------------------------------
+    void getSailingReportByID(
+        std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
+        int departure_day,              // [IN]  | The departure day of the sailing in the form of 2 digits.
+        int departure_hour,             // [IN]  | The departure hour of the sailing in the form of 2 digits.
+        SailingReport& sailing_report,  // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to retrieve a sailing report by ID using SQL queries.
@@ -293,20 +305,18 @@ public:
     *   @ <Empty tables>
     *       If the database contains no records for sailing report to be generated, the operation will terminate with a failure status and provide an appropriate error message saying "No records available!".
     */
+    // ----------------------------------------------------------------------------
 
-    void getSailingReportByID(
-        std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
-        int departure_day,              // [IN]  | The departure day of the sailing in the form of 2 digits.
-        int departure_hour,             // [IN]  | The departure hour of the sailing in the form of 2 digits.
-        SailingReport& sailing_report,  // [OUT] | The list of sailing reports that were retrieved.
-        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+
+
+    // ----------------------------------------------------------------------------
+    void addReservation(
+        Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
+        Vehicle vehicle,             // [IN]  | Data about the vehicle of the reservation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to create a reservation by using SQL queries.
@@ -326,18 +336,20 @@ public:
     *   @ <Not enough space>
     *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
     */
+    // ----------------------------------------------------------------------------
 
-    void addReservation(
-        Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
-        Vehicle vehicle,             // [IN]  | Data about the vehicle of the reservation.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+
+
+    // ----------------------------------------------------------------------------
+    void removeReservation(
+        std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
+        int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
+        int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
+        std::string license_plate,      // [IN]  | The license plate of the vehicle associated with the reservation.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to delete a reservation by using SQL queries.
@@ -352,8 +364,12 @@ public:
     *   @ <Invalid ID>
     *       If an invalid sailing ID is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
+    // ----------------------------------------------------------------------------
 
-    void removeReservation(
+
+
+    // ----------------------------------------------------------------------------
+    void completeBoarding(
         std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
         int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
         int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
@@ -361,11 +377,7 @@ public:
         bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to complete the boarding for a reservation by using SQL queries.
@@ -380,20 +392,18 @@ public:
     *   @ <Invalid license plate>
     *       If an invalid license plate is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
+    // ----------------------------------------------------------------------------
 
-    void completeBoarding(
-        std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
-        int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
-        int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
-        std::string license_plate,      // [IN]  | The license plate of the vehicle associated with the reservation.
+
+
+    // ----------------------------------------------------------------------------
+    void getVehicleByID(
+        std::string license_plate,      // [IN]  | The license plate of the vehicle targeted for search and retrieval.
+        Vehicle& vehicle,               // [OUT] | The retrieved vehicle data.
         bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
-    // ----------------------------------------------------------------------------
 
-
-
-    // ----------------------------------------------------------------------------
     /*
     *   [Description]
     *   This function attempts to search and retrieve a vehicle with a license plate (ID) by using SQL queries.
@@ -408,13 +418,6 @@ public:
     *   @ <Empty tables>
     *       If the database contains no records for vehicles, the operation will terminate with a failure status and provide an appropriate error message saying "No records available!".
     */
-
-    void getVehicleByID(
-        std::string license_plate,      // [IN]  | The license plate of the vehicle targeted for search and retrieval.
-        Vehicle& vehicle,               // [OUT] | The retrieved vehicle data.
-        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
-        );
     // ----------------------------------------------------------------------------
 
 private:

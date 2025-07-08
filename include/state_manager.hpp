@@ -52,6 +52,8 @@ class StateManager
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit StateManager();
+
     /*
     *   [Description]
     *   Constructor for the StateManager class. used to instantiate a physical object in memory.
@@ -63,13 +65,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit StateManager();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~StateManager() override;
+
     /*
     *   [Description]
     *   Destructor for the StateManager class. Ensures proper cleanup of resources and polymorphic destruction.
@@ -80,12 +82,14 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    ~StateManager() override;
     // ----------------------------------------------------------------------------
     
 public:
     // ----------------------------------------------------------------------------
+    void init(
+        Database* database // [IN] | A pointer to the database instance that each underlying State will require.
+        );
+
     /*
     *   [Description]
     *   This function attempts to initialize the required member fields with data.
@@ -98,15 +102,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void init(
-        Database* database // [IN] | A pointer to the database instance that each underlying State will require.
-        );
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void run();
+
     /*
     *   [Description]
     *   This function triggers the main Finite State Machine loop by calling the 'onEnter()', 'onProcess()', and 'onExit()' methods of each underlying state.
@@ -119,13 +121,15 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void run();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void selectNextState(
+        States next_state // [IN] | An enum indicating the next State to transition to.
+        );
+
     /*
     *   [Description]
     *   This function allows each underlying state to specify the next state that the StateManager should transition to.
@@ -136,10 +140,6 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void selectNextState(
-        States next_state // [IN] | An enum indicating the next State to transition to.
-        );
     // ----------------------------------------------------------------------------
 
 private:

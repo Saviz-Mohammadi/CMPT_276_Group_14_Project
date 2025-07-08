@@ -35,6 +35,8 @@ class State
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit State();
+
     /*
     *   [Description]
     *   Constructor for the State base class. Does not perform any heavy work.
@@ -46,13 +48,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit State();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    virtual ~State();
+
     /*
     *   [Description]
     *   Virtual destructor for the State base class. Ensures that destruction is polymorphic.
@@ -65,12 +67,15 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    virtual ~State();
     // ----------------------------------------------------------------------------
     
 public:
     // ----------------------------------------------------------------------------
+    void init(
+        StateManager* state_manager,
+        Database* database
+        );
+
     /*
     *   [Description]
     *   This function attempts to initialize the required member fields with data.
@@ -82,15 +87,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void init(
-        StateManager* state_manager,
-        Database* database
-        );
     // ----------------------------------------------------------------------------
 
 public:
     // ----------------------------------------------------------------------------
+    virtual void onEnter() = 0;
+
     /*
     *   [Description]
     *   This pure virtual function defines the behavior that should occur when entering a state.
@@ -102,13 +104,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    virtual void onEnter() = 0;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    virtual void onProcess() = 0;
+
     /*
     *   [Description]
     *   This pure virtual function defines the primary behavior that should occur while the system is in a given state.
@@ -121,13 +123,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    virtual void onProcess() = 0;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    virtual void onExit() = 0;
+
     /*
     *   [Description]
     *   This pure virtual function defines the behavior that should occur when exiting a state.
@@ -139,8 +141,6 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    virtual void onExit() = 0;
     // ----------------------------------------------------------------------------
     
 protected:

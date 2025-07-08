@@ -33,6 +33,8 @@
 class SailingManagementState : public State
 {
     // ----------------------------------------------------------------------------
+    explicit SailingManagementState();
+
     /*
     *   [Description]
     *   Constructor for the SailingManagementState class. used to instantiate a physical object in memory.
@@ -44,13 +46,13 @@ class SailingManagementState : public State
     *   [Errors]
     *   N/A
     */
-
-    explicit SailingManagementState();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~SailingManagementState() override;
+
     /*
     *   [Description]
     *   Destructor for the SailingManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
@@ -61,12 +63,12 @@ class SailingManagementState : public State
     *   [Errors]
     *   N/A
     */
-
-    ~SailingManagementState() override;
     // ----------------------------------------------------------------------------
 
 public:
     // ----------------------------------------------------------------------------
+    void onEnter() override;
+
     /*
     *   [Description]
     *   Called when entering the sailing management state. Use this method to display menus,
@@ -78,13 +80,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onEnter() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onProcess() override;
+
     /*
     *   [Description]
     *   Main processing loop for the sailing management state. Handles user input,
@@ -97,13 +99,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onProcess() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onExit() override;
+
     /*
     *   [Description]
     *   Called when exiting the sailing management state. Perform any necessary cleanup,
@@ -115,12 +117,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onExit() override;
     // ----------------------------------------------------------------------------
 
 private:
     // ----------------------------------------------------------------------------
+    void createSailing();
+
     /*
     *   [Description]
     *   Initiates the workflow for creating a new sailing entry.
@@ -133,13 +135,13 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void createSailing();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void deleteSailing();
+
     /*
     *   [Description]
     *   Initiates the workflow for deleting a sailing entry.
@@ -152,13 +154,13 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void deleteSailing();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void listSailingReports();
+
     /*
     *   [Description]
     *   Initiates the workflow for retrieving and displaying a summary of sailing reports (with a certain count).
@@ -170,13 +172,13 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void listSailingReports();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void listSailingReport();
+
     /*
     *   [Description]
     *   Initiates the workflow for retrieving and displaying a summary of sailing report (just one).
@@ -188,8 +190,6 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void listSailingReport();
     // ----------------------------------------------------------------------------
 };
 

@@ -34,6 +34,8 @@ class ReservationManagementState : public State
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit ReservationManagementState();
+
     /*
     *   [Description]
     *   Constructor for the ReservationManagementState class. used to instantiate a physical object in memory.
@@ -45,13 +47,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit ReservationManagementState();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~ReservationManagementState() override;
+
     /*
     *   [Description]
     *   Destructor for the ReservationManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
@@ -62,12 +64,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    ~ReservationManagementState() override;
     // ----------------------------------------------------------------------------
 
 public:
     // ----------------------------------------------------------------------------
+    void onEnter() override;
+
     /*
     *   [Description]
     *   Called when entering the reservation management state. Use this method to display menus,
@@ -79,13 +81,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onEnter() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onProcess() override;
+
     /*
     *   [Description]
     *   Main processing loop for the reservation management state. Handles user input,
@@ -98,13 +100,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onProcess() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onExit() override;
+
     /*
     *   [Description]
     *   Called when exiting the reservation management state. Perform any necessary cleanup,
@@ -116,12 +118,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onExit() override;
     // ----------------------------------------------------------------------------
 
 private:
     // ----------------------------------------------------------------------------
+    void createReservation();
+
     /*
     *   [Description]
     *   Initiates the workflow for creating a reservation entry (sailing remaining length will be reduced as a result of this).
@@ -134,13 +136,13 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void createReservation();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void deleteReservation();
+
     /*
     *   [Description]
     *   Initiates the workflow for deleting a reservation entry (sailing remaining length will be increased as a result of this).
@@ -153,8 +155,6 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void deleteReservation();
     // ----------------------------------------------------------------------------
 };
 

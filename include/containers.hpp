@@ -45,21 +45,6 @@ public:
     double high_ceiling_lane_length;
 };
 
-struct Vehicle
-{
-public:
-    explicit Vehicle();
-    explicit Vehicle(const int vehicle_id, const std::string& license_plate, const std::string& phone_number, const double length, const double height);
-    ~Vehicle();
-
-public:
-    int vehicle_id;
-    std::string& license_plate;
-    std::string& phone_number;
-    double length;
-    double height;
-};
-
 struct Sailing
 {
 public:
@@ -89,6 +74,21 @@ public:
     int vehicle_id;
     int amount_paid;
     bool reserved_for_low_lane;
+};
+
+struct Vehicle
+{
+public:
+    explicit Vehicle();
+    explicit Vehicle(const int vehicle_id, const std::string& license_plate, const std::string& phone_number, const double length, const double height);
+    ~Vehicle();
+
+public:
+    int vehicle_id;
+    std::string& license_plate;
+    std::string& phone_number;
+    double length;
+    double height;
 };
 
 struct SailingReport

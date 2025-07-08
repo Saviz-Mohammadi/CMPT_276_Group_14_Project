@@ -31,6 +31,9 @@
 
 int main(int argc, char *argv[])
 {
+    // bool is_successful = false;
+    // std::string outcome_message = "";
+
     //  Section: Database setup
     // ------------------------------------------------------------------------
 
@@ -38,12 +41,12 @@ int main(int argc, char *argv[])
 
     Database *database = new Database();
 
-    database->openConnection("database.db", g_is_successful, g_outcome_message);
+    database->openConnection("database.db", is_successful, outcome_message);
 
     // If the operation is not successful, then just abort:
-    if(!g_is_successful)
+    if(!is_successful)
     {
-        std::cout << g_outcome_message << std::endl;
+        std::cout << outcome_message << std::endl;
 
         return(0);
     }
@@ -75,12 +78,12 @@ int main(int argc, char *argv[])
 
     /*
 
-    database->cutConnection(g_is_successful, g_outcome_message);
+    database->cutConnection(is_successful, outcome_message);
 
     // If the operation is not successful, then just print message:
-    if(!g_is_successful)
+    if(!is_successful)
     {
-        std::cout << g_outcome_message << std::endl;
+        std::cout << outcome_message << std::endl;
     }
 
     delete database;
@@ -136,8 +139,10 @@ int main(int argc, char *argv[])
 
 
 [Spacing conventions]
--- Tabs will be automatically converted to and replaced with spaces of length 4. (IDE settings)
+-- Tabs will be automatically be converted to and replaced with spaces of length 4. (IDE settings)
 -- There will be no space before and after grouping symbols such '()', '{}', '<>'.
--- Curly brackets '{}' will be placed on the next line for better readability.
+-- Curly brackets '{}' will be placed on the next line for classes, functions, loops, switches, and others for better readability.
+-- There will be spaces before and after '=' signs.
+-- There will be spaces after commas.
 
 */

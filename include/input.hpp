@@ -33,6 +33,15 @@
 #include <regex>
 
 // ----------------------------------------------------------------------------
+void promptForInteger(
+    const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
+    int min,                         // [IN]  | The minimum acceptable integer value.
+    int max,                         // [IN]  | The maximum acceptable integer value.
+    int& acquired_integer,           // [OUT] | The integer entered and obtained by the user, if valid.
+    bool& is_successful,             // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+    std::string& outcome_message     // [OUT] | A descriptive message explaining the result of the operation.
+    );
+
 /*
 *   [Description]
 *   This function prompts the user to enter an integer value.
@@ -49,20 +58,20 @@
 *   @ <Invalid range>
 *       If the parsed integer is less than `min` or greater than `max`, the operation will terminate with a failure status and provide an appropriate error message saying "Input is out of range!".
 */
+// ----------------------------------------------------------------------------
 
-void promptForInteger(
+
+
+// ----------------------------------------------------------------------------
+void promptForReal(
     const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
-    int min,                         // [IN]  | The minimum acceptable integer value.
-    int max,                         // [IN]  | The maximum acceptable integer value.
-    int& acquired_integer,           // [OUT] | The integer entered and obtained by the user, if valid.
+    double min,                      // [IN]  | The minimum acceptable real value.
+    double max,                      // [IN]  | The maximum acceptable real value.
+    double& acquired_real,           // [OUT] | The real entered and obtained by the user, if valid.
     bool& is_successful,             // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
     std::string& outcome_message     // [OUT] | A descriptive message explaining the result of the operation.
     );
-// ----------------------------------------------------------------------------
 
-
-
-// ----------------------------------------------------------------------------
 /*
 *   [Description]
 *   This function prompts the user to enter a real (double) value.
@@ -79,20 +88,19 @@ void promptForInteger(
 *   @ <Invalid range>
 *       If the parsed real is less than `min` or greater than `max`, the operation will terminate with a failure status and provide an appropriate error message saying "Input is out of range!".
 */
+// ----------------------------------------------------------------------------
 
-void promptForReal(
-    const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
-    double min,                      // [IN]  | The minimum acceptable real value.
-    double max,                      // [IN]  | The maximum acceptable real value.
-    double& acquired_real,           // [OUT] | The real entered and obtained by the user, if valid.
-    bool& is_successful,             // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-    std::string& outcome_message     // [OUT] | A descriptive message explaining the result of the operation.
+
+
+// ----------------------------------------------------------------------------
+void promptForCharacter(
+    const std::string& input_prompt,          // [IN]  | The message displayed when asking the user for input.
+    const std::vector<char>& allowed_options, // [IN]  | The set of allowed characters to check against.
+    char& acquired_character,                 // [OUT] | The character entered and obtained by the user, if valid.
+    bool& is_successful,                      // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+    std::string& outcome_message              // [OUT] | A descriptive message explaining the result of the operation.
     );
-// ----------------------------------------------------------------------------
 
-
-
-// ----------------------------------------------------------------------------
 /*
 *   [Description]
 *   This function prompts the user to enter a character value (non-numeric).
@@ -108,19 +116,18 @@ void promptForReal(
 *   @ <Not in set>
 *       If the parsed character is not within the set of acceptable characters, the operation will terminate with a failure status and provide an appropriate error message saying "Input is not a correct choice!".
 */
+// ----------------------------------------------------------------------------
 
-void promptForCharacter(
-    const std::string& input_prompt,          // [IN]  | The message displayed when asking the user for input.
-    const std::vector<char>& allowed_options, // [IN]  | The set of allowed characters to check against.
-    char& acquired_character,                 // [OUT] | The character entered and obtained by the user, if valid.
-    bool& is_successful,                      // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-    std::string& outcome_message              // [OUT] | A descriptive message explaining the result of the operation.
+
+
+// ----------------------------------------------------------------------------
+void promptForString(
+    const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
+    std::string& acquired_string,    // [OUT] | The string entered and obtained by the user.
+    bool& is_successful,             // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+    std::string& outcome_message     // [OUT] | A descriptive message explaining the result of the operation.
     );
-// ----------------------------------------------------------------------------
 
-
-
-// ----------------------------------------------------------------------------
 /*
 *   [Description]
 *   This function prompts the user to enter a line of string/text.
@@ -133,18 +140,19 @@ void promptForCharacter(
 *   [Errors]
 *   N/A
 */
+// ----------------------------------------------------------------------------
 
+
+
+// ----------------------------------------------------------------------------
 void promptForString(
     const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
+    const std::regex& pattern,       // [IN]  | The pattern/format used to validate the string.
     std::string& acquired_string,    // [OUT] | The string entered and obtained by the user.
     bool& is_successful,             // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
     std::string& outcome_message     // [OUT] | A descriptive message explaining the result of the operation.
     );
-// ----------------------------------------------------------------------------
 
-
-
-// ----------------------------------------------------------------------------
 /*
 *   [Description]
 *   This function prompts the user to enter a line of string/text.
@@ -158,14 +166,6 @@ void promptForString(
 *   @ <Bad format>
 *       If the user’s input does no match the required pattern, the operation will terminate with a failure status and provide an appropriate error message saying "Input does not match required format!".
 */
-
-void promptForString(
-    const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
-    const std::regex& pattern,       // [IN]  | The pattern/format used to validate the string.
-    std::string& acquired_string,    // [OUT] | The string entered and obtained by the user.
-    bool& is_successful,             // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-    std::string& outcome_message     // [OUT] | A descriptive message explaining the result of the operation.
-    );
 // ----------------------------------------------------------------------------
 
 #endif // INPUT_HPP

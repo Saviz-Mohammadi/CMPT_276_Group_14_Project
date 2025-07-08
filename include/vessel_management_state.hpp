@@ -34,6 +34,8 @@ class VesselManagementState : public State
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit VesselManagementState();
+
     /*
     *   [Description]
     *   Constructor for the VesselManagementState class. used to instantiate a physical object in memory.
@@ -45,13 +47,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit VesselManagementState();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~VesselManagementState() override;
     /*
     *   [Description]
     *   Destructor for the VesselManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
@@ -62,12 +63,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    ~VesselManagementState() override;
     // ----------------------------------------------------------------------------
     
 public:
     // ----------------------------------------------------------------------------
+    void onEnter() override;
+
     /*
     *   [Description]
     *   Called when entering the vessel management state. Use this method to display menus,
@@ -79,13 +80,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onEnter() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onProcess() override;
+
     /*
     *   [Description]
     *   Main processing loop for the vessel management state. Handles user input,
@@ -97,13 +98,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onProcess() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onExit() override;
+
     /*
     *   [Description]
     *   Called when exiting the vessel management state. Perform any necessary cleanup,
@@ -115,12 +116,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onExit() override;
     // ----------------------------------------------------------------------------
 
 private:
     // ----------------------------------------------------------------------------
+    void creatVessel();
+
     /*
     *   [Description]
     *   Initiates the workflow for creating a new vessel entry.
@@ -133,13 +134,13 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void creatVessel();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void listVessels();
+
     /*
     *   [Description]
     *   Initiates the workflow for listing vessels (with a count limit).
@@ -151,8 +152,6 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void listVessels();
     // ----------------------------------------------------------------------------
 };
 

@@ -34,6 +34,8 @@ class BoardingState : public State
 {
 public:
     // ----------------------------------------------------------------------------
+    explicit BoardingState();
+
     /*
     *   [Description]
     *   Constructor for the BoardingState class. used to instantiate a physical object in memory.
@@ -45,13 +47,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    explicit BoardingState();
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    ~BoardingState() override;
+
     /*
     *   [Description]
     *   Destructor for the BoardingState class. Ensures proper cleanup of resources and polymorphic destruction.
@@ -62,12 +64,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    ~BoardingState() override;
     // ----------------------------------------------------------------------------
     
 public:
     // ----------------------------------------------------------------------------
+    void onEnter() override;
+
     /*
     *   [Description]
     *   Called when entering the boarding state. Use this method to display menus,
@@ -79,12 +81,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onEnter() override;
     // ----------------------------------------------------------------------------
 
 
     // ----------------------------------------------------------------------------
+    void onProcess() override;
+
     /*
     *   [Description]
     *   Main processing loop for the boarding state. Handles user input,
@@ -96,13 +98,13 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onProcess() override;
     // ----------------------------------------------------------------------------
 
 
 
     // ----------------------------------------------------------------------------
+    void onExit() override;
+
     /*
     *   [Description]
     *   Called when exiting the boarding state. Perform any necessary cleanup,
@@ -114,12 +116,12 @@ public:
     *   [Errors]
     *   N/A
     */
-
-    void onExit() override;
     // ----------------------------------------------------------------------------
 
 private:
     // ----------------------------------------------------------------------------
+    void startBoarding();
+
     /*
     *   [Description]
     *   Initiates the boarding process for passengers.
@@ -132,8 +134,6 @@ private:
     *   [Errors]
     *   N/A
     */
-
-    void startBoarding();
     // ----------------------------------------------------------------------------
 };
 
