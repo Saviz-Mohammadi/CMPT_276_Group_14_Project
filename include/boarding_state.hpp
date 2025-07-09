@@ -9,7 +9,7 @@
  *
  * [FILE NAME]
  *
- * bording.hpp
+ * bording_state.hpp
  *
  *
  * [REVISION HISTORY]
