@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 
 
 [Spacing conventions]
--- Tabs will be automatically be converted to and replaced with spaces of length 4. (IDE settings)
+-- Tabs will automatically be converted to and replaced with spaces of length 4. (IDE settings)
 -- There will be no space before and after grouping symbols such '()', '{}', '<>'.
 -- Curly brackets '{}' will be placed on the next line for classes, functions, loops, switches, and others for better readability.
 -- There will be spaces before and after '=' signs.
