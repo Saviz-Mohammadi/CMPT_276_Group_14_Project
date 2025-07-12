@@ -84,6 +84,7 @@ target_sources(${EXECUTABLE_NAME}
 
     # Input
     "${CMAKE_CURRENT_SOURCE_DIR}/include/input.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/input.cpp"
 
     # Containers
     "${CMAKE_CURRENT_SOURCE_DIR}/include/containers.hpp"
