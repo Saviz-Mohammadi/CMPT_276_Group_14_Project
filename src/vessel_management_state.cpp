@@ -197,7 +197,7 @@ void VesselManagementState::createVessel()
 // ----------------------------------------------------------------------------
 void VesselManagementState::listVessels()
 {
-    while (true)
+    while (true) // list forever until the user exits
     {
         std::vector<Vessel> vessels(g_list_length);
         m_database->getVessels(g_list_length, s_vessel_list_offset, vessels, s_is_successful, s_outcome_message);
@@ -226,7 +226,7 @@ void VesselManagementState::listVessels()
                     << "\n";
             }
             // ****************************************************************************
-            // page scrolling
+            // prompt for page scrolling or exit
             std::cout
                 << "\n\n"
                 << "<p> >> View the previous 5 vessels."
@@ -234,6 +234,7 @@ void VesselManagementState::listVessels()
                 << "<e> >> Exit the list."
                 << "\n\n";
 
+            // ****************************************************************************
             while (true) // prompt until valid choice
             {
                 promptForCharacter(
@@ -252,7 +253,8 @@ void VesselManagementState::listVessels()
                     std::cout << s_outcome_message << "\n\n";
                 }
             }
-            switch (s_user_choice)
+            // ****************************************************************************
+            switch (s_user_choice) // switch on choice
             {
             case 'p':
                 s_vessel_list_offset = std::max(0, s_vessel_list_offset - g_list_length);
