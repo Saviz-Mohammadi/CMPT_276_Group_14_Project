@@ -91,6 +91,7 @@ target_sources(${EXECUTABLE_NAME}
 
     # Database
     "${CMAKE_CURRENT_SOURCE_DIR}/include/database.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp"
 
     # Finite State Machine
     "${CMAKE_CURRENT_SOURCE_DIR}/include/state_manager.hpp"

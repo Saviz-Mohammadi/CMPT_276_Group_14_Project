@@ -27,21 +27,17 @@
 // ============================================================================
 // ============================================================================
 
-#include <sqlite3.h>
 #include "state_manager.hpp"
 #include "database.hpp"
-#include "input.hpp"
 #include <iostream>
 
 int main(int argc, char *argv[])
 {
-    // bool is_successful = false;
-    // std::string outcome_message = "";
+    bool is_successful = false;
+    std::string outcome_message = "";
 
     //  Section: Database setup
     // ------------------------------------------------------------------------
-
-    /*
 
     Database *database = new Database();
 
@@ -54,8 +50,6 @@ int main(int argc, char *argv[])
 
         return(0);
     }
-
-    */
 
     // ------------------------------------------------------------------------
 
@@ -80,8 +74,6 @@ int main(int argc, char *argv[])
     //  Section: Cleanup
     // ------------------------------------------------------------------------
 
-    /*
-
     database->cutConnection(is_successful, outcome_message);
 
     // If the operation is not successful, then just print message:
@@ -92,24 +84,7 @@ int main(int argc, char *argv[])
 
     delete database;
 
-    */
-
     // ------------------------------------------------------------------------
-
-    int acquired_integer = 0;
-    bool is_successful = false;
-    std::string outcome_message = "";
-
-    promptForInteger("Please enter your number: ", 10, 20, acquired_integer, is_successful, outcome_message);
-
-    if(!is_successful)
-    {
-        std::cout << outcome_message << std::endl;
-
-        return(0);
-    }
-
-    std::cout << acquired_integer << std::endl;
 
     return(0);
 }
