@@ -120,7 +120,7 @@ public:
 
 private:
     // ----------------------------------------------------------------------------
-    void creatVessel();
+    void createVessel();
 
     /*
     *   [Description]
