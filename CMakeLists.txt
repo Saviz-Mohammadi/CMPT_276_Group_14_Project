@@ -88,6 +88,7 @@ target_sources(${EXECUTABLE_NAME}
 
     # Containers
     "${CMAKE_CURRENT_SOURCE_DIR}/include/containers.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/containers.cpp"
 
     # Database
     "${CMAKE_CURRENT_SOURCE_DIR}/include/database.hpp"

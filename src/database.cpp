@@ -15,7 +15,11 @@ Database::~Database()
 #endif
 }
 
-void Database::openConnection(const std::string &path, bool& is_successful, std::string& outcome_message)
+void Database::openConnection(
+    const std::string &path,
+    bool& is_successful,
+    std::string& outcome_message
+    )
 {
     int return_code = sqlite3_open(path.c_str(), &this->m_sqlite3);
 
@@ -85,11 +89,14 @@ void Database::openConnection(const std::string &path, bool& is_successful, std:
 
     char* error_message = nullptr;
 
+    // Since we are just creating tables (no SELECT statements), we don’t need a 'callback' or 'user-data', so we pass 'nullptr' for both:
     return_code = sqlite3_exec(m_sqlite3, sql_query, nullptr, nullptr, &error_message);
 
     if (return_code != SQLITE_OK)
     {
+        is_successful = false;
         outcome_message = std::string("Connection request failed: ") + std::string(error_message);
+
         sqlite3_free(error_message);
 
         return;
@@ -99,16 +106,95 @@ void Database::openConnection(const std::string &path, bool& is_successful, std:
     outcome_message = std::string("Connection request succeeded");
 }
 
-void Database::cutConnection(bool& is_successful, std::string& outcome_message)
+void Database::cutConnection(
+    bool& is_successful,
+    std::string& outcome_message
+    )
 {
-    is_successful = (sqlite3_close(this->m_sqlite3) == SQLITE_OK);
+    int return_code = sqlite3_close(this->m_sqlite3);
 
-    if(!is_successful)
+    if(return_code != SQLITE_OK)
     {
+        is_successful = false;
         outcome_message = std::string("Cut connection request failed: ") + sqlite3_errmsg(this->m_sqlite3);
 
         return;
     }
 
+    is_successful = true;
     outcome_message = std::string("Cut connection request succeeded");
+}
+
+void Database::addVessel(
+    Vessel vessel,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // 1) Creating the SQL query command:
+    const char* sql_query = R"SQL(
+        INSERT INTO vessels (vessel_name, low_ceiling_lane_length, high_ceiling_lane_length)
+        VALUES (?, ?, ?);
+    )SQL";
+
+    // 2) Preparing the statement with bindings:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    // NOTE (SAVIZ): Using version 2 (v2) instead of 'sqlite3_prepare()' for better performance and safety.
+    // WARNING (SAVIZ): When using 'sqlite3_prepare_v2()' with 'nullptr' as the final parameter transactions will not work because it counts as multiple statements. If you wish to use this with multiple statements, then you need to bind to a call-back and loop thourgh it.
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query,
+        -1,                      // Tells SQLite how many bytes of your SQL buffer it should scan and compile ('-1' means read everything until the '\0' character for the end of the string)
+        &prepared_sql_statement,
+        nullptr                  // Useful if your buffer contains multiple SQL statements back-to-back ('nullptr' means: "I only have one statement in my string")
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vessel creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    // Binding parameters (?) rather than concatenating strings (avoiding SQL-injection attacks):
+    sqlite3_bind_text(
+        prepared_sql_statement,
+        1,                          // Place it for the first '?'
+        vessel.vessel_name.c_str(),
+        -1,                         // Data length in bytes ('-1' means scan until '\0')
+        SQLITE_TRANSIENT            // Destructor flag: "make a copy of the text"
+        );
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        2,
+        vessel.low_ceiling_lane_length
+        );
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        3,
+        vessel.high_ceiling_lane_length
+        );
+
+    // 3) Executing:
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vessel creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    sqlite3_int64 new_identifier = sqlite3_last_insert_rowid(m_sqlite3);
+
+    is_successful = true;
+    outcome_message = std::string("Vessel creation succeeded") + " with id of " + std::to_string(new_identifier);
+
+    // 4) Clean up:
+    sqlite3_finalize(prepared_sql_statement);
 }
