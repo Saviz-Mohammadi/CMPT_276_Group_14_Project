@@ -2,18 +2,18 @@
 
 // ============================================================================
 
+#include <vector>
+#include <iostream>
+#include <regex>
+#include <ctime>
+#include <iomanip>
 #include "state.hpp"
 #include "vessel_management_state.hpp"
 #include "state_manager.hpp"
 #include "input.hpp"
-#include <vector>
-#include <iostream>
-#include <regex>
-#include "database.hpp"
 #include "containers.hpp"
+#include "database.hpp"
 #include "global.hpp"
-#include <ctime>
-#include <iomanip>
 
 static Vessel s_vessel;
 static int s_vessel_list_offset;
@@ -49,26 +49,26 @@ void VesselManagementState::onEnter()
 // ----------------------------------------------------------------------------
 void VesselManagementState::onProcess()
 {
-    while (true) // prompt until good menu selection input
+    // Get user choice:
+    do
     {
         promptForCharacter(
             "Please enter your selection [0-2]: ",
             std::vector<char>('0', '1', '2'),
             s_user_choice,
             s_is_successful,
-            s_outcome_message);
-        std::cout << "\n\n";
-        if (s_is_successful)
-        {
-            break;
-        }
-        else
+            s_outcome_message
+            );
+
+        if(!s_is_successful)
         {
             std::cout << s_outcome_message << "\n\n";
         }
-    }
+    } while(!s_is_successful);
 
-    switch (s_user_choice) { //switch on menu item
+    // Switch on selection and start the appropriate action:
+    switch(s_user_choice)
+    {
         case '1':
             createVessel();
             m_state_manager->selectNextState(States.VesselManagementState);
@@ -111,6 +111,7 @@ void VesselManagementState::createVessel()
             std::cout << s_outcome_message << "\n";
         }
     }
+
     // ****************************************************************************
     while (true) // prompt until good hcll
     {
@@ -130,6 +131,7 @@ void VesselManagementState::createVessel()
             std::cout << s_outcome_message << "\n";
         }
     }
+
     // ****************************************************************************
     while (true) // prompt until good lcll
     {

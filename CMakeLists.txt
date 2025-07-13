@@ -99,6 +99,7 @@ target_sources(${EXECUTABLE_NAME}
     "${CMAKE_CURRENT_SOURCE_DIR}/include/state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/main_menu_state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/vessel_management_state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/vessel_management_state.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/sailing_management_state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/reservation_management_state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/boarding_state.hpp"
