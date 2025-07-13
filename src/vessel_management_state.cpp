@@ -66,6 +66,21 @@ void VesselManagementState::onProcess()
         }
     } while(!s_is_successful);
 
+    // NOTE (SAVIZ): Here is some code to help calling 'getVessels()':
+
+    // std::vector<Vessel> vessels;
+    // database->getVessels(5, 0, vessels, is_successful, outcome_message);
+
+    // if(!is_successful)
+    // {
+    //     std::cout << outcome_message << std::endl;
+    // }
+
+    // for(const Vessel& vessel : vessels)
+    // {
+    //     std::cout << vessel.vessel_id << ", " << vessel.vessel_name << ", " << vessel.low_ceiling_lane_length << ", " << vessel.high_ceiling_lane_length << std::endl;
+    // }
+
     // Switch on selection and start the appropriate action:
     switch(s_user_choice)
     {
@@ -276,7 +291,6 @@ void VesselManagementState::listVessels()
         {
             std::cout << s_outcome_message << "\n\n";
             break;
-        }        
+        }
     } // endwhile
 }
-

@@ -198,3 +198,178 @@ void Database::addVessel(
     // 4) Clean up:
     sqlite3_finalize(prepared_sql_statement);
 }
+
+void Database::getVesselByID(
+    int vessel_id,
+    Vessel& vessel,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // 1) Creating the SQL query command:
+    const char* sql_query = R"SQL(
+        SELECT vessel_name, low_ceiling_lane_length, high_ceiling_lane_length FROM vessels
+        WHERE vessel_id_pk = ?;
+    )SQL";
+
+    // 2) Preparing the statement with bindings:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vessel get by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        vessel_id
+        );
+
+    // 3) Executing:
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    // Row found! Extract each column by index:
+    if (return_code == SQLITE_ROW)
+    {
+        // NOTE (SAVIZ): We obtain every column/field in the database by calling the correct function per the type of data and correct index for the column (starting from '0'):
+        vessel.vessel_id = vessel_id;
+
+        const unsigned char* vessel_name_column_data = sqlite3_column_text(
+            prepared_sql_statement,
+            0);
+
+        vessel.vessel_name = vessel_name_column_data ? reinterpret_cast<const char*>(vessel_name_column_data) : "";
+
+        vessel.low_ceiling_lane_length = sqlite3_column_double(
+            prepared_sql_statement,
+            1);
+
+        vessel.high_ceiling_lane_length = sqlite3_column_double(
+            prepared_sql_statement,
+            2);
+
+        is_successful = true;
+        outcome_message = std::string("Vessel get by ID succeeded.");
+    }
+
+    // Operation completed, but row was not found:
+    else if (return_code == SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vessel get by ID failed: ") + std::string("No vessel found with ID = ") + std::to_string(vessel_id);
+    }
+
+    // Operation did not complete (something has seriously gone wrong):
+    else
+    {
+        is_successful = false;
+        outcome_message = std::string("Vessel get by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+    }
+
+    // 4) Clean up:
+    sqlite3_finalize(prepared_sql_statement);
+}
+
+void Database::getVessels(
+    int count,
+    int offset,
+    std::vector<Vessel>& vessels,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // 1) Creating the SQL query command:
+    const char* sql_query = R"SQL(
+        SELECT vessel_id_pk, vessel_name, low_ceiling_lane_length, high_ceiling_lane_length FROM vessels
+        LIMIT ? OFFSET ?;
+    )SQL";
+
+    // 2) Preparing the statement with bindings:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Get vessels failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        count
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        2,
+        offset
+        );
+
+    // 3) Executing:
+    vessels.clear();
+
+    while ((return_code = sqlite3_step(prepared_sql_statement)) == SQLITE_ROW)
+    {
+        Vessel vessel;
+
+        vessel.vessel_id = sqlite3_column_int(
+            prepared_sql_statement,
+            0);
+
+        const unsigned char* vessel_name_column_data = sqlite3_column_text(
+            prepared_sql_statement,
+            1);
+
+        vessel.vessel_name = vessel_name_column_data ? reinterpret_cast<const char*>(vessel_name_column_data) : "";
+
+        vessel.low_ceiling_lane_length = sqlite3_column_double(
+            prepared_sql_statement,
+            2);
+
+        vessel.high_ceiling_lane_length = sqlite3_column_double(
+            prepared_sql_statement,
+            3);
+
+        // TODO (SAVIZ): Might be worth to look at 'emplace_back()' for vector to increase performance:
+        vessels.push_back(vessel);
+    }
+
+    // Operation completed, but row was not found:
+    if (return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Get vessels failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        sqlite3_finalize(prepared_sql_statement);
+
+        return;
+    }
+
+    is_successful = true;
+    outcome_message = std::string("get Vessels succeeded.");
+
+    // 4) Clean up:
+    sqlite3_finalize(prepared_sql_statement);
+}
