@@ -31,6 +31,8 @@ void Database::openConnection(
         return;
     }
 
+    // TODO (SAVIZ): Make license_plate in vehcile a unique field.
+
     /*
      * The { R"SQL(...)SQL" } syntax is just C++11’s raw string literal.
      *
@@ -462,6 +464,103 @@ void Database::addSailing(
 
     is_successful = true;
     outcome_message = std::string("Sailing creation succeeded") + " with id of " + std::to_string(new_identifier);
+
+    // 4) Clean up:
+    sqlite3_finalize(prepared_sql_statement);
+}
+
+void Database::getVehicleByID(
+    std::string license_plate,
+    Vehicle& vehicle,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // 1) Creating the SQL query command:
+    const char* sql_query = R"SQL(
+        SELECT vehicle_id_pk, license_plate, phone_number, length, height FROM vehicles
+        WHERE license_plate = ?
+    )SQL";
+
+    // 2) Preparing the statement with bindings:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vehicle get by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    sqlite3_bind_text(
+        prepared_sql_statement,
+        1,
+        license_plate.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    // 3) Executing:
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    // Row found! Extract each column by index:
+    if (return_code == SQLITE_ROW)
+    {
+        vehicle.vehicle_id = sqlite3_column_int(
+            prepared_sql_statement,
+            0
+            );
+
+        const unsigned char* license_plate_data_column = sqlite3_column_text(
+            prepared_sql_statement,
+            1
+            );
+
+        vehicle.license_plate = license_plate_data_column ? reinterpret_cast<const char*>(license_plate_data_column) : std::string();
+
+        const unsigned char* phone_number_data_column = sqlite3_column_text(
+            prepared_sql_statement,
+            2
+            );
+
+        vehicle.phone_number = phone_number_data_column ? reinterpret_cast<const char*>(phone_number_data_column) : std::string();
+
+        vehicle.length = sqlite3_column_double(
+            prepared_sql_statement,
+            3
+            );
+
+        vehicle.height = sqlite3_column_double(
+            prepared_sql_statement,
+            4
+            );
+
+        is_successful = true;
+        outcome_message = std::string("Vehicle get by ID succeeded.");
+    }
+
+    // Operation completed, but row was not found:
+    else if (return_code == SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vehicle get by ID failed: ") + std::string("No Vehicle found with license plate = ") + license_plate;
+    }
+
+    // Operation did not complete (something has seriously gone wrong):
+    else
+    {
+        is_successful = false;
+        outcome_message = std::string("Vehicle get by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+    }
 
     // 4) Clean up:
     sqlite3_finalize(prepared_sql_statement);
