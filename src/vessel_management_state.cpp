@@ -16,7 +16,6 @@
 #include "global.hpp"
 
 static Vessel s_vessel;
-static int s_vessel_list_offset;
 static char s_user_choice;
 static bool s_is_successful;
 static std::string s_outcome_message;
@@ -37,7 +36,6 @@ VesselManagementState::~VesselManagementState()
 void VesselManagementState::onEnter()
 {
     s_vessel = Vessel();
-    s_vessel_list_offset = 0;
     std::cout <<
         "VESSEL MANAGEMENT MENU\n"
         "1) Add a new vessel\n"
@@ -214,83 +212,116 @@ void VesselManagementState::createVessel()
 // ----------------------------------------------------------------------------
 void VesselManagementState::listVessels()
 {
+    int highest_offet = -1;
+    int vessel_list_offset = 0;
     while (true) // list forever until the user exits
     {
         std::vector<Vessel> vessels(g_list_length);
-        m_database->getVessels(g_list_length, s_vessel_list_offset, vessels, s_is_successful, s_outcome_message);
-        if (s_is_successful)
-        {
-            // ****************************************************************************
-            // format and print the vessel list
-            time_t time = std::time(nullptr);
-            std::cout << "Vessel Report" << std::string(17, ' ') << std::put_time(time, "%Y-%m-%d  %H:%M:%S") << "\n";
-            std::cout
-                << "    " << std::setw(25) << std::left << "Name" << "  "
-                << std::setw(6) << std::right << "LCLL" << "  "
-                << std::setw(6) << std::right << "HCLL" << "\n";
-            bool found_one_vessel = false;
-            for (int i = 0; i < g_list_length; i++)
-            {
-                Vessel v = vessels[i];
-                if (v == NULL) {
-                    continue;
-                }
-                std::cout
-                    << std::setw(2) << std::right << v.vessel_id << ") "
-                    << std::setw(25) << std::left << v.vessel_name << "  "
-                    << std::setw(6) << std::right << std::fixed << std::setprecision(1) << v.low_ceiling_lane_length
-                    << std::setw(6) << std::right << std::fixed << std::setprecision(1) << v.high_ceiling_lane_length
-                    << "\n";
-            }
-            // ****************************************************************************
-            // prompt for page scrolling or exit
-            std::cout
-                << "\n\n"
-                << "<p> >> View the previous 5 vessels."
-                << "<n> >> View the next 5 vessels."
-                << "<e> >> Exit the list."
-                << "\n\n";
+        m_database->getVessels(g_list_length, vessel_list_offset, vessels, s_is_successful, s_outcome_message);
 
-            // ****************************************************************************
-            while (true) // prompt until valid choice
-            {
-                promptForCharacter(
-                    "Please enter your selection [<p>, <n>, <e>]: ",
-                    std::vector<char>('p', 'n', 'e'),
-                    s_user_choice,
-                    s_is_successful,
-                    s_outcome_message);
-                std::cout << "\n\n";
-                if (s_is_successful)
-                {
-                    break;
-                }
-                else
-                {
-                    std::cout << s_outcome_message << "\n\n";
-                }
-            }
-            // ****************************************************************************
-            switch (s_user_choice) // switch on choice
-            {
-            case 'p':
-                s_vessel_list_offset = std::max(0, s_vessel_list_offset - g_list_length);
-                break;
-            case 'n':
-                s_vessel_list_offset = s_vessel_list_offset + g_list_length;
-                break;
-            case 'e':
-                cout << "\n\n";
-                return;
-                break;
-            }
-            cout << "\n\n"
-            // ****************************************************************************
-        }
-        else // database read failed
+        // ****************************************************************************
+        // edge cases
+        if (!s_is_successful) 
         {
             std::cout << s_outcome_message << "\n\n";
+            return; // back to menu
+        }
+        if (vessels.size() == 0) //if user has scrolled off the edge of the list
+        {
+            if (vessel_list_offset == 0) // if offset is zero and no records were returned then the database is empty
+            {
+                std::cout << "No records available for displaying!\n\n";
+                return; //back to menu
+            }
+            else // must be at the end of the list so wrap to beginning
+            {
+                highest_offet = std::max(vessel_list_offset-g_list_length, highest_offet)-g_list_length; // remember where the end of the list is so we can wrap the other direction
+                vessel_list_offset = 0;
+                continue; // re-fetch records with the new offset
+            }
+        }        
+        // ****************************************************************************
+
+        printVesselList(vessels);
+
+        // prompt for page scrolling or exit
+        std::cout
+            << "\n\n"
+            << "<p> >> View the previous 5 vessels."
+            << "<n> >> View the next 5 vessels."
+            << "<e> >> Exit the list."
+            << "\n\n";
+
+        while (true) // prompt until valid choice from the prompt
+        {
+            promptForCharacter(
+                "Please enter your selection [<p>, <n>, <e>]: ",
+                std::vector<char>('p', 'n', 'e'),
+                s_user_choice,
+                s_is_successful,
+                s_outcome_message);
+            std::cout << "\n\n";
+            if (s_is_successful)
+            {
+                break;
+            }
+            else
+            {
+                std::cout << s_outcome_message << "\n\n";
+            }
+        }
+
+        switch (s_user_choice) //change offset for the list according to choice, or return to menu
+        {
+        case 'p':
+            vessel_list_offset = vessel_list_offset - g_list_length;
+            if (vessel_list_offset < 0) //we've scrolled off the beginning of the list
+            {
+                if (highest_offet < 0) // we haven't seen the end of the list yet so just stay here
+                {
+                    vessel_list_offset = 0;
+                }
+                else // we know where the end of the list is, wrap around and go there
+                {
+                    vessel_list_offset = highest_offet;
+                }
+            }
+            break;
+        case 'n':
+            vessel_list_offset = vessel_list_offset + g_list_length;     
+            break;
+        case 'e':
+            cout << "\n\n";
+            return; // back to menu
             break;
         }
+        cout << "\n\n"
     } // endwhile
+}
+
+// ----------------------------------------------------------------------------
+void VesselManagementState::printVesselList(std::vector<Vessel>& vessels)
+{
+    time_t time = std::time(nullptr);
+
+    //report title
+    std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time, "%Y-%m-%d  %H:%M:%S") << "\n";
+
+    // column headers
+    std::cout
+        << " ID  "
+        << std::setw(25) << std::left << "Name" << "  "
+        << std::setw(6) << std::right << "LCLL" << "  "
+        << std::setw(6) << std::right << "HCLL" << "\n";
+
+    //one row for each fetched vessel record
+    for (const Vessel& v : vessels) 
+    {
+        std::cout
+            << std::setw(3) << std::right << v.vessel_id << ") " //ID column
+            << std::setw(25) << std::left << v.vessel_name << "  " //Name column
+            << std::setw(6) << std::right << std::fixed << std::setprecision(1) << v.low_ceiling_lane_length //lcll column
+            << std::setw(6) << std::right << std::fixed << std::setprecision(1) << v.high_ceiling_lane_length //hcll column
+            << "\n";
+    }
 }
