@@ -1,7 +1,4 @@
 
-
-// ============================================================================
-
 #include <vector>
 #include <iostream>
 #include <regex>
@@ -19,6 +16,8 @@ static Vessel s_vessel;
 static char s_user_choice;
 static bool s_is_successful;
 static std::string s_outcome_message;
+
+static void printVesselList(std::vector<Vessel>& vessels);
 
 // ----------------------------------------------------------------------------
 VesselManagementState::VesselManagementState()
@@ -52,7 +51,7 @@ void VesselManagementState::onProcess()
     {
         promptForCharacter(
             "Please enter your selection [0-2]: ",
-            std::vector<char>('0', '1', '2'),
+            std::vector<char>{'0', '1', '2'},
             s_user_choice,
             s_is_successful,
             s_outcome_message
@@ -84,14 +83,14 @@ void VesselManagementState::onProcess()
     {
         case '1':
             createVessel();
-            m_state_manager->selectNextState(States.VesselManagementState);
+            m_state_manager->selectNextState(States::VesselManagementState);
             break;
         case '2':
             listVessels();
-            m_state_manager->selectNextState(States.VesselManagementState);
+            m_state_manager->selectNextState(States::VesselManagementState);
             break;
         case '0':
-            m_state_manager->selectNextState(States.MainMenuState);
+            m_state_manager->selectNextState(States::MainMenuState);
             break;
     }
 }
@@ -110,8 +109,8 @@ void VesselManagementState::createVessel()
     {
         promptForString(
             "Please enter the name of the new vessel: ",
-            std::regex(R"[\w ]{1,25}"), //match 1-25 letters, numbers, digits, case insensitive
-            s_vessel.vesselName,
+            std::regex(R"([\w ]{1,25})"), //match 1-25 letters, numbers, digits, case insensitive
+            s_vessel.vessel_name,
             s_is_successful,
             s_outcome_message);
         std::cout << "\n";
@@ -171,7 +170,7 @@ void VesselManagementState::createVessel()
     {
         promptForCharacter(
             "Are you sure you want to create this vessel [y/n]? ",
-            std::vector<char>('y', 'Y', 'n', 'N'),
+            std::vector<char>{'y', 'Y', 'n', 'N'},
             s_user_choice,
             s_is_successful,
             s_outcome_message);
@@ -206,7 +205,7 @@ void VesselManagementState::createVessel()
             std::cout << "Vessel creation operation aborted!";
             break;
     }
-    std::cout << "\n\n"
+    std::cout << "\n\n";
 }
 
 // ----------------------------------------------------------------------------
@@ -256,7 +255,7 @@ void VesselManagementState::listVessels()
         {
             promptForCharacter(
                 "Please enter your selection [<p>, <n>, <e>]: ",
-                std::vector<char>('p', 'n', 'e'),
+                std::vector<char>{'p', 'n', 'e'},
                 s_user_choice,
                 s_is_successful,
                 s_outcome_message);
@@ -291,21 +290,22 @@ void VesselManagementState::listVessels()
             vessel_list_offset = vessel_list_offset + g_list_length;     
             break;
         case 'e':
-            cout << "\n\n";
+            std::cout << "\n\n";
             return; // back to menu
             break;
         }
-        cout << "\n\n"
+        std::cout << "\n\n";
     } // endwhile
 }
 
 // ----------------------------------------------------------------------------
-void VesselManagementState::printVesselList(std::vector<Vessel>& vessels)
+static void printVesselList(std::vector<Vessel>& vessels)
 {
     time_t time = std::time(nullptr);
+    std::tm* time_ptr = std::localtime(&time);
 
     //report title
-    std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time, "%Y-%m-%d  %H:%M:%S") << "\n";
+    std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
 
     // column headers
     std::cout
