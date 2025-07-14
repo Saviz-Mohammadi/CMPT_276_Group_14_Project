@@ -187,6 +187,8 @@ void Database::addVessel(
         is_successful = false;
         outcome_message = std::string("Vessel creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
 
+        sqlite3_finalize(prepared_sql_statement);
+
         return;
     }
 
@@ -369,6 +371,97 @@ void Database::getVessels(
 
     is_successful = true;
     outcome_message = std::string("get Vessels succeeded.");
+
+    // 4) Clean up:
+    sqlite3_finalize(prepared_sql_statement);
+}
+
+void Database::addSailing(
+    Sailing sailing,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // 1) Creating the SQL query command:
+    const char* sql_query = R"SQL(
+        INSERT INTO sailings (vessel_id_fk, departure_terminal, departure_day, departure_hour, low_remaining_length, high_remaining_length)
+        VALUES (?, ?, ?, ?, ?, ?);
+    )SQL";
+
+    // 2) Preparing the statement with bindings:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Sailing creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        sailing.vessel_id
+        );
+
+    sqlite3_bind_text(
+        prepared_sql_statement,
+        2,
+        sailing.departure_terminal.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        3,
+        sailing.departure_day
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        4,
+        sailing.departure_hour
+        );
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        5,
+        sailing.low_remaining_length
+        );
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        6,
+        sailing.high_remaining_length
+        );
+
+    // 3) Executing:
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Sailing creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        sqlite3_finalize(prepared_sql_statement);
+
+        return;
+    }
+
+    sqlite3_int64 new_identifier = sqlite3_last_insert_rowid(m_sqlite3);
+
+    is_successful = true;
+    outcome_message = std::string("Sailing creation succeeded") + " with id of " + std::to_string(new_identifier);
 
     // 4) Clean up:
     sqlite3_finalize(prepared_sql_statement);
