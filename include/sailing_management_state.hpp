@@ -32,6 +32,7 @@
 
 class SailingManagementState : public State
 {
+public:
     // ----------------------------------------------------------------------------
     explicit SailingManagementState();
 
