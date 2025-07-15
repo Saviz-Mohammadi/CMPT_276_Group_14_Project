@@ -1,3 +1,4 @@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <vector>
 #include <iostream>
@@ -84,11 +85,11 @@ void VesselManagementState::onProcess()
     {
         case '1':
             createVessel();
-            m_state_manager->selectNextState(States::VesselManagementState);
+            //m_state_manager->selectNextState(States::VesselManagementState); this is redundant, state maanger is already on this state and will start it again after we return here
             break;
         case '2':
             listVessels();
-            m_state_manager->selectNextState(States::VesselManagementState);
+            //m_state_manager->selectNextState(States::VesselManagementState);
             break;
         case '0':
             m_state_manager->selectNextState(States::MainMenuState);
@@ -212,8 +213,12 @@ void VesselManagementState::createVessel()
 // ----------------------------------------------------------------------------
 void VesselManagementState::listVessels()
 {
+    // because we dont know how many records there are, if we scroll to the end of the list use this variable to remember how big the list is
     int highest_offet = -1;
+
+    // offset to the record at the beginning of the page, imcrements by g_list_length
     int vessel_list_offset = 0;
+
     while (true) // list forever until the user exits
     {
         std::vector<Vessel> vessels(g_list_length);
@@ -300,7 +305,7 @@ void VesselManagementState::listVessels()
 }
 
 // ----------------------------------------------------------------------------
-static void printVesselList(std::vector<Vessel>& vessels)
+void VesselManagementState::printVesselList(std::vector<Vessel>& vessels)
 {
     time_t time = std::time(nullptr);
     std::tm* time_ptr = std::localtime(&time);
