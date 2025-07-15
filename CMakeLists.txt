@@ -81,6 +81,7 @@ target_sources(${EXECUTABLE_NAME}
     PUBLIC
     # Global
     "${CMAKE_CURRENT_SOURCE_DIR}/include/global.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/global.cpp"
 
     # Input
     "${CMAKE_CURRENT_SOURCE_DIR}/include/input.hpp"

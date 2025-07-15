@@ -157,7 +157,7 @@ private:
 
     // ----------------------------------------------------------------------------
     void printVesselList(
-        std::vector<Vessel>& vessels // [IN] list of vessels to print on one report
+        // std::vector<Vessel>& vessels // [IN] list of vessels to print on one report
     );
     /*
     *   [Description]
