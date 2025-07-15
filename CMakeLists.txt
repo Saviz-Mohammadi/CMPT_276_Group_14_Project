@@ -97,6 +97,7 @@ target_sources(${EXECUTABLE_NAME}
 
     # Finite State Machine
     "${CMAKE_CURRENT_SOURCE_DIR}/include/state_manager.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/state_manager.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/main_menu_state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/vessel_management_state.hpp"
