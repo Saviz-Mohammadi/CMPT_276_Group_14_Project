@@ -1,3 +1,6 @@
+// TODO: Make a function called getSailingByID
+
+
 #include <iostream>
 #include "database.hpp"
 
@@ -46,7 +49,7 @@ void Database::openConnection(
         -- VESSELS
         CREATE TABLE IF NOT EXISTS vessels (
             vessel_id_pk INTEGER PRIMARY KEY AUTOINCREMENT,
-            vessel_name TEXT NOT NULL,
+            vessel_name TEXT NOT NULL UNIQUE,
             low_ceiling_lane_length REAL NOT NULL,
             high_ceiling_lane_length REAL NOT NULL
         );
@@ -67,7 +70,7 @@ void Database::openConnection(
         -- VEHICLES
         CREATE TABLE IF NOT EXISTS vehicles (
             vehicle_id_pk INTEGER PRIMARY KEY AUTOINCREMENT,
-            license_plate TEXT NOT NULL,
+            license_plate TEXT NOT NULL UNIQUE,
             phone_number TEXT NOT NULL,
             length REAL NOT NULL,
             height REAL NOT NULL
@@ -385,6 +388,7 @@ void Database::addSailing(
     )
 {
     // 1) Creating the SQL query command:
+    // TODO: Check if it exists (vessel_id_fk, departure_terminal, departure_day, departure_hour)
     const char* sql_query = R"SQL(
         INSERT INTO sailings (vessel_id_fk, departure_terminal, departure_day, departure_hour, low_remaining_length, high_remaining_length)
         VALUES (?, ?, ?, ?, ?, ?);
@@ -469,6 +473,7 @@ void Database::addSailing(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// TODO: We're assuming that the two functions of getSailingReportsByID and getVehicleByID are called before this function and provided with the correct parameters
 void Database::addReservation(
     Sailing sailing,
     Vehicle vehicle,
@@ -477,6 +482,7 @@ void Database::addReservation(
     )
 {
     // 1) Check that the sailing exists:
+    // TODO: Check if you can try using getSailingReportsByID instead of creating a new query
     const char* sql_query_check_sailing = R"SQL(
         SELECT 1 FROM sailings
         WHERE departure_terminal = ? AND departure_day = ? AND departure_hour = ?
@@ -648,7 +654,9 @@ void Database::addReservation(
     // 3) Insert reservation record:
 
     // TODO (SAVIZ): I need to do two things here: 1- Calculate where the vehicle should go and assign the correct place for low or high 2- Decrement the remaining space (For both of these I need help from the group)
-
+    // First check if the low lane is full or not, if it is full and the vehicle is not tall, place it in the high lane, if it is, all tall vehicles can only be put in the high lane. Otherwise short vehicles all go into the low lane first
+    // Tall vehicles are >= 2 meters
+    // If you put a short vehicle into the high lane there is a bool on the reservation record that you need to set
     const char* sql_query_insert_reservation = R"SQL(
         INSERT INTO reservations (sailing_id_fk, vehicle_id_fk, amount_paid, reserved_for_low_lane)
         VALUES (?, ?, ?, ?);
@@ -686,6 +694,7 @@ void Database::addReservation(
         prepared_sql_statement,
         3,
         0 // TODO (SAVIZ): How do we calculate the amount paid?
+        // Amount paid can be calculated inside the completeBoarding menu state 
         );
 
     // NOTE (SAVIZ): There simply isn’t a 'sqlite3_bind_bool()' in the API. Booleans in SQL are just integers:
@@ -712,6 +721,7 @@ void Database::addReservation(
     outcome_message = std::string("Reservation creation succeeded");
 }
 
+//TODO: Call getSailingReportsByID and getVehicleByID before calling this function
 void Database::removeReservation(
     std::string departure_terminal,
     int departure_day,
@@ -900,6 +910,7 @@ void Database::removeReservation(
     }
 
     // TODO (SAVIZ): I need to also find a way to increment the sailing remaining length.
+    // Note: Every vehicle subtracts an extra 0.5 meters from the remainign length whenever it is added to a sailing, when removing a reservation, make sure to account for this
 
     // 5) Success
     is_successful = true;
@@ -1132,6 +1143,7 @@ void Database::completeBoarding(
     }
 
     double amount = 100.0; // TODO: replace with real calculation or parameter
+    // Note: We are now doing this in the completeBoarding menu state
 
     sqlite3_bind_double(
         prepared_sql_statement,
