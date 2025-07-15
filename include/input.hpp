@@ -168,4 +168,38 @@ void promptForString(
 */
 // ----------------------------------------------------------------------------
 
+
+// TODO (SAVIZ): I need to add comments for these later:
+
+void continuouslyPromptForInteger(
+    const std::string& input_prompt,
+    int min,
+    int max,
+    int& acquired_integer
+    );
+
+void continuouslyPromptForReal(
+    const std::string& input_prompt,
+    double min,
+    double max,
+    double& acquired_real
+    );
+
+void continuouslyPromptForCharacter(
+    const std::string& input_prompt,
+    const std::vector<char>& allowed_options,
+    char& acquired_character
+    );
+
+void continuouslyPromptForString(
+    const std::string& input_prompt,
+    std::string& acquired_string
+    );
+
+void continuouslyPromptForString(
+    const std::string& input_prompt,
+    const std::regex& validation_pattern,
+    std::string& acquired_string
+    );
+
 #endif // INPUT_HPP

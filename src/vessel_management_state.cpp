@@ -221,7 +221,7 @@ void VesselManagementState::listVessels()
 
         // ****************************************************************************
         // edge cases
-        if (!g_is_successful) 
+        if (!g_is_successful)
         {
             std::cout << g_outcome_message << "\n\n";
             return; // back to menu
@@ -239,7 +239,7 @@ void VesselManagementState::listVessels()
                 vessel_list_offset = 0;
                 continue; // re-fetch records with the new offset
             }
-        }        
+        }
         // ****************************************************************************
 
         printVesselList(vessels);
@@ -288,7 +288,7 @@ void VesselManagementState::listVessels()
             }
             break;
         case 'n':
-            vessel_list_offset = vessel_list_offset + g_list_length;     
+            vessel_list_offset = vessel_list_offset + g_list_length;
             break;
         case 'e':
             std::cout << "\n\n";
@@ -316,7 +316,7 @@ static void printVesselList(std::vector<Vessel>& vessels)
         << std::setw(6) << std::right << "HCLL" << "\n";
 
     //one row for each fetched vessel record
-    for (const Vessel& v : vessels) 
+    for (const Vessel& v : vessels)
     {
         std::cout
             << std::setw(3) << std::right << v.vessel_id << ") " //ID column

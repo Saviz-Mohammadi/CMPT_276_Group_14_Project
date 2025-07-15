@@ -391,3 +391,135 @@ void promptForString(
     is_successful = true;
     outcome_message = "";
 }
+
+void continuouslyPromptForInteger(
+    const std::string& input_prompt,
+    int min,
+    int max,
+    int& acquired_integer
+    )
+{
+    bool is_successful = false;
+    std::string outcome_message = "";
+
+    do
+    {
+        promptForInteger(
+            input_prompt,
+            min,
+            max,
+            acquired_integer,
+            is_successful,
+            outcome_message
+            );
+
+        if(!is_successful)
+        {
+            std::cout << outcome_message << "\n\n";
+        }
+    }while(!is_successful);
+}
+
+void continuouslyPromptForReal(
+    const std::string& input_prompt,
+    double min,
+    double max,
+    double& acquired_real
+    )
+{
+    bool is_successful = false;
+    std::string outcome_message = "";
+
+    do
+    {
+        promptForReal(
+            input_prompt,
+            min,
+            max,
+            acquired_real,
+            is_successful,
+            outcome_message
+            );
+
+        if(!is_successful)
+        {
+            std::cout << outcome_message << "\n\n";
+        }
+    }while(!is_successful);
+}
+
+void continuouslyPromptForCharacter(
+    const std::string& input_prompt,
+    const std::vector<char>& allowed_options,
+    char& acquired_character
+    )
+{
+    bool is_successful = false;
+    std::string outcome_message = "";
+
+    do
+    {
+        promptForCharacter(
+            input_prompt,
+            allowed_options,
+            acquired_character,
+            is_successful,
+            outcome_message
+            );
+
+        if (!is_successful)
+        {
+            std::cout << outcome_message << "\n\n";
+        }
+    }while(!is_successful);
+}
+
+void continuouslyPromptForString(
+    const std::string& input_prompt,
+    std::string& acquired_string
+    )
+{
+    bool is_successful = false;
+    std::string outcome_message = "";
+
+    do
+    {
+        promptForString(
+            input_prompt,
+            acquired_string,
+            is_successful,
+            outcome_message
+            );
+
+        if (!is_successful)
+        {
+            std::cout << outcome_message << "\n\n";
+        }
+    }while(!is_successful);
+}
+
+void continuouslyPromptForString(
+    const std::string& input_prompt,
+    const std::regex& validation_pattern,
+    std::string& acquired_string
+    )
+{
+    bool is_successful = false;
+    std::string outcome_message = "";
+
+    do
+    {
+        promptForString(
+            input_prompt,
+            validation_pattern,
+            acquired_string,
+            is_successful,
+            outcome_message
+            );
+
+        if (!is_successful)
+        {
+            std::cout << outcome_message << "\n\n";
+        }
+    }while(!is_successful);
+}
