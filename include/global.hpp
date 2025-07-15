@@ -35,6 +35,12 @@
 // Specifies the default length for returned lists, such as lists of vessels or sailing reports.
 extern int g_list_length;
 
+// global variable to pass to input functions to avoid creating multiple instances to check success.
+extern bool g_is_successful;
+
+// global variable to pass to input functions to avoid creating multiple instances to get outcome messages.
+extern std::string g_outcome_message;
+
 // A default set of accepted characters for yes/no questions, intended for repeated use.
 extern std::vector<char> g_allowed_yes_no_responses;
 

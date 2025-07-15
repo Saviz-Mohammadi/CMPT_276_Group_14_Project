@@ -12,10 +12,11 @@
 #include "database.hpp"
 #include "global.hpp"
 
+// static container for storing vessel info when creating a vessel
 static Vessel s_vessel;
+
+// static container for storing the users single character responses
 static char s_user_choice;
-static bool s_is_successful;
-static std::string s_outcome_message;
 
 static void printVesselList(std::vector<Vessel>& vessels);
 
@@ -53,15 +54,15 @@ void VesselManagementState::onProcess()
             "Please enter your selection [0-2]: ",
             std::vector<char>{'0', '1', '2'},
             s_user_choice,
-            s_is_successful,
-            s_outcome_message
+            g_is_successful,
+            g_outcome_message
             );
 
-        if(!s_is_successful)
+        if(!g_is_successful)
         {
-            std::cout << s_outcome_message << "\n\n";
+            std::cout << g_outcome_message << "\n\n";
         }
-    } while(!s_is_successful);
+    } while(!g_is_successful);
 
     // NOTE (SAVIZ): Here is some code to help calling 'getVessels()':
 
@@ -111,16 +112,16 @@ void VesselManagementState::createVessel()
             "Please enter the name of the new vessel: ",
             std::regex(R"([\w ]{1,25})"), //match 1-25 letters, numbers, digits, case insensitive
             s_vessel.vessel_name,
-            s_is_successful,
-            s_outcome_message);
+            g_is_successful,
+            g_outcome_message);
         std::cout << "\n";
-        if (s_is_successful)
+        if (g_is_successful)
         {
             break;
         }
         else
         {
-            std::cout << s_outcome_message << "\n";
+            std::cout << g_outcome_message << "\n";
         }
     }
 
@@ -131,16 +132,16 @@ void VesselManagementState::createVessel()
             "Please enter the \"High-Ceiling Lane Length\" (HCLL) [0-1200]: ",
             0, 1200,
             s_vessel.high_ceiling_lane_length,
-            s_is_successful,
-            s_outcome_message);
+            g_is_successful,
+            g_outcome_message);
         std::cout << "\n";
-        if (s_is_successful)
+        if (g_is_successful)
         {
             break;
         }
         else
         {
-            std::cout << s_outcome_message << "\n";
+            std::cout << g_outcome_message << "\n";
         }
     }
 
@@ -151,17 +152,17 @@ void VesselManagementState::createVessel()
             "Please enter the \"Low-Ceiling Lane Length\" (LCLL) [0-1200]: ",
             0, 1200,
             s_vessel.low_ceiling_lane_length,
-            s_is_successful,
-            s_outcome_message);
+            g_is_successful,
+            g_outcome_message);
         std::cout << "\n";
 
-        if (s_is_successful)
+        if (g_is_successful)
         {
             break;
         }
         else
         {
-            std::cout << s_outcome_message << "\n";
+            std::cout << g_outcome_message << "\n";
         }
     }
     std::cout << "\n";
@@ -172,17 +173,17 @@ void VesselManagementState::createVessel()
             "Are you sure you want to create this vessel [y/n]? ",
             std::vector<char>{'y', 'Y', 'n', 'N'},
             s_user_choice,
-            s_is_successful,
-            s_outcome_message);
+            g_is_successful,
+            g_outcome_message);
         std::cout << "\n";
 
-        if (s_is_successful)
+        if (g_is_successful)
         {
             break;
         }
         else
         {
-            std::cout << s_outcome_message << "\n";
+            std::cout << g_outcome_message << "\n";
         }
     }
     std::cout << "\n";
@@ -190,14 +191,14 @@ void VesselManagementState::createVessel()
     switch (s_user_choice) {
         case 'y':
         case 'Y': //try vessel record creation
-            m_database->addVessel(s_vessel, s_is_successful, s_outcome_message);
-            if (s_is_successful)
+            m_database->addVessel(s_vessel, g_is_successful, g_outcome_message);
+            if (g_is_successful)
             {
                 std::cout << "New vessel successfully created!";
             }
             else
             {
-                std::cout << s_outcome_message;
+                std::cout << g_outcome_message;
             }
             break;
         case 'n':
@@ -216,13 +217,13 @@ void VesselManagementState::listVessels()
     while (true) // list forever until the user exits
     {
         std::vector<Vessel> vessels(g_list_length);
-        m_database->getVessels(g_list_length, vessel_list_offset, vessels, s_is_successful, s_outcome_message);
+        m_database->getVessels(g_list_length, vessel_list_offset, vessels, g_is_successful, g_outcome_message);
 
         // ****************************************************************************
         // edge cases
-        if (!s_is_successful) 
+        if (!g_is_successful) 
         {
-            std::cout << s_outcome_message << "\n\n";
+            std::cout << g_outcome_message << "\n\n";
             return; // back to menu
         }
         if (vessels.size() == 0) //if user has scrolled off the edge of the list
@@ -257,16 +258,16 @@ void VesselManagementState::listVessels()
                 "Please enter your selection [<p>, <n>, <e>]: ",
                 std::vector<char>{'p', 'n', 'e'},
                 s_user_choice,
-                s_is_successful,
-                s_outcome_message);
+                g_is_successful,
+                g_outcome_message);
             std::cout << "\n\n";
-            if (s_is_successful)
+            if (g_is_successful)
             {
                 break;
             }
             else
             {
-                std::cout << s_outcome_message << "\n\n";
+                std::cout << g_outcome_message << "\n\n";
             }
         }
 

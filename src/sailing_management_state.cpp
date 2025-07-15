@@ -14,8 +14,6 @@
 
 static Sailing s_sailing;
 static char s_user_choice;
-static bool s_is_successful;
-static std::string s_outcome_message;
 
 // ----------------------------------------------------------------------------
 SailingManagementState::SailingManagementState()
@@ -53,15 +51,15 @@ void SailingManagementState::onProcess()
             "Please enter your selection [0-4]: ",
             std::vector<char>{'0', '1', '2', '3', '4'},
             s_user_choice,
-            s_is_successful,
-            s_outcome_message
+            g_is_successful,
+            g_outcome_message
         );
 
-        if (!s_is_successful)
+        if (!g_is_successful)
         {
-            std::cout << s_outcome_message << "\n\n";
+            std::cout << g_outcome_message << "\n\n";
         }
-    } while (!s_is_successful);
+    } while (!g_is_successful);
 
     // Switch on selection and start the appropriate action:
     switch (s_user_choice)
