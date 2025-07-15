@@ -53,3 +53,66 @@ Sailing::Sailing(
 }
 
 Sailing::~Sailing() = default;
+
+Reservation::Reservation():
+    sailing_id(0),
+    vehicle_id(0),
+    amount_paid(0),
+    reserved_for_low_lane(false)
+{   
+}
+
+Reservation::Reservation(
+    const int sailing_id,
+    const int vehicle_id,
+    const int amount_paid,
+    const bool reserved_for_low_lane) :
+    sailing_id(sailing_id),
+    vehicle_id(vehicle_id),
+    amount_paid(amount_paid),
+    reserved_for_low_lane(reserved_for_low_lane)
+{
+}
+
+Reservation::~Reservation()= default;
+
+Vehicle::Vehicle() :
+    vehicle_id(0),
+    license_plate(),
+    phone_number(),
+    length(0.0),
+    height(0.0)
+{
+}
+
+Vehicle::Vehicle(
+    const int vehicle_id,
+    const std::string& license_plate,
+    const std::string& phone_number,
+    const double length,
+    const double height) :
+    vehicle_id(vehicle_id),
+    license_plate(license_plate),
+    phone_number(phone_number),
+    length(length),
+    height(height)
+{
+}
+Vehicle::~Vehicle() = default;
+
+SailingReport::SailingReport() :
+    sailing(),
+    vessel(),
+    vehicles(0)
+{
+}
+SailingReport::SailingReport(
+    const Sailing& sailing,
+    const Vessel& vessel,
+    const int vehicles) :
+    sailing(sailing),
+    vessel(vessel),
+    vehicles(vehicles)
+{
+}
+SailingReport::~SailingReport() = default;

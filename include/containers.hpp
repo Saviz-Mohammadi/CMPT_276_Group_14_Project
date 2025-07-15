@@ -85,8 +85,8 @@ public:
 
 public:
     int vehicle_id;
-    std::string& license_plate;
-    std::string& phone_number;
+    std::string license_plate;
+    std::string phone_number;
     double length;
     double height;
 };
@@ -95,7 +95,7 @@ struct SailingReport
 {
 public:
     explicit SailingReport();
-    explicit SailingReport(const Sailing sailing, const Vessel vessel, const int vehicles);
+    explicit SailingReport(const Sailing& sailing, const Vessel& vessel, const int vehicles);
     ~SailingReport();
 
 public:
