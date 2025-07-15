@@ -85,11 +85,11 @@ void VesselManagementState::onProcess()
     {
         case '1':
             createVessel();
-            m_state_manager->selectNextState(States::VesselManagementState);
+            //m_state_manager->selectNextState(States::VesselManagementState); this is redundant, state maanger is already on this state and will start it again after we return here
             break;
         case '2':
             listVessels();
-            m_state_manager->selectNextState(States::VesselManagementState);
+            //m_state_manager->selectNextState(States::VesselManagementState);
             break;
         case '0':
             m_state_manager->selectNextState(States::MainMenuState);
