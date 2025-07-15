@@ -44,7 +44,7 @@ StateManager::selectNextState(States next_state)
 	case (States::SailingManagementState):
 		m_state = &m_sailing_management_state;
 		break;
-	case (States::ReservationsManagementState):
+	case (States::ReservationManagementState):
 		m_state = &m_reservation_management_state;
 		break;
 	case (States::BoardingState):
