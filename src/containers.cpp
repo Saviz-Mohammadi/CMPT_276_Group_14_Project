@@ -98,6 +98,7 @@ Vehicle::Vehicle(
     height(height)
 {
 }
+
 Vehicle::~Vehicle() = default;
 
 SailingReport::SailingReport() :
@@ -106,6 +107,7 @@ SailingReport::SailingReport() :
     vehicles(0)
 {
 }
+
 SailingReport::SailingReport(
     const Sailing& sailing,
     const Vessel& vessel,
@@ -115,4 +117,5 @@ SailingReport::SailingReport(
     vehicles(vehicles)
 {
 }
+
 SailingReport::~SailingReport() = default;

@@ -62,6 +62,30 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/$<CONFIG>/lib_static") #
 # [[ ----------------------------------------------------------------------- ]]
 # [[ ----------------------------------------------------------------------- ]]
 
+set(HEADERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/global.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/input.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/containers.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/database.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/state_manager.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/main_menu_state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/vessel_management_state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/sailing_management_state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/reservation_management_state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/boarding_state.hpp"
+)
+
+set(SOURCES
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/global.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/input.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/containers.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp"
+    #"${CMAKE_CURRENT_SOURCE_DIR}/src/state_manager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/vessel_management_state.cpp"
+    #"${CMAKE_CURRENT_SOURCE_DIR}/src/boarding_state.cpp"
+)
+
 add_executable(${EXECUTABLE_NAME})
 
 set_target_properties(${EXECUTABLE_NAME}
@@ -77,41 +101,45 @@ target_include_directories(${EXECUTABLE_NAME}
     "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 target_sources(${EXECUTABLE_NAME}
-
     PUBLIC
-    # Global
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/global.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/global.cpp"
-
-    # Input
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/input.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/input.cpp"
-
-    # Containers
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/containers.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/containers.cpp"
-
-    # Database
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/database.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp"
-
-    # Finite State Machine
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/state_manager.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/state_manager.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/state.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/main_menu_state.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/vessel_management_state.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/vessel_management_state.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/sailing_management_state.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/reservation_management_state.hpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/include/boarding_state.hpp"
-
+        ${HEADERS}
     PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
+        ${SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp"
+)
 
 # [[ ----------------------------------------------------------------------- ]]
 # [[ ----------------------------------------------------------------------- ]]
 # [[ Executable Target ]]
+
+
+
+
+
+# [[ External libraries ]]
+# [[ ----------------------------------------------------------------------- ]]
+# [[ ----------------------------------------------------------------------- ]]
+
+include(FetchContent)
+
+# Catch2 (Unit testing)
+FetchContent_Declare(Catch2
+
+    GIT_REPOSITORY "https://github.com/catchorg/Catch2.git"
+    GIT_TAG "v3.4.0"
+    GIT_SHALLOW TRUE)
+
+FetchContent_MakeAvailable(Catch2)
+
+include(CTest)
+include(Catch)
+set(CMAKE_CATCH_DISCOVER_TESTS_DISCOVERY_MODE PRE_TEST)
+
+target_link_libraries(${EXECUTABLE_NAME} PRIVATE Catch2::Catch2WithMain)
+
+# [[ ----------------------------------------------------------------------- ]]
+# [[ ----------------------------------------------------------------------- ]]
+# [[ External libraries ]]
 
 
 
@@ -159,3 +187,17 @@ target_link_libraries(${EXECUTABLE_NAME}
 # [[ ----------------------------------------------------------------------- ]]
 # [[ ----------------------------------------------------------------------- ]]
 # [[ Libraries ]]
+
+
+
+
+
+# [[ Adding unit tests ]]
+# [[ ----------------------------------------------------------------------- ]]
+# [[ ----------------------------------------------------------------------- ]]
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/unit_tests")
+
+# [[ ----------------------------------------------------------------------- ]]
+# [[ ----------------------------------------------------------------------- ]]
+# [[ Adding unit tests]]
