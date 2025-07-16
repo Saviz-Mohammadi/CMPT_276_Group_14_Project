@@ -1,3 +1,10 @@
+// 1 amount 0, 
+//2 check sailing exist and abort to state
+//3 if vehcile doesnot exist call addvehicle to create it without any id
+//4 calulation for lanes (saviz) ASK Group about this
+
+
+
 #include <vector>
 #include <iostream>
 #include "state.hpp"
@@ -11,6 +18,9 @@
 
 // static container for storing Reservation info when creating a reservation
 static Reservation s_reservation;
+
+// static container for storing Vehicle info when creating a reservation
+static Vehicle s_vehicle;
 
 // static container for storing the users single character responses
 static char s_user_choice;
@@ -85,14 +95,48 @@ void ReservationManagementState::onExit()
 
 // ----------------------------------------------------------------------------
 void ReservationManagementState::createReservation()
-{
-    //   //Sailing ID (assuming format: 3 letters-2 digits-2 digits like "AHS-22-10")
-    // std::regex sailing_pattern("[A-Z]{3}-\\d{2}-\\d{2}");
-    // continuouslyPromptForString("Please enter the ID of the sailing [TTT-dd-hh]: ", sailing_pattern,s_reservation.sailing_id);
+{   
+    std::string sailing_data;
+    std::string license_plate;
+    std::string phone_number;
 
-    // //License plate (pattern A76-2H4)
-    // std::regex plate_pattern("[A-Z0-9]{3}-[A-Z0-9]{3}");
-    // continuouslyPromptForString("Please enter the licence plate of the vehicle: ", plate_pattern, s_reservation.vehicle_id);
+      //Sailing ID (assuming format: 3 letters-2 digits-2 digits like "AHS-22-10")
+    std::regex sailing_pattern("[A-Z]{3}-\\d{2}-\\d{2}");
+
+
+    //  -----------------------do again---------------------
+    // do
+    // {
+    //     continuouslyPromptForString("Please enter the ID of the sailing [TTT-dd-hh]: ", sailing_pattern,sailing_data); 
+
+        // Parse components
+        std::string terminal = sailing_data.substr(0, 3);
+        int day = std::stoi(sailing_data.substr(4, 2));
+        int hour = std::stoi(sailing_data.substr(7, 2));
+
+        SailingReport sailing_report;
+
+        m_database->getSailingReportByID(terminal, day, hour, sailing_report, g_is_successful, g_outcome_message);
+
+        if (!g_is_successful) {
+            std::cout << g_outcome_message << "\n\n";
+            m_state_manager->selectNextState(States::ReservationManagementState);
+        }
+
+    // } while (!g_is_successful);
+    
+    
+
+    //License plate (pattern A76-2H4)
+    std::regex plate_pattern("[A-Z0-9]{3}-[A-Z0-9]{3}");
+   
+        continuouslyPromptForString("Please enter the licence plate of the vehicle: ", plate_pattern,license_plate);
+
+        m_database->getVehicleByID(license_plate,s_vehicle,g_is_successful,g_outcome_message);
+
+  
+    
+    
 
     // //Phone number (12-digit only digits)
     // std::regex phone_pattern("\\d{12}");
