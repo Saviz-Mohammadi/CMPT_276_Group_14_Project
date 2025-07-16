@@ -22,6 +22,9 @@ static Reservation s_reservation;
 // static container for storing Vehicle info when creating a reservation
 static Vehicle s_vehicle;
 
+// static container for storing Sailing info
+static Sailing s_sailing;
+
 // static container for storing the users single character responses
 static char s_user_choice;
 
@@ -97,66 +100,73 @@ void ReservationManagementState::onExit()
 void ReservationManagementState::createReservation()
 {   
     std::string sailing_data;
-    std::string license_plate;
-    std::string phone_number;
+    // std::string license_plate;
+    // std::string phone_number;
 
       //Sailing ID (assuming format: 3 letters-2 digits-2 digits like "AHS-22-10")
     std::regex sailing_pattern("[A-Z]{3}-\\d{2}-\\d{2}");
+    continuouslyPromptForString("Please enter the ID of the sailing [TTT-dd-hh]: ", sailing_pattern,sailing_data); 
 
+    // Parse components
+    std::string terminal = sailing_data.substr(0, 3);
+    int day = std::stoi(sailing_data.substr(4, 2));
+    int hour = std::stoi(sailing_data.substr(7, 2));
 
-    //  -----------------------do again---------------------
-    // do
-    // {
-    //     continuouslyPromptForString("Please enter the ID of the sailing [TTT-dd-hh]: ", sailing_pattern,sailing_data); 
+    //savis is xhanging this
 
-        // Parse components
-        std::string terminal = sailing_data.substr(0, 3);
-        int day = std::stoi(sailing_data.substr(4, 2));
-        int hour = std::stoi(sailing_data.substr(7, 2));
+    m_database->getSailingByID(terminal, day, hour, s_sailing, g_is_successful, g_outcome_message);
 
-        SailingReport sailing_report;
-
-        m_database->getSailingReportByID(terminal, day, hour, sailing_report, g_is_successful, g_outcome_message);
-
-        if (!g_is_successful) {
-            std::cout << g_outcome_message << "\n\n";
-            m_state_manager->selectNextState(States::ReservationManagementState);
-        }
-
-    // } while (!g_is_successful);
-    
-    
+    if (!g_is_successful) {
+        std::cout << g_outcome_message << "\n\n";
+        m_state_manager->selectNextState(States::ReservationManagementState);
+    }    
 
     //License plate (pattern A76-2H4)
     std::regex plate_pattern("[A-Z0-9]{3}-[A-Z0-9]{3}");
-   
-        continuouslyPromptForString("Please enter the licence plate of the vehicle: ", plate_pattern,license_plate);
+    continuouslyPromptForString("Please enter the licence plate of the vehicle: ", plate_pattern,s_vehicle.license_plate);
 
-        m_database->getVehicleByID(license_plate,s_vehicle,g_is_successful,g_outcome_message);
+    //Phone number (12-digit only digits)
+    std::regex phone_pattern("\\d{12}");
+    continuouslyPromptForString("Please enter the phone number of the owner: ", phone_pattern, s_vehicle.phone_number);
+
+    //Vehicle length [0–99.9]
+    continuouslyPromptForReal("Please enter the length of the vehicle [0-99.9]: ", 0, 99, s_vehicle.length);
+
+    //Vehicle height [0–9.9]
+    continuouslyPromptForReal("Please enter the height of the vehicle [0-9.9]: ", 0.0, 9.9, s_vehicle.height);
+
+    m_database->getVehicleByID(s_vehicle.license_plate,s_vehicle,g_is_successful,g_outcome_message);
+
+    if (!g_is_successful) {
+        m_database->addVehicle(s_vehicle,g_is_successful,g_outcome_message);
+        if (!g_is_successful) {
+        std::cout << g_outcome_message << "\n\n";
+        m_state_manager->selectNextState(States::ReservationManagementState);
+        } 
+    }
+    
+    
 
   
     
     
 
-    // //Phone number (12-digit only digits)
-    // std::regex phone_pattern("\\d{12}");
-    // continuouslyPromptForString("Please enter the phone number of the owner: ", phone_pattern, s_reservation.);
+    char confirm;
 
-    // //Vehicle length [0–99.9]
-    // continuouslyPromptForInteger("Please enter the length of the vehicle [0-99.9]: ", 0, 99, vehicle_length);
+    //Confirmation
+    continuouslyPromptForCharacter("Are you sure you want to create this new reservation [y/n]? ", {'y', 'n'}, confirm);
 
-    // //Vehicle height [0–9.9]
-    // continuouslyPromptForReal("Please enter the height of the vehicle [0-9.9]: ", 0.0, 9.9, vehicle_height);
-
-    // //Confirmation
-    // continuouslyPromptForCharacter("Are you sure you want to create this new reservation [y/n]? ", {'y', 'n'}, confirm);
-
-    // // Final message
-    // if (confirm == 'y') {
-    //     std::cout << "\nNew reservation successfully created!\n";
-    // } else {
-    //     std::cout << "\nReservation cancelled.\n";
-    // }
+    // Final message
+    if (confirm == 'y') {
+        m_database->addReservation(s_sailing,s_vehicle,g_is_successful,g_outcome_message);
+        if (!g_is_successful) {
+        std::cout << g_outcome_message << "\n\n";
+        m_state_manager->selectNextState(States::ReservationManagementState);
+        } 
+        std::cout << "\nNew reservation successfully created!\n";
+    } else {
+        std::cout << "\nReservation Abort.\n";
+    }
 }
 
 // ----------------------------------------------------------------------------
