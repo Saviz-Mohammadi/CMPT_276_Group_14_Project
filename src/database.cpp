@@ -1,8 +1,7 @@
-// TODO: Make a function called getSailingByID
-
-
 #include <iostream>
 #include "database.hpp"
+
+// WARNING (SAVIZ): When using 'sqlite3_prepare_v2()' with 'nullptr' as the final parameter transactions will not work because it counts as multiple statements. If you wish to use this with multiple statements, then you need to bind to a call-back and loop thourgh it.
 
 Database::Database() : m_sqlite3(nullptr)
 {
@@ -34,15 +33,6 @@ void Database::openConnection(
         return;
     }
 
-    // TODO (SAVIZ): Make license_plate in vehcile a unique field.
-
-    /*
-     * The { R"SQL(...)SQL" } syntax is just C++11’s raw string literal.
-     *
-     * 'R'     >> At the start tells: "this is a raw string".
-     * '"SQL(' >> Is the opening delimiter (Can be anything). It just marks the start of the content. Everything up to the matching ')SQL"' is taken literally (no escaping of " or \ is needed).
-     * ')SQL"' >> Closes the literal.
-    */
     const char* sql_query = R"SQL(
         BEGIN TRANSACTION;
 
@@ -64,7 +54,10 @@ void Database::openConnection(
             low_remaining_length REAL NOT NULL,
             high_remaining_length REAL NOT NULL,
 
-            FOREIGN KEY(vessel_id_fk) REFERENCES vessels(vessel_id_pk)
+            FOREIGN KEY(vessel_id_fk) REFERENCES vessels(vessel_id_pk),
+
+            -- Making the combination of the sailing ID unique:
+            UNIQUE(departure_terminal, departure_day, departure_hour)
         );
 
         -- VEHICLES
@@ -145,8 +138,6 @@ void Database::addVessel(
     // 2) Preparing the statement with bindings:
     sqlite3_stmt* prepared_sql_statement = nullptr;
 
-    // NOTE (SAVIZ): Using version 2 (v2) instead of 'sqlite3_prepare()' for better performance and safety.
-    // WARNING (SAVIZ): When using 'sqlite3_prepare_v2()' with 'nullptr' as the final parameter transactions will not work because it counts as multiple statements. If you wish to use this with multiple statements, then you need to bind to a call-back and loop thourgh it.
     int return_code = sqlite3_prepare_v2(
         m_sqlite3,
         sql_query,
@@ -197,10 +188,8 @@ void Database::addVessel(
         return;
     }
 
-    sqlite3_int64 new_identifier = sqlite3_last_insert_rowid(m_sqlite3);
-
     is_successful = true;
-    outcome_message = std::string("Vessel creation succeeded") + " with id of " + std::to_string(new_identifier);
+    outcome_message = std::string("Vessel creation succeeded");
 
     // 4) Clean up:
     sqlite3_finalize(prepared_sql_statement);
@@ -388,7 +377,6 @@ void Database::addSailing(
     )
 {
     // 1) Creating the SQL query command:
-    // TODO: Check if it exists (vessel_id_fk, departure_terminal, departure_day, departure_hour)
     const char* sql_query = R"SQL(
         INSERT INTO sailings (vessel_id_fk, departure_terminal, departure_day, departure_hour, low_remaining_length, high_remaining_length)
         VALUES (?, ?, ?, ?, ?, ?);
@@ -464,27 +452,118 @@ void Database::addSailing(
         return;
     }
 
-    sqlite3_int64 new_identifier = sqlite3_last_insert_rowid(m_sqlite3);
-
     is_successful = true;
-    outcome_message = std::string("Sailing creation succeeded") + " with id of " + std::to_string(new_identifier);
+    outcome_message = std::string("Sailing creation succeeded");
 
     // 4) Clean up:
     sqlite3_finalize(prepared_sql_statement);
 }
 
-// TODO: We're assuming that the two functions of getSailingReportsByID and getVehicleByID are called before this function and provided with the correct parameters
-void Database::addReservation(
+void Database::removeSailing(
     Sailing sailing,
-    Vehicle vehicle,
     bool& is_successful,
     std::string& outcome_message
     )
 {
-    // 1) Check that the sailing exists:
-    // TODO: Check if you can try using getSailingReportsByID instead of creating a new query
-    const char* sql_query_check_sailing = R"SQL(
-        SELECT 1 FROM sailings
+    // 1) Delete all reservations for this sailing
+    const char* sql_query_delete_reservations = R"SQL(
+        DELETE FROM reservations
+        WHERE sailing_id_fk = ?;
+    )SQL";
+
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_delete_reservations,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Sailing deletion failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        sailing.sailing_id
+        );
+
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Sailing deletion failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    // 2) Delete the sailing record
+    const char* sql_query_delete_sail = R"SQL(
+        DELETE FROM sailings
+        WHERE sailing_id_pk = ?;
+    )SQL";
+
+    return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_delete_sail,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Sailing deletion failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        sailing.sailing_id
+        );
+
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Sailing deletion failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    // 4) Success
+    is_successful = true;
+    outcome_message = std::string("Sailing deletion succeeded");
+}
+
+void Database::getSailingByID(
+    std::string departure_terminal,
+    int departure_day,
+    int departure_hour,
+    Sailing &sailing,
+    bool &is_successful,
+    std::string &outcome_message
+    )
+{
+    // 1) Prepare the SELECT statement
+    const char* sql_query = R"SQL(
+        SELECT sailing_id_pk, vessel_id_fk, departure_terminal, departure_day, departure_hour, low_remaining_length, high_remaining_length FROM sailings
         WHERE departure_terminal = ? AND departure_day = ? AND departure_hour = ?
         LIMIT 1;
     )SQL";
@@ -493,7 +572,7 @@ void Database::addReservation(
 
     int return_code = sqlite3_prepare_v2(
         m_sqlite3,
-        sql_query_check_sailing,
+        sql_query,
         -1,
         &prepared_sql_statement,
         nullptr
@@ -502,15 +581,16 @@ void Database::addReservation(
     if(return_code != SQLITE_OK)
     {
         is_successful = false;
-        outcome_message = std::string("Reservation creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Get sailing by ID failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
 
+    // 2) Bind parameters
     sqlite3_bind_text(
         prepared_sql_statement,
         1,
-        sailing.departure_terminal.c_str(),
+        departure_terminal.c_str(),
         -1,
         SQLITE_TRANSIENT
         );
@@ -518,151 +598,100 @@ void Database::addReservation(
     sqlite3_bind_int(
         prepared_sql_statement,
         2,
-        sailing.departure_day
+        departure_day
         );
 
     sqlite3_bind_int(
         prepared_sql_statement,
         3,
-        sailing.departure_hour
+        departure_hour
         );
 
+    // 3) Execute and fetch
     return_code = sqlite3_step(prepared_sql_statement);
-
-    sqlite3_finalize(prepared_sql_statement);
-
-    if(return_code != SQLITE_ROW)
-    {
-        is_successful = false;
-        outcome_message = std::string("Reservation creation failed: ") + "Sailing not found for ID of " + sailing.departure_terminal + "-" + std::to_string(sailing.departure_day) + "-" + std::to_string(sailing.departure_hour);
-
-        return;
-    }
-
-    // 1) Try to find existing vehicle by license plate:
-    const char* sql_query_find_vehicle = R"SQL(
-        SELECT vehicle_id_pk FROM vehicles
-        WHERE license_plate = ?
-        LIMIT 1;
-    )SQL";
-
-    return_code = sqlite3_prepare_v2(
-        m_sqlite3,
-        sql_query_find_vehicle,
-        -1,
-        &prepared_sql_statement,
-        nullptr
-        );
-
-    if(return_code != SQLITE_OK)
-    {
-        is_successful = false;
-        outcome_message = std::string("Reservation creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
-
-        return;
-    }
-
-    sqlite3_bind_text(
-        prepared_sql_statement,
-        1,
-        vehicle.license_plate.c_str(),
-        -1,
-        SQLITE_TRANSIENT
-        );
-
-    return_code = sqlite3_step(prepared_sql_statement);
-
-    int vehicle_id_pk = 0;
 
     if(return_code == SQLITE_ROW)
     {
-        vehicle_id_pk = sqlite3_column_int(
+        sailing.sailing_id = sqlite3_column_int(
             prepared_sql_statement,
             0
             );
+
+        sailing.vessel_id = sqlite3_column_int(
+            prepared_sql_statement,
+            1
+            );
+
+        const unsigned char* departure_terminal_column_data = sqlite3_column_text(
+            prepared_sql_statement,
+            2
+            );
+
+        sailing.departure_terminal = departure_terminal_column_data ? reinterpret_cast<const char*>(departure_terminal_column_data) : std::string();
+
+        sailing.departure_day = sqlite3_column_int(
+            prepared_sql_statement,
+            3
+            );
+
+        sailing.departure_hour = sqlite3_column_int(
+            prepared_sql_statement,
+            4
+            );
+
+        sailing.low_remaining_length = sqlite3_column_double(
+            prepared_sql_statement,
+            5
+            );
+
+        sailing.high_remaining_length = sqlite3_column_double(
+            prepared_sql_statement,
+            6
+            );
+
+        is_successful = true;
+        outcome_message = "Get sailing by ID succeeded.";
     }
 
-    sqlite3_finalize(prepared_sql_statement);
-
-    // 2) If not found, insert new vehicle:
-    if(vehicle_id_pk == 0)
+    else if(return_code == SQLITE_DONE)
     {
-        const char* sql_query_insert_vehicle = R"SQL(
-            INSERT INTO vehicles (license_plate, phone_number, length, height)
-            VALUES (?, ?, ?, ?);
-        )SQL";
-
-        return_code = sqlite3_prepare_v2(
-            m_sqlite3,
-            sql_query_insert_vehicle,
-            -1,
-            &prepared_sql_statement,
-            nullptr
-            );
-
-        if(return_code != SQLITE_OK)
-        {
-            is_successful = false;
-            outcome_message = std::string("Reservation creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
-
-            return;
-        }
-
-        sqlite3_bind_text(
-            prepared_sql_statement,
-            1,
-            vehicle.license_plate.c_str(),
-            -1,
-            SQLITE_TRANSIENT
-            );
-
-        sqlite3_bind_text(
-            prepared_sql_statement,
-            2,
-            vehicle.phone_number.c_str(),
-            -1,
-            SQLITE_TRANSIENT
-            );
-
-        sqlite3_bind_double(
-            prepared_sql_statement,
-            3,
-            vehicle.length
-            );
-
-        sqlite3_bind_double(
-            prepared_sql_statement,
-            4,
-            vehicle.height
-            );
-
-        return_code = sqlite3_step(prepared_sql_statement);
-
-        sqlite3_finalize(prepared_sql_statement);
-
-        if (return_code != SQLITE_DONE)
-        {
-            is_successful = false;
-            outcome_message = std::string("Reservation creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
-
-            return;
-        }
-
-        vehicle_id_pk = static_cast<int>(sqlite3_last_insert_rowid(m_sqlite3));
+        is_successful = false;
+        outcome_message = std::string("Get sailing by ID failed: ") + std::string("No sailing found for ID of ") + departure_terminal + "-" + std::to_string(departure_day) + "-" + std::to_string(departure_hour);
     }
+
+    else
+    {
+        is_successful = false;
+        outcome_message = std::string("Get sailing by ID failed: ") + sqlite3_errmsg(m_sqlite3);
+    }
+
+    // 4) Finalize
+    sqlite3_finalize(prepared_sql_statement);
+}
+
+void Database::addReservation(
+    Sailing sailing,
+    Vehicle vehicle,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // TODO (SAVIZ): There are a couple of things that we need to do here:
+    //
+    // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
+    // 1- Calculate remaining sailing length to verify if a reservation can be added before proceeding.
+    // 2- Calculate the appropriate lane for the vehicle based on its dimensions.
+    // 3- Reduce the remaining length of the appropriate lane in the sailing based on the vehicle's assigned position.
 
     // 3) Insert reservation record:
-
-    // TODO (SAVIZ): I need to do two things here: 1- Calculate where the vehicle should go and assign the correct place for low or high 2- Decrement the remaining space (For both of these I need help from the group)
-    // First check if the low lane is full or not, if it is full and the vehicle is not tall, place it in the high lane, if it is, all tall vehicles can only be put in the high lane. Otherwise short vehicles all go into the low lane first
-    // Tall vehicles are >= 2 meters
-    // If you put a short vehicle into the high lane there is a bool on the reservation record that you need to set
     const char* sql_query_insert_reservation = R"SQL(
         INSERT INTO reservations (sailing_id_fk, vehicle_id_fk, amount_paid, reserved_for_low_lane)
         VALUES (?, ?, ?, ?);
     )SQL";
 
-    return_code = sqlite3_prepare_v2(
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
         m_sqlite3,
         sql_query_insert_reservation,
         -1,
@@ -687,21 +716,20 @@ void Database::addReservation(
     sqlite3_bind_int(
         prepared_sql_statement,
         2,
-        vehicle_id_pk
+        vehicle.vehicle_id
         );
 
     sqlite3_bind_int(
         prepared_sql_statement,
         3,
-        0 // TODO (SAVIZ): How do we calculate the amount paid?
-        // Amount paid can be calculated inside the completeBoarding menu state 
+        0 // NOTE (SAVIZ): When making a reservation, the starting amount should always be '0'.
         );
 
     // NOTE (SAVIZ): There simply isn’t a 'sqlite3_bind_bool()' in the API. Booleans in SQL are just integers:
     sqlite3_bind_int(
         prepared_sql_statement,
         4,
-        (vehicle.length <= sailing.low_remaining_length) ? 1 : 0 // TODO (SAVIZ): I need to ask someone how we decide this.
+        true ? 1 : 0 // TODO (SAVIZ): Based on the calculations above, determine which lane the vehicle should be assigned to here.
         );
 
     return_code = sqlite3_step(prepared_sql_statement);
@@ -721,20 +749,23 @@ void Database::addReservation(
     outcome_message = std::string("Reservation creation succeeded");
 }
 
-//TODO: Call getSailingReportsByID and getVehicleByID before calling this function
 void Database::removeReservation(
-    std::string departure_terminal,
-    int departure_day,
-    int departure_hour,
-    std::string license_plate,
-    bool &is_successful,
-    std::string &outcome_message
+    Sailing sailing,
+    Vehicle vehicle,
+    bool& is_successful,
+    std::string& outcome_message
     )
 {
-    // 1) Lookup sailing_id by terminal/day/hour
-    const char* sql_query_check_sailing = R"SQL(
-        SELECT sailing_id_pk FROM sailings
-        WHERE departure_terminal = ? AND departure_day = ? AND departure_hour = ?
+    // TODO (SAVIZ): There are a couple of things that we need to do here:
+    //
+    // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
+    // 1- Calculate the length to be returned to the associated sailing based on the vehicle's dimensions. (Take into account margins too)
+    // 2- Return the length to the correct lane based on 'reserved_for_low_lane'.
+
+    // 1) Check 'reserved_for_low_lane' flag before deleting
+    const char* sql_query_check = R"SQL(
+        SELECT reserved_for_low_lane FROM reservations
+        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?
         LIMIT 1;
     )SQL";
 
@@ -742,7 +773,7 @@ void Database::removeReservation(
 
     int return_code = sqlite3_prepare_v2(
         m_sqlite3,
-        sql_query_check_sailing,
+        sql_query_check,
         -1,
         &prepared_sql_statement,
         nullptr
@@ -751,111 +782,51 @@ void Database::removeReservation(
     if(return_code != SQLITE_OK)
     {
         is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Reservation deletion failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
 
-    sqlite3_bind_text(
+    sqlite3_bind_int(
         prepared_sql_statement,
         1,
-        departure_terminal.c_str(),
-        -1,
-        SQLITE_TRANSIENT
+        sailing.sailing_id
         );
 
     sqlite3_bind_int(
         prepared_sql_statement,
         2,
-        departure_day
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        3,
-        departure_hour
+        vehicle.vehicle_id
         );
 
     return_code = sqlite3_step(prepared_sql_statement);
 
-    int sailing_id = 0;
+    int reserved_low = 0;
 
-    if(return_code == SQLITE_ROW)
+    if (return_code == SQLITE_ROW)
     {
-        sailing_id = sqlite3_column_int(
+        reserved_low = sqlite3_column_int(
             prepared_sql_statement,
             0
             );
     }
 
-    sqlite3_finalize(prepared_sql_statement);
-
-    if(sailing_id == 0)
+    else
     {
+        sqlite3_finalize(prepared_sql_statement);
+
         is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + "Sailing not found for ID of " + departure_terminal + "-" + std::to_string(departure_day) + "-" + std::to_string(departure_hour);
+        outcome_message = std::string("Reservation deletion failed: ") + std::string("reservation not found!");
 
         return;
-    }
-
-    // 2) Lookup vehicle_id by license_plate
-    const char* sql_query_find_vehicle = R"SQL(
-        SELECT vehicle_id_pk FROM vehicles
-        WHERE license_plate = ?
-        LIMIT 1;
-    )SQL";
-
-    return_code = sqlite3_prepare_v2(
-        m_sqlite3,
-        sql_query_find_vehicle,
-        -1,
-        &prepared_sql_statement,
-        nullptr
-        );
-
-    if(return_code != SQLITE_OK)
-    {
-        is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
-
-        return;
-    }
-
-    sqlite3_bind_text(
-        prepared_sql_statement,
-        1,
-        license_plate.c_str(),
-        -1,
-        SQLITE_TRANSIENT
-        );
-
-    return_code = sqlite3_step(prepared_sql_statement);
-
-    int vehicle_id = 0;
-
-    if(return_code == SQLITE_ROW)
-    {
-        vehicle_id = sqlite3_column_int(
-            prepared_sql_statement,
-            0
-            );
     }
 
     sqlite3_finalize(prepared_sql_statement);
 
-    if(vehicle_id == 0)
-    {
-        is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + std::string("No vehicle found with license_plate = ") + license_plate;
-
-        return;
-    }
-
-    // 3) Delete the reservation
+    // 2) Delete the reservation record
     const char* sql_query_delete_reservation = R"SQL(
         DELETE FROM reservations
-        WHERE sailing_id_fk = ?
-        AND vehicle_id_fk = ?;
+        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?;
     )SQL";
 
     return_code = sqlite3_prepare_v2(
@@ -869,7 +840,7 @@ void Database::removeReservation(
     if(return_code != SQLITE_OK)
     {
         is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Reservation deletion failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
@@ -877,13 +848,13 @@ void Database::removeReservation(
     sqlite3_bind_int(
         prepared_sql_statement,
         1,
-        sailing_id
+        sailing.sailing_id
         );
 
     sqlite3_bind_int(
         prepared_sql_statement,
         2,
-        vehicle_id
+        vehicle.vehicle_id
         );
 
     return_code = sqlite3_step(prepared_sql_statement);
@@ -893,128 +864,29 @@ void Database::removeReservation(
     if(return_code != SQLITE_DONE)
     {
         is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Reservation deletion failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
 
-    // 4) Check that a row was actually deleted
-    int changes = sqlite3_changes(m_sqlite3);
+    // 3) Return length to sailing lanes:
+    double amount = vehicle.length + 0.5; // TODO (SAVIZ): Is this the correct idea?
 
-    if(changes == 0)
+    const char* sql_query_update_sailing = nullptr;
+
+    if (reserved_low)
     {
-        is_successful = false;
-        outcome_message = std::string("Reservation deletion failed: ") + std::string("No reservation found to delete for sailing ID = ") + departure_terminal + "-" + std::to_string(departure_day) + "-" + std::to_string(departure_hour) + " and vehicle license plate = " + license_plate;
-
-        return;
+        sql_query_update_sailing = "UPDATE sailings SET low_remaining_length = low_remaining_length + ? WHERE sailing_id_pk = ?;";
     }
 
-    // TODO (SAVIZ): I need to also find a way to increment the sailing remaining length.
-    // Note: Every vehicle subtracts an extra 0.5 meters from the remainign length whenever it is added to a sailing, when removing a reservation, make sure to account for this
-
-    // 5) Success
-    is_successful = true;
-    outcome_message = std::string("Reservation creation succeeded");
-}
-
-void Database::completeBoarding(
-    std::string departure_terminal,
-    int departure_day,
-    int departure_hour,
-    std::string license_plate,
-    bool &is_successful,
-    std::string &outcome_message
-    )
-{
-    // 1) Lookup sailing_id, remaining lengths by terminal/day/hour
-    const char* sql_query_find_sailing = R"SQL(
-        SELECT sailing_id_pk, low_remaining_length, high_remaining_length FROM sailings
-        WHERE departure_terminal = ? AND departure_day = ? AND departure_hour = ?
-        LIMIT 1;
-    )SQL";
-
-    sqlite3_stmt* prepared_sql_statement = nullptr;
-
-    int return_code = sqlite3_prepare_v2(
-        m_sqlite3,
-        sql_query_find_sailing,
-        -1,
-        &prepared_sql_statement,
-        nullptr
-        );
-
-    if(return_code != SQLITE_OK)
+    else
     {
-        is_successful   = false;
-        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
-
-        return;
+        sql_query_update_sailing = "UPDATE sailings SET high_remaining_length = high_remaining_length + ? WHERE sailing_id_pk = ?;";
     }
-
-    sqlite3_bind_text(
-        prepared_sql_statement,
-        1,
-        departure_terminal.c_str(),
-        -1,
-        SQLITE_TRANSIENT
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        2,
-        departure_day
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        3,
-        departure_hour
-        );
-
-    return_code = sqlite3_step(prepared_sql_statement);
-
-    int sailing_id = 0;
-    double low_remaining = 0.0;
-    double high_remaining = 0.0;
-
-    if(return_code == SQLITE_ROW)
-    {
-        sailing_id = sqlite3_column_int(
-            prepared_sql_statement,
-            0
-            );
-
-        low_remaining = sqlite3_column_double(
-            prepared_sql_statement,
-            1
-            );
-
-        high_remaining= sqlite3_column_double(
-            prepared_sql_statement,
-            2
-            );
-    }
-
-    sqlite3_finalize(prepared_sql_statement);
-
-    if(sailing_id == 0)
-    {
-        is_successful   = false;
-        outcome_message = std::string("Boarding failed: ") + "Sailing not found for " + departure_terminal + "-" + std::to_string(departure_day) + "-" + std::to_string(departure_hour);
-
-        return;
-    }
-
-    // 2) Lookup vehicle_id and length by license_plate
-    const char* sql_query_find_vehicle = R"SQL(
-        SELECT vehicle_id_pk, length FROM vehicles
-        WHERE license_plate = ?
-        LIMIT 1;
-    )SQL";
 
     return_code = sqlite3_prepare_v2(
         m_sqlite3,
-        sql_query_find_vehicle,
+        sql_query_update_sailing,
         -1,
         &prepared_sql_statement,
         nullptr
@@ -1023,127 +895,10 @@ void Database::completeBoarding(
     if(return_code != SQLITE_OK)
     {
         is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
+        outcome_message = std::string("Reservation deletion failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
-    sqlite3_bind_text(
-        prepared_sql_statement,
-        1,
-        license_plate.c_str(),
-        -1,
-        SQLITE_TRANSIENT
-        );
-
-    return_code = sqlite3_step(prepared_sql_statement);
-
-    int vehicle_id = 0;
-    double vehicle_length = 0.0;
-
-    if(return_code == SQLITE_ROW)
-    {
-        vehicle_id = sqlite3_column_int(
-            prepared_sql_statement,
-            0
-            );
-
-        vehicle_length = sqlite3_column_double(
-            prepared_sql_statement,
-            1
-            );
-    }
-
-    sqlite3_finalize(prepared_sql_statement);
-
-    if(vehicle_id == 0)
-    {
-        is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + std::string("No vehicle found with plate = ") + license_plate;
-
-        return;
-    }
-
-    // 3) Lookup reserved_for_low_lane flag
-    const char* sql_query_check_reservation = R"SQL(
-        SELECT reserved_for_low_lane FROM reservations
-        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?
-        LIMIT 1;
-    )SQL";
-
-    return_code = sqlite3_prepare_v2(
-        m_sqlite3,
-        sql_query_check_reservation,
-        -1,
-        &prepared_sql_statement,
-        nullptr
-        );
-
-    if(return_code != SQLITE_OK)
-    {
-        is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
-
-        return;
-    }
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        1,
-        sailing_id
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        2,
-        vehicle_id
-        );
-
-    return_code = sqlite3_step(prepared_sql_statement);
-
-    int reserved_low = 0;
-
-    if(return_code == SQLITE_ROW)
-    {
-        reserved_low = sqlite3_column_int(
-            prepared_sql_statement,
-            0
-            );
-    }
-
-    sqlite3_finalize(prepared_sql_statement);
-
-    if(return_code != SQLITE_ROW)
-    {
-        is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + "No reservation found.";
-
-        return;
-    }
-
-    // 3) Update reservation amount_paid:
-    const char* sql_query_update_res = R"SQL(
-        UPDATE reservations SET amount_paid = ?
-        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?;
-    )SQL";
-
-    return_code = sqlite3_prepare_v2(
-        m_sqlite3,
-        sql_query_update_res,
-        -1,
-        &prepared_sql_statement,
-        nullptr
-        );
-
-    if(return_code != SQLITE_OK)
-    {
-        is_successful= false;
-        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
-
-        return;
-    }
-
-    double amount = 100.0; // TODO: replace with real calculation or parameter
-    // Note: We are now doing this in the completeBoarding menu state
 
     sqlite3_bind_double(
         prepared_sql_statement,
@@ -1154,13 +909,7 @@ void Database::completeBoarding(
     sqlite3_bind_int(
         prepared_sql_statement,
         2,
-        sailing_id
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        3,
-        vehicle_id
+        sailing.sailing_id
         );
 
     return_code = sqlite3_step(prepared_sql_statement);
@@ -1169,7 +918,128 @@ void Database::completeBoarding(
 
     if(return_code != SQLITE_DONE)
     {
-        is_successful   = false;
+        is_successful = false;
+        outcome_message = std::string("Reservation deletion failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    // 4) Success
+    is_successful = true;
+    outcome_message = std::string("Reservation deletion succeeded: ") + "returned length = " + std::to_string(amount);
+}
+
+void Database::completeBoarding(
+    Sailing sailing,
+    Vehicle vehicle,
+    bool &is_successful,
+    std::string &outcome_message
+    )
+{
+    // TODO (SAVIZ): There are a couple of things that we need to do here:
+    //
+    // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
+    // 1- Calculate the amont of money to be paid (set in the 'amount_paid' field) when boarding based on the vehicle's dimensions.
+
+    // 1) Verify reservation exists
+    const char* sql_query_check = R"SQL(
+        SELECT 1 FROM reservations
+        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?
+        LIMIT 1;
+    )SQL";
+
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_check,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        sailing.sailing_id
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        2,
+        vehicle.vehicle_id
+        );
+
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    if(return_code != SQLITE_ROW)
+    {
+        is_successful = false;
+        outcome_message = std::string("Boarding failed: ") + "No reserevation found.";
+
+        return;
+    }
+
+    // 2) Calculate amount to be paid:
+    double amount = vehicle.length * 10; // TODO (SAVIZ): How to calculate this?
+
+    // 3) Update amount_paid in reservations
+    const char* sql_query_update = R"SQL(
+        UPDATE reservations SET amount_paid = ?
+        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?;
+    )SQL";
+
+    return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_update,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful  = false;
+        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        1,
+        amount
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        2,
+        sailing.sailing_id
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        3,
+        vehicle.vehicle_id
+        );
+
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
         outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
@@ -1177,7 +1047,87 @@ void Database::completeBoarding(
 
     // 4) Success
     is_successful = true;
-    outcome_message = std::string("Boarding succeeded");
+    outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount);
+}
+
+void Database::addVehicle(
+    Vehicle vehicle,
+    int& vehicle_id,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // 1) Prepare INSERT INTO vehicles
+    const char* sql_query_add_vehicle = R"SQL(
+        INSERT INTO vehicles (license_plate, phone_number, length, height)
+        VALUES (?, ?, ?, ?);
+    )SQL";
+
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_add_vehicle,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vehicle creation failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    // 2) Bind parameters: license_plate, phone_number, length
+    sqlite3_bind_text(
+        prepared_sql_statement,
+        1,
+        vehicle.license_plate.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    sqlite3_bind_text(
+        prepared_sql_statement,
+        2,
+        vehicle.phone_number.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        3,
+        vehicle.length
+        );
+
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        4,
+        vehicle.height
+        );
+
+    // 3) Execute insertion
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    if (return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Vehicle creation failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    // 4) Retrieve new vehicle ID
+    vehicle_id = static_cast<int>(sqlite3_last_insert_rowid(m_sqlite3));
+
+    is_successful = true;
+    outcome_message = std::string("Vehicle created succeeded");
 }
 
 void Database::getVehicleByID(
@@ -1207,7 +1157,7 @@ void Database::getVehicleByID(
     if(return_code != SQLITE_OK)
     {
         is_successful = false;
-        outcome_message = std::string("Vehicle get by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Get vehicle by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
 
         return;
     }
@@ -1256,21 +1206,21 @@ void Database::getVehicleByID(
             );
 
         is_successful = true;
-        outcome_message = std::string("Vehicle get by ID succeeded.");
+        outcome_message = std::string("Get vehicle by ID succeeded.");
     }
 
     // Operation completed, but row was not found:
     else if (return_code == SQLITE_DONE)
     {
         is_successful = false;
-        outcome_message = std::string("Vehicle get by ID failed: ") + std::string("No Vehicle found with license plate = ") + license_plate;
+        outcome_message = std::string("Get vehicle by failed: ") + std::string("No vehicle found with license plate = ") + license_plate;
     }
 
     // Operation did not complete (something has seriously gone wrong):
     else
     {
         is_successful = false;
-        outcome_message = std::string("Vehicle get by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Get vehicle by failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
     }
 
     // 4) Clean up:

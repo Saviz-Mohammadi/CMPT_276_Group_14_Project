@@ -69,6 +69,7 @@ public:
     // ----------------------------------------------------------------------------
 
 public:
+    // DONE
     // ----------------------------------------------------------------------------
     void openConnection(
         const std::string& path,     // [IN]  | The path to the database file where the connection is to be established.
@@ -96,6 +97,7 @@ public:
 
 
 
+    // DONE
     // ----------------------------------------------------------------------------
     void cutConnection(
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
@@ -118,6 +120,7 @@ public:
 
 
 
+    // DONE
     // ----------------------------------------------------------------------------
     void addVessel(
         Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
@@ -145,6 +148,7 @@ public:
 
 
 
+    // DONE
     // ----------------------------------------------------------------------------
     void getVesselByID(
         int vessel_id,               // [IN]  | The ID of vessel to be searched for.
@@ -172,6 +176,7 @@ public:
 
 
 
+    // DONE
     // ----------------------------------------------------------------------------
     void getVessels(
         int count,                    // [IN]  | The number of vessels to be retrieved.
@@ -199,6 +204,7 @@ public:
 
 
 
+    // DONE
     // ----------------------------------------------------------------------------
     void addSailing(
         Sailing sailing,             // [IN]  | Data for the new sailing that will be created.
@@ -229,6 +235,7 @@ public:
 
 
 
+    // DONE
     // ----------------------------------------------------------------------------
     void removeSailing(
         Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
@@ -240,6 +247,7 @@ public:
     *   [Description]
     *   This function attempts to delete a sailing from the database using SQL queries.
     *   Note that this method will also delete any associated reservations as a side effect.
+    *   Note that it is assumed that 'getSailingByID()' will be successfully called before this.
     *   It is important to call 'openConnection()' before invoking this method.
     *
     *   [Return]
@@ -254,16 +262,38 @@ public:
     // ----------------------------------------------------------------------------
 
 
+
+    // DONE
+    // ----------------------------------------------------------------------------
     void getSailingByID(
         std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
         int departure_day,              // [IN]  | The departure day of the sailing in the form of 2 digits.
         int departure_hour,             // [IN]  | The departure hour of the sailing in the form of 2 digits.
-        Sailing& sailing,               // [OUT] | The sailing object returned by.
+        Sailing& sailing,               // [OUT] | The sailing object data to be stored.
         bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
 
+    /*
+    *   [Description]
+    *   This function attempts to search for and retrieve a sailing by its ID using SQL queries.
+    *   It is useful for verifying the existence of a sailing before performing other operations.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Empty table>
+    *       If the database contains no records in the sailing table, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    *   @ <Invalid ID>
+    *       If a sailing with the exact provided ID does not exist in the database, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    */
+    // ----------------------------------------------------------------------------
 
+
+
+    // NEED HELP
     // ----------------------------------------------------------------------------
     void getSailingReports(
         int count,                                   // [IN]  | The number of sailing reports to be retrieved.
@@ -291,6 +321,7 @@ public:
 
 
 
+    // NEED HELP
     // ----------------------------------------------------------------------------
     void getSailingReportByID(
         std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
@@ -318,6 +349,7 @@ public:
 
 
 
+    // NEED HELP
     // ----------------------------------------------------------------------------
     void addReservation(
         Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
@@ -329,7 +361,7 @@ public:
     /*
     *   [Description]
     *   This function attempts to create a reservation by using SQL queries.
-    *   Note that this method will also create a vehicle (if not existing already) and decrement remaining length of sailing as a side effect.
+    *   Note that it is assumed that 'getVehicleByID()' and 'getSailingByID()' are successfully called before this.
     *   It is important to call 'openConnection()' before invoking this method.
     *
     *   [Return]
@@ -349,47 +381,49 @@ public:
 
 
 
+    // NEED HELP
     // ----------------------------------------------------------------------------
     void removeReservation(
-        std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
-        int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
-        int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
-        std::string license_plate,      // [IN]  | The license plate of the vehicle associated with the reservation.
-        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        Sailing sailing,             // [IN]  | The sailing that the reservation is associated to.
+        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
     *   [Description]
     *   This function attempts to delete a reservation by using SQL queries.
-    *   Note that a sailing ID is composed of three elements: departure terminal, departure day, and departure hour.
-    *   Note that this method will also increment remaining length of sailing as a side effect.
+    *   Note that it is assumed that 'getVehicleByID()' and 'getSailingByID()' are successfully called before this.
     *   It is important to call 'openConnection()' before invoking this method.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   @ <Invalid ID>
-    *       If an invalid sailing ID is provided, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
+    *   @ <Invalid sailing>
+    *       If the input sailing is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid sailing!".
+    *   @ <Invalid vehicle>
+    *       If the input vehicle is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid vehicle!".
+    *   @ <Reservation does not exist>
+    *       If a reservation with the exact provided data does not exist, the operation will terminate with a failure status and provide an appropriate error message saying "Record does not exist!".
     */
     // ----------------------------------------------------------------------------
 
 
 
+    // NEED HELP
     // ----------------------------------------------------------------------------
     void completeBoarding(
-        std::string departure_terminal, // [IN]  | The departure terminal of the sailing associated with the reservation in the form of 3 characters.
-        int departure_day,              // [IN]  | The departure day of the sailing associated with the reservation in the form of 2 digits.
-        int departure_hour,             // [IN]  | The departure hour of the sailing associated with the reservation in the form of 2 digits.
-        std::string license_plate,      // [IN]  | The license plate of the vehicle associated with the reservation.
-        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        Sailing sailing,             // [IN]  | The sailing that the reservation is associated to for completing the boarding.
+        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to for completing the boarding.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
     *   [Description]
     *   This function attempts to complete the boarding for a reservation by using SQL queries.
+    *   Note that it is assumed that 'getVehicleByID()' and 'getSailingByID()' are successfully called before this.
     *   It is important to call 'openConnection()' before invoking this method.
     *
     *   [Return]
@@ -405,6 +439,36 @@ public:
 
 
 
+    // DONE
+    // ----------------------------------------------------------------------------
+    void addVehicle(
+        Vehicle vehicle,             // [IN]  | Data for the new vehicle that will be created.
+        int& vehicle_id,             // [OUT] | The returned ID of the new vehicle.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
+
+    /*
+    *   [Description]
+    *   This function attempts to create and insert a new vehicle into the database using SQL queries.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid vehicle>
+    *       If the input vehicle is missing, incomplete, or invalid (an unlikely scenario as validation is made in the input layer), the operation will terminate with a failure status and provide an appropriate error message saying "Invalid vehicle!".
+    *   @ <Vehicle already exists>
+    *       If a vehicle with the exact provided data already exists, the operation will terminate with a failure status and provide an appropriate error message saying "Record already exists!".
+    *   @ <Not enough space>
+    *       If the database ever runs out of space (an unlikely scenario in this case), the operation will terminate with a failure status and provide an appropriate error message for diagnosis.
+    */
+    // ----------------------------------------------------------------------------
+
+
+
+    // DONE
     // ----------------------------------------------------------------------------
     void getVehicleByID(
         std::string license_plate,      // [IN]  | The license plate of the vehicle targeted for search and retrieval.
