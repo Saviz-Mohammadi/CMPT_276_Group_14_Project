@@ -1,333 +1,260 @@
-// // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#include <iostream>
+#include <vector>
+#include <regex>
+#include <ctime>
+#include <iomanip>
+#include "global.hpp"
+#include "input.hpp"
+#include "state_manager.hpp"
+#include "vessel_management_state.hpp"
+#include "database.hpp"
 
-// #include <vector>
-// #include <iostream>
-// #include <regex>
-// #include <ctime>
-// #include <iomanip>
-// #include "state.hpp"
-// #include "vessel_management_state.hpp"
-// #include "state_manager.hpp"
-// #include "input.hpp"
-// #include "containers.hpp"
-// #include "database.hpp"
-// #include "global.hpp"
+// ----------------------------------------------------------------------------
+VesselManagementState::VesselManagementState()
+{
+}
 
-// // static container for storing vessel info when creating a vessel
-// static Vessel s_vessel;
+// ----------------------------------------------------------------------------
+VesselManagementState::~VesselManagementState()
+{
+}
 
-// // static container for storing the users single character responses
-// static char s_user_choice;
+// ----------------------------------------------------------------------------
+void VesselManagementState::onEnter()
+{
+    std::cout <<
+        "VESSEL MANAGEMENT MENU\n"
+        "1) Add a new vessel\n"
+        "2) List all vessels\n"
+        "0) Exit to main menu\n"
+        "\n";
+}
 
-// static void printVesselList(std::vector<Vessel>& vessels);
+// ----------------------------------------------------------------------------
+void VesselManagementState::onProcess()
+{
+    char user_choice = '\0';
 
-// // ----------------------------------------------------------------------------
-// VesselManagementState::VesselManagementState()
-// {
-    
-// }
+    // Get user choice:
+    continuouslyPromptForCharacter(
+        "Please enter your selection [0-2]: ",
+        std::vector<char>{'0', '1', '2'},
+        user_choice
+        );
 
-// // ----------------------------------------------------------------------------
-// VesselManagementState::~VesselManagementState()
-// {
+    switch(user_choice)
+    {
+        case '1':
+            createVessel();
+            m_state_manager->selectNextState(States::VesselManagementState);
+            break;
+        case '2':
+            listVessels();
+            m_state_manager->selectNextState(States::VesselManagementState);
+            break;
+        case '0':
+            m_state_manager->selectNextState(States::MainMenuState);
+            break;
+    }
+}
 
-// }
+// ----------------------------------------------------------------------------
+void VesselManagementState::onExit()
+{
+}
 
-// // ----------------------------------------------------------------------------
-// void VesselManagementState::onEnter()
-// {
-//     s_vessel = Vessel();
-//     std::cout <<
-//         "VESSEL MANAGEMENT MENU\n"
-//         "1) Add a new vessel\n"
-//         "2) List all vessels\n"
-//         "0) Exit to main menu\n"
-//         "\n";
-// }
+// ----------------------------------------------------------------------------
+void VesselManagementState::createVessel()
+{
+    Vessel vessel;
+    char user_choice = '\0';
 
-// // ----------------------------------------------------------------------------
-// void VesselManagementState::onProcess()
-// {
-//     // Get user choice:
-//     do
-//     {
-//         promptForCharacter(
-//             "Please enter your selection [0-2]: ",
-//             std::vector<char>{'0', '1', '2'},
-//             s_user_choice,
-//             g_is_successful,
-//             g_outcome_message
-//             );
+    // Obtain input for new vessel:
+    // ****************************************************************************
 
-//         if(!g_is_successful)
-//         {
-//             std::cout << g_outcome_message << "\n\n";
-//         }
-//     } while(!g_is_successful);
+    continuouslyPromptForString(
+        "Please enter the name of the new vessel: ",
+        std::regex(R"([\w ]{1,25})"), // Regular expression >> match 1-25 letters, numbers, digits, case insensitive
+        vessel.vessel_name
+        );
 
-//     // NOTE (SAVIZ): Here is some code to help calling 'getVessels()':
+    continuouslyPromptForReal(
+        "Please enter the \"High-Ceiling Lane Length\" (HCLL) [0-1200]: ",
+        0,
+        1200,
+        vessel.high_ceiling_lane_length
+        );
 
-//     // std::vector<Vessel> vessels;
-//     // database->getVessels(5, 0, vessels, is_successful, outcome_message);
+    continuouslyPromptForReal(
+        "Please enter the \"Low-Ceiling Lane Length\" (LCLL) [0-1200]: ",
+        0,
+        1200,
+        vessel.low_ceiling_lane_length
+        );
 
-//     // if(!is_successful)
-//     // {
-//     //     std::cout << outcome_message << std::endl;
-//     // }
+    continuouslyPromptForCharacter(
+        "Are you sure you want to create this vessel [y/n]? ",
+        g_allowed_yes_no_responses,
+        user_choice
+        );
 
-//     // for(const Vessel& vessel : vessels)
-//     // {
-//     //     std::cout << vessel.vessel_id << ", " << vessel.vessel_name << ", " << vessel.low_ceiling_lane_length << ", " << vessel.high_ceiling_lane_length << std::endl;
-//     // }
+    // Decide what to do based on input:
+    // ****************************************************************************
 
-//     // Switch on selection and start the appropriate action:
-//     switch(s_user_choice)
-//     {
-//         case '1':
-//             createVessel();
-//             //m_state_manager->selectNextState(States::VesselManagementState); this is redundant, state maanger is already on this state and will start it again after we return here
-//             break;
-//         case '2':
-//             listVessels();
-//             //m_state_manager->selectNextState(States::VesselManagementState);
-//             break;
-//         case '0':
-//             m_state_manager->selectNextState(States::MainMenuState);
-//             break;
-//     }
-// }
+    switch(user_choice)
+    {
+        // Attempt vessel creation:
+        case 'y':
+        case 'Y':
+            State::m_database->addVessel(vessel, g_is_successful, g_outcome_message);
 
-// // ----------------------------------------------------------------------------
-// void VesselManagementState::onExit()
-// {
+            if(g_is_successful)
+            {
+                std::cout << "New vessel successfully created!" << "\n";
+            }
 
-// }
+            else
+            {
+                std::cout << g_outcome_message << "\n";
+            }
+            break;
+        case 'n':
+        case 'N':
+            std::cout << "Vessel creation operation aborted!" << "\n";
+            break;
+    }
 
-// // ----------------------------------------------------------------------------
-// void VesselManagementState::createVessel()
-// {
-//     // ****************************************************************************
-//     while (true) //prompt until good vessel name
-//     {
-//         promptForString(
-//             "Please enter the name of the new vessel: ",
-//             std::regex(R"([\w ]{1,25})"), //match 1-25 letters, numbers, digits, case insensitive
-//             s_vessel.vessel_name,
-//             g_is_successful,
-//             g_outcome_message);
-//         std::cout << "\n";
-//         if (g_is_successful)
-//         {
-//             break;
-//         }
-//         else
-//         {
-//             std::cout << g_outcome_message << "\n";
-//         }
-//     }
+    std::cout << "\n";
+}
 
-//     // ****************************************************************************
-//     while (true) // prompt until good hcll
-//     {
-//         promptForReal(
-//             "Please enter the \"High-Ceiling Lane Length\" (HCLL) [0-1200]: ",
-//             0, 1200,
-//             s_vessel.high_ceiling_lane_length,
-//             g_is_successful,
-//             g_outcome_message);
-//         std::cout << "\n";
-//         if (g_is_successful)
-//         {
-//             break;
-//         }
-//         else
-//         {
-//             std::cout << g_outcome_message << "\n";
-//         }
-//     }
+// ----------------------------------------------------------------------------
+void VesselManagementState::listVessels()
+{
+    // Offset the starting record by the length amount:
+    int offset = 0;
 
-//     // ****************************************************************************
-//     while (true) // prompt until good lcll
-//     {
-//         promptForReal(
-//             "Please enter the \"Low-Ceiling Lane Length\" (LCLL) [0-1200]: ",
-//             0, 1200,
-//             s_vessel.low_ceiling_lane_length,
-//             g_is_successful,
-//             g_outcome_message);
-//         std::cout << "\n";
+    // Continue listing vessels forever until the user exits:
+    while(true)
+    {
+        std::vector<Vessel> vessels;
 
-//         if (g_is_successful)
-//         {
-//             break;
-//         }
-//         else
-//         {
-//             std::cout << g_outcome_message << "\n";
-//         }
-//     }
-//     std::cout << "\n";
-//     // ****************************************************************************
-//     while (true) // prompt until good confirmation
-//     {
-//         promptForCharacter(
-//             "Are you sure you want to create this vessel [y/n]? ",
-//             std::vector<char>{'y', 'Y', 'n', 'N'},
-//             s_user_choice,
-//             g_is_successful,
-//             g_outcome_message);
-//         std::cout << "\n";
+        vessels.reserve(g_list_length);
 
-//         if (g_is_successful)
-//         {
-//             break;
-//         }
-//         else
-//         {
-//             std::cout << g_outcome_message << "\n";
-//         }
-//     }
-//     std::cout << "\n";
-//     // ****************************************************************************
-//     switch (s_user_choice) {
-//         case 'y':
-//         case 'Y': //try vessel record creation
-//             m_database->addVessel(s_vessel, g_is_successful, g_outcome_message);
-//             if (g_is_successful)
-//             {
-//                 std::cout << "New vessel successfully created!";
-//             }
-//             else
-//             {
-//                 std::cout << g_outcome_message;
-//             }
-//             break;
-//         case 'n':
-//         case 'N':
-//             std::cout << "Vessel creation operation aborted!";
-//             break;
-//     }
-//     std::cout << "\n\n";
-// }
+        m_database->getVessels(
+            g_list_length,
+            offset,
+            vessels,
+            g_is_successful,
+            g_outcome_message
+            );
 
-// // ----------------------------------------------------------------------------
-// void VesselManagementState::listVessels()
-// {
-//     // because we dont know how many records there are, if we scroll to the end of the list use this variable to remember how big the list is
-//     int highest_offet = -1;
+        // Edge cases:
+        // ****************************************************************************
 
-//     // offset to the record at the beginning of the page, imcrements by g_list_length
-//     int vessel_list_offset = 0;
+        if(!g_is_successful)
+        {
+            std::cout << g_outcome_message << "\n\n";
 
-//     while (true) // list forever until the user exits
-//     {
-//         std::vector<Vessel> vessels(g_list_length);
-//         m_database->getVessels(g_list_length, vessel_list_offset, vessels, g_is_successful, g_outcome_message);
+            break; // Go back to menu.
+        }
 
-//         // ****************************************************************************
-//         // edge cases
-//         if (!g_is_successful)
-//         {
-//             std::cout << g_outcome_message << "\n\n";
-//             return; // back to menu
-//         }
-//         if (vessels.size() == 0) //if user has scrolled off the edge of the list
-//         {
-//             if (vessel_list_offset == 0) // if offset is zero and no records were returned then the database is empty
-//             {
-//                 std::cout << "No records available for displaying!\n\n";
-//                 return; //back to menu
-//             }
-//             else // must be at the end of the list so wrap to beginning
-//             {
-//                 highest_offet = std::max(vessel_list_offset-g_list_length, highest_offet)-g_list_length; // remember where the end of the list is so we can wrap the other direction
-//                 vessel_list_offset = 0;
-//                 continue; // re-fetch records with the new offset
-//             }
-//         }
-//         // ****************************************************************************
+        // If there are no more records to show based on offset:
+        if(vessels.empty())
+        {
+            // NOTE (SAVIZ): I understand that the value technically cannot be less than zero, but it's good programming practice to account for such cases nonetheless:
+            if(offset == 0) // If we are at the start of the list.
+            {
+                std::cout << "No more previous records available for displaying!" << "\n\n";
+            }
 
-//         printVesselList(vessels);
+            else // If we are at the end of the list.
+            {
+                // Clamp top:
+                offset -= g_list_length;
 
-//         // prompt for page scrolling or exit
-//         std::cout
-//             << "\n\n"
-//             << "<p> >> View the previous 5 vessels."
-//             << "<n> >> View the next 5 vessels."
-//             << "<e> >> Exit the list."
-//             << "\n\n";
+                std::cout << "No more next records available for displaying!" << "\n\n";
+            }
 
-//         while (true) // prompt until valid choice from the prompt
-//         {
-//             promptForCharacter(
-//                 "Please enter your selection [<p>, <n>, <e>]: ",
-//                 std::vector<char>{'p', 'n', 'e'},
-//                 s_user_choice,
-//                 g_is_successful,
-//                 g_outcome_message);
-//             std::cout << "\n\n";
-//             if (g_is_successful)
-//             {
-//                 break;
-//             }
-//             else
-//             {
-//                 std::cout << g_outcome_message << "\n\n";
-//             }
-//         }
+            continue;  // In any case, skip the printing.
+        }
 
-//         switch (s_user_choice) //change offset for the list according to choice, or return to menu
-//         {
-//         case 'p':
-//             vessel_list_offset = vessel_list_offset - g_list_length;
-//             if (vessel_list_offset < 0) //we've scrolled off the beginning of the list
-//             {
-//                 if (highest_offet < 0) // we haven't seen the end of the list yet so just stay here
-//                 {
-//                     vessel_list_offset = 0;
-//                 }
-//                 else // we know where the end of the list is, wrap around and go there
-//                 {
-//                     vessel_list_offset = highest_offet;
-//                 }
-//             }
-//             break;
-//         case 'n':
-//             vessel_list_offset = vessel_list_offset + g_list_length;
-//             break;
-//         case 'e':
-//             std::cout << "\n\n";
-//             return; // back to menu
-//             break;
-//         }
-//         std::cout << "\n\n";
-//     } // endwhile
-// }
+        // Print the list:
+        // ****************************************************************************
 
-// // ----------------------------------------------------------------------------
-// void VesselManagementState::printVesselList(std::vector<Vessel>& vessels)
-// {
-//     time_t time = std::time(nullptr);
-//     std::tm* time_ptr = std::localtime(&time);
+        std::time_t time = std::time(nullptr);
+        std::tm* time_ptr = std::localtime(&time);
 
-//     //report title
-//     std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
+        // Report title:
+        std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
 
-//     // column headers
-//     std::cout
-//         << " ID  "
-//         << std::setw(25) << std::left << "Name" << "  "
-//         << std::setw(6) << std::right << "LCLL" << "  "
-//         << std::setw(6) << std::right << "HCLL" << "\n";
+        // Column headers:
+        std::cout
+            << " ID  "
+            << std::setw(25) << std::left  << "Name" << "  "
+            << std::setw(6)  << std::right << "LCLL" << "  "
+            << std::setw(6)  << std::right << "HCLL" << "\n";
 
-//     //one row for each fetched vessel record
-//     for (const Vessel& v : vessels)
-//     {
-//         std::cout
-//             << std::setw(3) << std::right << v.vessel_id << ") " //ID column
-//             << std::setw(25) << std::left << v.vessel_name << "  " //Name column
-//             << std::setw(6) << std::right << std::fixed << std::setprecision(1) << v.low_ceiling_lane_length //lcll column
-//             << std::setw(6) << std::right << std::fixed << std::setprecision(1) << v.high_ceiling_lane_length //hcll column
-//             << "\n";
-//     }
-// }
+        // One row for each fetched vessel record
+        for(const Vessel& vessel : vessels)
+        {
+            std::cout
+                << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
+                << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
+                << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length  // LCLL column
+                << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
+                << "\n";
+        }
+
+        // Prompt for input:
+        // ****************************************************************************
+
+        std::cout
+            << "\n\n"
+            << "<p> >> View the previous 5 vessels."
+            << "<n> >> View the next 5 vessels."
+            << "<e> >> Exit the list."
+            << "\n\n";
+
+        char user_choice = '\0';
+
+        continuouslyPromptForCharacter(
+            "Please enter your selection [<p>, <n>, <e>]: ",
+            g_allowed_navigation_responses,
+            user_choice
+            );
+
+        // Decide what to do next:
+        // ****************************************************************************
+
+        bool user_wants_to_exit = false;
+
+        switch(user_choice)
+        {
+        case 'p':
+        case 'P':
+            offset -= g_list_length;
+
+            // Clamp bottom:
+            if(offset <= 0)
+            {
+                offset = 0;
+            }
+            break;
+        case 'n':
+        case 'N':
+            offset += g_list_length;
+            break;
+        case 'e':
+        case 'E':
+            user_wants_to_exit = true;
+            break;
+        }
+
+        std::cout << "\n\n";
+
+        if(user_wants_to_exit)
+        {
+            break;
+        }
+    }
+}

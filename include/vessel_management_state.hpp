@@ -29,6 +29,7 @@
 #define VESSEL_MANAGEMENT_STATE_HPP
 
 #include "state.hpp"
+#include "containers.hpp"
 
 class VesselManagementState : public State
 {

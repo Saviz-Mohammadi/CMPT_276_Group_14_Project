@@ -326,7 +326,7 @@ void Database::getVessels(
     // 3) Executing:
     vessels.clear();
 
-    while ((return_code = sqlite3_step(prepared_sql_statement)) == SQLITE_ROW)
+    while((return_code = sqlite3_step(prepared_sql_statement)) == SQLITE_ROW)
     {
         Vessel vessel;
 
@@ -352,8 +352,8 @@ void Database::getVessels(
         vessels.push_back(vessel);
     }
 
-    // Operation completed, but row was not found:
-    if (return_code != SQLITE_DONE)
+    // 4.a) Operation completed, but row was not found:
+    if(return_code != SQLITE_DONE)
     {
         is_successful = false;
         outcome_message = std::string("Get vessels failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
@@ -363,10 +363,12 @@ void Database::getVessels(
         return;
     }
 
-    is_successful = true;
-    outcome_message = std::string("get Vessels succeeded.");
+    // 4.b) It is the responsibility of the calling code to handle cases where no records are returned based on the size of the vector.
 
-    // 4) Clean up:
+    // 4.c) Successful:
+    is_successful = true;
+    outcome_message = std::string("Get vessels succeeded.");
+
     sqlite3_finalize(prepared_sql_statement);
 }
 
