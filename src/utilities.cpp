@@ -5,20 +5,6 @@
 #include "utilities.hpp"
 
 
-Utilities::Utilities() : m_sqlite3(nullptr)
-{
-#ifdef DEBUG_MODE
-    std::cout << "Constructor called: Utilities()" << "\n";
-#endif
-}
-
-Utilities::~Utilities()
-{
-#ifdef DEBUG_MODE
-    std::cout << "Destructor called: ~Utilities()" << "\n";
-#endif
-}
-
 Utilities::extractSailingID(std::string& sailing_id, std::string& terminal, int& departure_day, int& departure_hour) {
     // String stream
     std::stringstream string_stream(sailing_id);

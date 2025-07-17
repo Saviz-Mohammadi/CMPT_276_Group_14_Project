@@ -35,41 +35,8 @@
 #include "containers.hpp"
 
 
-class Utilities
+namespace Utilities
 {
-public:
-    // ----------------------------------------------------------------------------
-    explicit Utilities();
-
-    /*
-    *   [Description]
-    *   Constructor for the Utilities class, used to instantiate a physical object in memory.
-    *
-    *   [Return]
-    *   N/A
-    *
-    *   [Errors]
-    *   N/A
-    */
-    // ----------------------------------------------------------------------------
-
-
-
-    // ----------------------------------------------------------------------------
-    ~Utilities();
-
-    /*
-    *   [Description]
-    *   Destructor for the Utilities class, responsible for deallocating the object from memory.
-    *
-    *   [Return]
-    *   N/A
-    *
-    *   [Errors]
-    *   N/A
-    */
-    // ----------------------------------------------------------------------------
-
     void extractSailingID(
         std::string& sailing_id, 
         std::string& terminal, 
