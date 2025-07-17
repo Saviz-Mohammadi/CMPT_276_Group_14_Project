@@ -47,4 +47,16 @@ extern std::vector<char> g_allowed_yes_no_responses;
 // A default set of accepted characters for navigational questions (Previous, Next, Exit), intended for repeated use.
 extern std::vector<char> g_allowed_navigation_responses;
 
+// Minimum allowed length in meters of vehicles, used to validate user input
+extern double g_vehicle_min_length;
+
+// Maximum allowed length in meters of vehicles, used to validate user input
+extern double g_vehicle_max_length;
+
+// Minimum allowed height in meters of vehicles, used to validate user input
+extern double g_vehicle_min_height;
+
+// Maximum allowed height in meters of vehicles, used to validate user input
+extern double g_vehicle_max_height;
+
 #endif // GLOBAL_H

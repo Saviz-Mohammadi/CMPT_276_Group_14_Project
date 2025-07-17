@@ -16,3 +16,9 @@ std::vector<char> g_allowed_navigation_responses = {
     'N', 'n',   // Next
     'E', 'e'    // Exit
 };
+
+// Vehicle size ranges
+double g_vehicle_min_length = 0;
+double g_vehicle_max_length = 100;
+double g_vehicle_min_height = 0;
+double g_vehicle_max_height = 10;
