@@ -104,17 +104,20 @@ Vehicle::~Vehicle() = default;
 SailingReport::SailingReport() :
     sailing(),
     vessel(),
-    vehicles(0)
+    vehicle_count(0),
+    occupancy_percentage(0.0)
 {
 }
 
 SailingReport::SailingReport(
     const Sailing& sailing,
     const Vessel& vessel,
-    const int vehicles) :
+    const int vehicle_count,
+    const double occupancy_percentage) :
     sailing(sailing),
     vessel(vessel),
-    vehicles(vehicles)
+    vehicle_count(vehicle_count),
+    occupancy_percentage(occupancy_percentage)
 {
 }
 

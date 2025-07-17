@@ -671,6 +671,270 @@ void Database::getSailingByID(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+void Database::getSailingReports(
+    int count,
+    int offset,
+    std::vector<SailingReport>& sailing_reports,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // TODO (SAVIZ): Is the way I use here to calculate the percentage of occupancy correct? Or am I missing something...
+
+    // 1) Creating the SQL query command:
+    const char* sql_query_sailing_reports = R"SQL(
+        SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
+
+        COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
+        (
+            (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
+        ) * 100.0 AS occupancy_percentage
+
+        FROM sailings
+
+        JOIN vessels ON sailings.vessel_id_fk = vessels.vessel_id_pk
+        LEFT JOIN reservations ON reservations.sailing_id_fk = sailings.sailing_id_pk
+        GROUP BY sailings.sailing_id_pk ORDER BY sailings.departure_day, sailings.departure_hour
+
+        LIMIT ? OFFSET ?;
+    )SQL";
+
+    // 2) Preparing the statement with bindings:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_sailing_reports,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Get sailing reports failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        count
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        2,
+        offset
+        );
+
+    // 3) Executing and populating results:
+    sailing_reports.clear();
+
+    while((return_code = sqlite3_step(prepared_sql_statement)) == SQLITE_ROW)
+    {
+        SailingReport sailing_report;
+
+        const unsigned char* departure_terminal_column_data = sqlite3_column_text(
+            prepared_sql_statement,
+            0
+            );
+
+        sailing_report.sailing.departure_terminal = departure_terminal_column_data ? reinterpret_cast<const char*>(departure_terminal_column_data) : "";
+
+        sailing_report.sailing.departure_day = sqlite3_column_int(
+            prepared_sql_statement,
+            1
+            );
+
+        sailing_report.sailing.departure_hour = sqlite3_column_int(
+            prepared_sql_statement,
+            2
+            );
+
+        const unsigned char* vessel_name_column_data = sqlite3_column_text(
+            prepared_sql_statement,
+            3
+            );
+
+        sailing_report.vessel.vessel_name = vessel_name_column_data ? reinterpret_cast<const char*>(vessel_name_column_data) : "";
+
+        sailing_report.sailing.low_remaining_length = sqlite3_column_double(
+            prepared_sql_statement,
+            4
+            );
+
+        sailing_report.sailing.high_remaining_length = sqlite3_column_double(
+            prepared_sql_statement,
+            5
+            );
+
+        sailing_report.vehicle_count = sqlite3_column_int(
+            prepared_sql_statement,
+            6
+            );
+
+        sailing_report.occupancy_percentage = sqlite3_column_double(
+            prepared_sql_statement,
+            7
+            );
+
+        // TODO (SAVIZ): Might be worth to look at 'emplace_back()' for vector to increase performance:
+        sailing_reports.push_back(sailing_report);
+    }
+
+    // 4.a) Check for errors in stepping:
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Get sailing reports failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        sqlite3_finalize(prepared_sql_statement);
+
+        return;
+    }
+
+    // 4.b) Success
+    is_successful = true;
+    outcome_message = std::string("Get sailing reports succeeded");
+
+    sqlite3_finalize(prepared_sql_statement);
+}
+
+void Database::getSailingReportByID(
+    Sailing sailing,
+    SailingReport& sailing_report,
+    bool& is_successful,
+    std::string& outcome_message
+    )
+{
+    // TODO (SAVIZ): Is the way I use here to calculate the percentage of occupancy correct? Or am I missing something...
+
+    // 1) Creating the SQL query command:
+    const char* sql_query_sailing_report = R"SQL(
+        SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
+
+        COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
+        (
+            (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
+        ) * 100.0 AS occupancy_percentage
+
+        FROM sailings
+
+        JOIN vessels ON sailings.vessel_id_fk = vessels.vessel_id_pk
+        LEFT JOIN reservations ON reservations.sailing_id_fk = sailings.sailing_id_pk
+
+        WHERE sailings.departure_terminal = ? AND sailings.departure_day = ? AND sailings.departure_hour = ?
+
+        GROUP BY sailings.sailing_id_pk;
+    )SQL";
+
+    // 2) Prepare statement:
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_sailing_report,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Get sailing report by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    // 3) Bind key parameters:
+    sqlite3_bind_text(
+        prepared_sql_statement,
+        1,
+        sailing.departure_terminal.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        2,
+        sailing.departure_day
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        3,
+        sailing.departure_hour
+        );
+
+    // 4) Execute:
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    if(return_code == SQLITE_ROW)
+    {
+        const unsigned char* departure_terminal_column_data = sqlite3_column_text(prepared_sql_statement, 0);
+
+        sailing_report.sailing.departure_terminal = departure_terminal_column_data ? reinterpret_cast<const char*>(departure_terminal_column_data) : "";
+
+        sailing_report.sailing.departure_day = sqlite3_column_int(
+            prepared_sql_statement,
+            1
+            );
+
+        sailing_report.sailing.departure_hour = sqlite3_column_int(
+            prepared_sql_statement,
+            2
+            );
+
+        sailing_report.sailing.low_remaining_length = sqlite3_column_double(
+            prepared_sql_statement,
+            3
+            );
+
+        sailing_report.sailing.high_remaining_length = sqlite3_column_double(
+            prepared_sql_statement,
+            4
+            );
+
+        const unsigned char* vessel_name_column_data = sqlite3_column_text(prepared_sql_statement, 5);
+
+        sailing_report.vessel.vessel_name = vessel_name_column_data ? reinterpret_cast<const char*>(vessel_name_column_data) : "";
+
+        sailing_report.vehicle_count = sqlite3_column_int(
+            prepared_sql_statement,
+            6
+            );
+
+        sailing_report.occupancy_percentage = sqlite3_column_double(
+            prepared_sql_statement,
+            7
+            );
+
+        is_successful = true;
+        outcome_message = std::string("Get sailing report by ID succeeded");
+    }
+
+    // 4.b) No matching sailing
+    else if(return_code == SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Get sailing report by ID failed: ") + std::string("No sailing found for given ID.");
+    }
+
+    // 4.c) Some other error
+    else
+    {
+        is_successful = false;
+        outcome_message = std::string("Get sailing report by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+    }
+
+    sqlite3_finalize(prepared_sql_statement);
+}
+
 void Database::addReservation(
     Sailing sailing,
     Vehicle vehicle,
