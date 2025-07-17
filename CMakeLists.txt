@@ -83,7 +83,7 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp"
     #"${CMAKE_CURRENT_SOURCE_DIR}/src/state_manager.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/vessel_management_state.cpp"
-    #"${CMAKE_CURRENT_SOURCE_DIR}/src/boarding_state.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/boarding_state.cpp"
 )
 
 add_executable(${EXECUTABLE_NAME})
