@@ -95,13 +95,14 @@ struct SailingReport
 {
 public:
     explicit SailingReport();
-    explicit SailingReport(const Sailing& sailing, const Vessel& vessel, const int vehicles);
+    explicit SailingReport(const Sailing& sailing, const Vessel& vessel, const int vehicle_count, const double occupancy_percentage);
     ~SailingReport();
 
 public:
     Sailing sailing; 
-    Vessel vessel; 
-    int vehicles; 
+    Vessel vessel;
+    int vehicle_count;
+    double occupancy_percentage;
 };
 
 #endif // CONTAINERS_HPP

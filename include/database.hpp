@@ -324,18 +324,16 @@ public:
     // NEED HELP
     // ----------------------------------------------------------------------------
     void getSailingReportByID(
-        std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
-        int departure_day,              // [IN]  | The departure day of the sailing in the form of 2 digits.
-        int departure_hour,             // [IN]  | The departure hour of the sailing in the form of 2 digits.
-        SailingReport& sailing_report,  // [OUT] | The list of sailing reports that were retrieved.
-        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
+        Sailing sailing,               // [IN]  | The sailing being targeted for reporting.
+        SailingReport& sailing_report, // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,           // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message   // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
     *   [Description]
     *   This function attempts to retrieve a sailing report by ID using SQL queries.
-    *   Note that a sailing ID is composed of three elements: departure terminal, departure day, and departure hour.
+    *   Note that it is assumed that 'getSailingByID()' is successfully called before this.
     *   It is important to call 'openConnection()' before invoking this method.
     *
     *   [Return]
