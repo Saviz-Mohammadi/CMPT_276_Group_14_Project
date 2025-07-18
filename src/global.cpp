@@ -1,7 +1,7 @@
 #include "global.hpp"
 
 // how many items to return by default
-int g_list_length = 10;
+int g_list_length = 5;
 
 // for your prompt‑loop functions
 bool g_is_successful = false;
