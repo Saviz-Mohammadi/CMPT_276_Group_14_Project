@@ -43,7 +43,7 @@ ReservationManagementState::~ReservationManagementState()
 // ----------------------------------------------------------------------------
 void ReservationManagementState::onEnter()
 {
-     s_reservation = Reservation();
+    s_reservation = Reservation();
     std::cout <<
         "RESERVATION MANAGEMENT MENU\n"
         "1) Make a new reservation\n"
@@ -138,7 +138,9 @@ void ReservationManagementState::createReservation()
     m_database->getVehicleByID(s_vehicle.license_plate,s_vehicle,g_is_successful,g_outcome_message);
 
     if (!g_is_successful) {
-        m_database->addVehicle(s_vehicle,g_is_successful,g_outcome_message);
+        int vehicle_id_out;
+        m_database->addVehicle(s_vehicle, vehicle_id_out,g_is_successful,g_outcome_message);
+        s_vehicle.vehicle_id = vehicle_id_out;
         if (!g_is_successful) {
         std::cout << g_outcome_message << "\n\n";
         m_state_manager->selectNextState(States::ReservationManagementState);
