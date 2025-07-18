@@ -188,7 +188,7 @@ void VesselManagementState::listVessels()
         std::tm* time_ptr = std::localtime(&time);
 
         // Report title:
-        std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
+        std::cout << "Vessel Report" << std::string(13, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
 
         // Column headers:
         std::cout
@@ -203,7 +203,7 @@ void VesselManagementState::listVessels()
             std::cout
                 << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
                 << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
-                << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length  // LCLL column
+                << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
                 << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
                 << "\n";
         }
@@ -213,10 +213,10 @@ void VesselManagementState::listVessels()
 
         std::cout
             << "\n\n"
-            << "<p> >> View the previous 5 vessels."
-            << "<n> >> View the next 5 vessels."
-            << "<e> >> Exit the list."
-            << "\n\n";
+            << "<p> >> View the previous 5 vessels." << "\n"
+            << "<n> >> View the next 5 vessels." << "\n"
+            << "<e> >> Exit the list." << "\n"
+            << "\n";
 
         char user_choice = '\0';
 
