@@ -942,12 +942,59 @@ void Database::addReservation(
     std::string& outcome_message
     )
 {
-    // TODO (SAVIZ): There are a couple of things that we need to do here:
-    //
-    // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
-    // 1- Calculate remaining sailing length to verify if a reservation can be added before proceeding.
-    // 2- Calculate the appropriate lane for the vehicle based on its dimensions.
-    // 3- Reduce the remaining length of the appropriate lane in the sailing based on the vehicle's assigned position.
+    // 1) Check space and choose a lane:
+    double new_low_remaining_length = 0;
+    double new_high_remaining_length = 0;
+    bool reserved_for_low_lane = false;
+
+    // NOTE (SAVIZ): I think I might be missing margins here (0.5 meters or something?):
+    if(vehicle.length <= sailing.low_remaining_length)
+    {
+        reserved_for_low_lane = true;
+        new_low_remaining_length = sailing.low_remaining_length - vehicle.length;
+    }
+
+    else if(vehicle.length <= sailing.high_remaining_length)
+    {
+        reserved_for_low_lane = false;
+        remainingHigh = sailing.high_remaining_length - vehicle.length;
+    }
+
+    else
+    {
+        // no room in either lane
+        is_successful   = false;
+        outcome_message = "Reservation failed: not enough space on vessel.";
+        return;
+    }
+
+    // 2) Update sailings table to deduct the vehicle’s length
+    const char* sql_update_sailing = R"SQL(
+        UPDATE sailings
+           SET low_remaining_length  = ?,
+               high_remaining_length = ?
+         WHERE sailing_id_pk = ?;
+    )SQL";
+
+    sqlite3_stmt* stmt_update = nullptr;
+    int rc = sqlite3_prepare_v2(m_sqlite3, sql_update_sailing, -1, &stmt_update, nullptr);
+    if (rc != SQLITE_OK) {
+        is_successful   = false;
+        outcome_message = std::string("Failed to update sailing: ") + sqlite3_errmsg(m_sqlite3);
+        return;
+    }
+
+    sqlite3_bind_double(stmt_update, 1, remainingLow);
+    sqlite3_bind_double(stmt_update, 2, remainingHigh);
+    sqlite3_bind_int   (stmt_update, 3, sailing.sailing_id);
+    rc = sqlite3_step(stmt_update);
+    sqlite3_finalize(stmt_update);
+
+    if (rc != SQLITE_DONE) {
+        is_successful   = false;
+        outcome_message = std::string("Failed to update sailing: ") + sqlite3_errmsg(m_sqlite3);
+        return;
+    }
 
     // 3) Insert reservation record:
     const char* sql_query_insert_reservation = R"SQL(
@@ -995,7 +1042,7 @@ void Database::addReservation(
     sqlite3_bind_int(
         prepared_sql_statement,
         4,
-        true ? 1 : 0 // TODO (SAVIZ): Based on the calculations above, determine which lane the vehicle should be assigned to here.
+        reservedForLowLane ? 1 : 0 // TODO (SAVIZ): Based on the calculations above, determine which lane the vehicle should be assigned to here.
         );
 
     return_code = sqlite3_step(prepared_sql_statement);
