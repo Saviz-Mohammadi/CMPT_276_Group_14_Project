@@ -14,6 +14,7 @@ TEST_CASE("Utilities: Sailing ID functions", "[Utilities]")
         Utilities::createSailingID(true_terminal, true_day, true_hour, sailing_id_out);
         REQUIRE(sailing_id_out == true_sailing_id);
     }
+
     SECTION("Parse sailing ID")
     {
         std::string terminal_out;

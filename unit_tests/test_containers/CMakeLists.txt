@@ -26,6 +26,16 @@ set(EXECUTABLE_NAME "${PROJECT_NAME}")
 # [[ ----------------------------------------------------------------------- ]]
 # [[ ----------------------------------------------------------------------- ]]
 
+set(HEADERS
+    "${CMAKE_SOURCE_DIR}/include/containers.hpp"
+    "${CMAKE_SOURCE_DIR}/include/utilities.hpp"
+)
+
+set(SOURCES
+    "${CMAKE_SOURCE_DIR}/src/containers.cpp"
+    "${CMAKE_SOURCE_DIR}/src/utilities.cpp"
+)
+
 set(TEST_FILES
 
     "${CMAKE_CURRENT_SOURCE_DIR}/src/test_containers.cpp")
