@@ -32,11 +32,15 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <limits>
+#include <ctime>
 #include "containers.hpp"
 
 
 namespace Utilities
 {
+    std::string getLocalDateAndTime();
+
     void extractSailingID(
         std::string& sailing_id, 
         std::string& terminal, 
@@ -51,6 +55,11 @@ namespace Utilities
         std::string& output_sailing_id
         );
 
+    bool almostEqual(
+        double first_number,
+        double second_number,
+        double epsilon = std::numeric_limits<double>::epsilon()
+        );
 }
 
 #endif // UTILITIES_HPP
