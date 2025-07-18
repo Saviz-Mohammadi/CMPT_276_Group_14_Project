@@ -54,6 +54,10 @@ If you're using Visual Studio Code as your IDE, you can refer to the [official V
 3. Open Visual Studio Code and select the folder containing the root `CMakeLists.txt` file.
 4. Build, configure, and run the project.
 
+# Tutorials and documentations
+
+If you want to learn more about writing unit tests, then visit the official [Catch2 library documentation page](https://github.com/catchorg/Catch2/blob/devel/docs/tutorial.md#top).
+
 # License
 
 This project is licensed under the [MIT License](LICENSE).
