@@ -12,6 +12,9 @@
 // ----------------------------------------------------------------------------
 VesselManagementState::VesselManagementState()
 {
+#ifdef DEBUG_MODE
+    std::cout << "Constructor called: VesselManagementState()" << "\n";
+#endif
 }
 
 // ----------------------------------------------------------------------------
