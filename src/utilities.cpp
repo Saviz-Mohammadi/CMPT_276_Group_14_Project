@@ -1,8 +1,7 @@
-
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <format>
+#include <iomanip>
 #include "utilities.hpp"
 
 
@@ -17,8 +16,13 @@ void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal,
     string_stream >> departure_day >> dummy >> departure_hour; // Uses dummy to consume the 2nd dash
 }
 
-void Utilities::createSailingID(const std::string& terminal, const int departure_day, const int departure_hour, std::string& output_sailing_id) {
-
-    output_sailing_id = std::format("{}-{:02}-{:02}", terminal, departure_day, departure_hour);
-
+void Utilities::createSailingID(const std::string& terminal, const int departure_day, const int departure_hour, std::string& output_sailing_id)
+{
+    std::ostringstream oss;
+    oss << terminal
+        << '-'
+        << std::setw(2) << std::setfill('0') << departure_day
+        << '-'
+        << std::setw(2) << std::setfill('0') << departure_hour;
+    output_sailing_id = oss.str();
 }

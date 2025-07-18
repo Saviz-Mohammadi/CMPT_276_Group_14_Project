@@ -57,7 +57,6 @@ int main(int argc, char *argv[])
 
     //  Section: State setup
     // ------------------------------------------------------------------------
-
     
     StateManager state_manager;
 

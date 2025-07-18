@@ -6,7 +6,9 @@ State::State()
     this->m_state_manager = nullptr;
 }
 
-State::~State() { }
+State::~State()
+{
+}
 
 void State::init(StateManager* state_manager, Database* database)
 {
