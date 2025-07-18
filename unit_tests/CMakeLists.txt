@@ -3,6 +3,7 @@
 # [[ ----------------------------------------------------------------------- ]]
 
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/test_containers")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/test_utilities")
 
 # Add more tests as needed...
 

@@ -74,6 +74,7 @@ set(HEADERS
     "${CMAKE_CURRENT_SOURCE_DIR}/include/sailing_management_state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/reservation_management_state.hpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/include/boarding_state.hpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/include/utilities.hpp"
 )
 
 set(SOURCES
@@ -81,9 +82,14 @@ set(SOURCES
     "${CMAKE_CURRENT_SOURCE_DIR}/src/input.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/containers.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/database.cpp"
-    #"${CMAKE_CURRENT_SOURCE_DIR}/src/state_manager.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/state_manager.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/vessel_management_state.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/boarding_state.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/reservation_management_state.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/sailing_management_state.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/utilities.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/state.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/main_menu_state.cpp"
 )
 
 add_executable(${EXECUTABLE_NAME})
