@@ -2,6 +2,7 @@
 
 StateManager::StateManager()
 {
+    m_state = nullptr;
 }
 
 StateManager::~StateManager()
@@ -45,9 +46,10 @@ void StateManager::run()
 {
     while(m_state != nullptr)
     {
-        m_state->onEnter();
-        m_state->onProcess();
-        m_state->onExit();
+        State *current_state = m_state; //onProcess() changes m_state so make a copy of the pointer
+        current_state->onEnter();
+        current_state->onProcess();
+        current_state->onExit();
 	}
 }
 
@@ -57,22 +59,22 @@ void StateManager::selectNextState(
 {
     switch(next_state)
     {
-    case(States::MainMenuState):
+    case States::MainMenuState:
 		m_state = &m_main_menu_state;
 		break;
-    case(States::VesselManagementState):
+    case States::VesselManagementState:
 		m_state = &m_vessel_management_state;
 		break;
-    case(States::SailingManagementState):
+    case States::SailingManagementState:
 		m_state = &m_sailing_management_state;
 		break;
-    case(States::ReservationManagementState):
+    case States::ReservationManagementState:
 		m_state = &m_reservation_management_state;
 		break;
-    case(States::BoardingState):
+    case States::BoardingState:
         m_state = &m_boarding_state;
 		break;
-    case(States::ExitState):
+    case States::ExitState:
 		m_state = nullptr;
 		break;
 	}
