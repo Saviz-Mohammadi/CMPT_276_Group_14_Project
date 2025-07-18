@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <regex>
-#include <ctime>
 #include <iomanip>
 #include "global.hpp"
 #include "input.hpp"
+#include "utilities.hpp"
 #include "state_manager.hpp"
 #include "vessel_management_state.hpp"
 #include "database.hpp"
@@ -184,11 +184,8 @@ void VesselManagementState::listVessels()
         // Print the list:
         // ****************************************************************************
 
-        std::time_t time = std::time(nullptr);
-        std::tm* time_ptr = std::localtime(&time);
-
         // Report title:
-        std::cout << "Vessel Report" << std::string(13, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
+        std::cout << "Vessel Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
 
         // Column headers:
         std::cout
