@@ -1,4 +1,5 @@
 #include <vector>
+#include <limits> 
 #include <iostream>
 #include <regex>
 #include <ctime>
@@ -80,25 +81,23 @@ void SailingManagementState::onExit()
 
 // ----------------------------------------------------------------------------
 /* 
-Note (Henry): 
+Note (Henry) 1: 
 Duplicates or database errors will be checked by the database functions AFTER we have collected all parameters, 
 will be annoying for the user if they input something wrong then have to input all 4 again, alternative option is to call get vessel/sailing by ID in here 
 first to check if it exists but working on the assumption that we WON'T call those functions for sake of efficiency for the developer 
 
-Note (Henry): After the overloaded promptForString was added use the regex pattern std::regex(R"([A-Z]{3}-\d{2}-\d{2})") to force a TTT-dd-hh pattern by the user
+Note (Henry) 2: After the overloaded promptForString was added use the regex pattern std::regex(R"([A-Z]{3}-\d{2}-\d{2})") to force a TTT-dd-hh pattern by the user
 Now the input modules should entirely be responsible for bad input
-HOWEVER
+
+Note (Henry) 3: There should be possible solutions to prompt the user again after bad input like existing sailing or nonexistant vessel, they are commentented out.
+Uncomment them and replace it with them if you want to 
 */ 
 void SailingManagementState::createSailing()
 {
     // Variables for prompting    
     std::string sailing_id_str; 
     char user_choice = '0'; 
-    // Min and max variables for prompting integers (POSSIBLE PLACEHOLDER)
-    // Note: Maybe make it so that on startup of the program, it changes like a global variable of the maximum vessel id for an accurate range
-    int min = 0;
-    int max = 999;
-    
+
     // Sailing varbiables
     int sailing_id_int;
     int vessel_id;
@@ -108,29 +107,20 @@ void SailingManagementState::createSailing()
 
     Sailing new_sailing; 
     Vessel referred_vessel; 
-
+    vessel_id = -1; 
     bool valid_vessel = false; 
     bool valid_sailing = false; 
     // Get Vessel ID to create
 
-    vessel_id = -1; 
-    continuouslyPromptForInteger(
-        "Please enter the ID of the vessel for the sailing: ", 
-        min, 
-        max, 
-        vessel_id
-    );
-    //Possible solution to prompt user again if they enter an invalid vessel ID
-    /*
+
     do {
         vessel_id = -1; 
         continuouslyPromptForInteger(
-            "Please enter the ID of the vessel for the sailing: ", 
-            min, 
-            max, 
-            vessel_id
-        );
-      
+        "Please enter the ID of the vessel for the sailing: ", 
+        0, 
+        std::numeric_limits<int>::max(), 
+        vessel_id
+    );
         m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message); 
         if(!g_is_successful) {
             std::cout << "Invalid Vessel ID, please try again"; 
@@ -141,41 +131,28 @@ void SailingManagementState::createSailing()
         }
         
     } while(valid_vessel = false); 
-    */
+
     // Get Sailing ID to create
 
-    promptForString(
-        "Please enter the ID of the sailing [TTT-dd-hh]: ",
-        std::regex(R"([A-Z]{3}-\d{2}-\d{2})"), //TTT-dd-hh pattern
-        sailing_id_str, 
-        g_is_successful, 
-        g_outcome_message
-    );
-    
 
-    // Possible solution to prompt user again if bad sailing ID
-    /*
-        do {
-            promptForString(
-                "Please enter the ID of the sailing [TTT-dd-hh]: ",
-                std::regex(R"([A-Z]{3}-\d{2}-\d{2})"), //TTT-dd-hh pattern
-                sailing_id_str, 
-                g_is_successful, 
-                g_outcome_message
-            );
+    do {
+        promptForString(
+            "Please enter the ID of the sailing [TTT-dd-hh]: ",
+            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"), //TTT-dd-hh pattern
+            sailing_id_str, 
+            g_is_successful, 
+            g_outcome_message
+        );
 
-            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
-            m_database->getSailingByID( departure_terminal, departure_day, departure_hour, new_sailing, g_is_successful, g_outcome_message);
-            if(g_is_successful) {
-                valid_sailing = false; 
-                std::cout << "Sailing ID already exists"; 
-            } else {
-                valid_sailing = true; 
-            }
-        } while(valid_sailing == false)
-    
-    */
-
+        Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
+        m_database->getSailingByID( departure_terminal, departure_day, departure_hour, new_sailing, g_is_successful, g_outcome_message);
+        if(g_is_successful) {
+            valid_sailing = false; 
+            std::cout << "Sailing ID already exists"; 
+        } else {
+            valid_sailing = true; 
+        }
+    } while(valid_sailing == false); 
 
 
     // Prompting confirmation of sailing creation
@@ -186,29 +163,41 @@ void SailingManagementState::createSailing()
         user_choice
     ); 
 
-    
-    if(std::tolower(user_choice) == 'y') {
+    Sailing new_sailing; 
+    switch(user_choice)
+    {
+        // Attempt Sailing creationg
+        case 'y':
+        case 'Y':
+            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
+
+            // Extracting HCL and LCL from vessel
+            m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message); 
+            double lcl = referred_vessel.low_ceiling_lane_length;
+            double hcl = referred_vessel.high_ceiling_lane_length;
+
+            new_sailing = Sailing(0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl); 
+
+            m_database->addSailing(new_sailing, g_is_successful, g_outcome_message);
         
-        Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
 
-        // Extracting HCL and LCL from vessel
-        m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message); 
-        double lcl = referred_vessel.low_ceiling_lane_length;
-        double hcl = referred_vessel.high_ceiling_lane_length;
+            if(g_is_successful)
+            {
+                std::cout << "Sailing created with ID of " << sailing_id_str << std::endl;
+            }
 
-        Sailing new_sailing(0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl); 
-
-        m_database->addSailing(new_sailing, g_is_successful, g_outcome_message);
-        
-        if(!g_is_successful) {
-            std::cout << g_outcome_message << std::endl; 
-            return; 
-        } else {
-            std::cout << "Sailing created with ID of " << sailing_id_str << std::endl;
-        }
-    } else {
-        std::cout << "Canceled sailing creation" << std::endl;
+            else
+            {
+                std::cout << g_outcome_message << "\n";
+            }
+            break;
+        case 'n':
+        case 'N':
+            std::cout << "Canceled sailing creation" << std::endl;
+            break;
     }
+
+   
 
 }
 
@@ -241,15 +230,30 @@ void SailingManagementState::deleteSailing()
         user_choice 
     ); 
 
-    
-    if(std::tolower(user_choice) == 'y') {
-        Sailing referred_sailing; 
+    Sailing referred_sailing; 
+    switch(user_choice)
+    {
+        // Attempt vessel deletion:
+        case 'y':
+        case 'Y':
+            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour); 
+            m_database->getSailingByID(departure_terminal, departure_day, departure_hour, referred_sailing, g_is_successful, g_outcome_message); 
+            m_database->removeSailing(referred_sailing, g_is_successful, g_outcome_message); 
 
-        Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour); 
-        m_database->getSailingByID(departure_terminal, departure_day, departure_hour, referred_sailing, g_is_successful, g_outcome_message); 
-        m_database->removeSailing(referred_sailing, g_is_successful, g_outcome_message); 
-    } else {
-        std::cout << "Canceled sailing deletion\n";
+            if(g_is_successful)
+            {
+                std::cout << "Sailing successfully deleted!" << "\n";
+            }
+
+            else
+            {
+                std::cout << g_outcome_message << "\n";
+            }
+            break;
+        case 'n':
+        case 'N':
+            std::cout << "Sailing deletion operation aborted!" << "\n";
+            break;
     }
 }
 
@@ -286,7 +290,7 @@ void SailingManagementState::listSailingReports()
                 << std::setw(10) << std::left << sailing_id_str << " "
                 << std::setw(30) << std::left << report.vessel.vessel_name
                 << std::fixed << std::setprecision(1)
-                << std::setw(7) << std::right << report.sailing.low_remaining_length
+                << std::setw(7) << std::right << report.sailing.low_remaining_length // Clamp to >= 0 here
                 << std::setw(7) << std::right << report.sailing.high_remaining_length
                 << std::setw(9) << std::right << report.vehicle_count
                 << std::setw(10) << std::right << report.occupancy_percentage << "%"
@@ -308,6 +312,7 @@ void SailingManagementState::listSailingReports()
             g_allowed_navigation_responses,
             user_choice
         );
+
         if(std::tolower(user_choice) == 'e') {
             stop = true; 
             break; 
@@ -316,9 +321,10 @@ void SailingManagementState::listSailingReports()
             stop = false; 
             offset += g_list_length; 
         }
-        else if (std::tolower(user_choice) == 'e') {    
+        else if (std::tolower(user_choice) == 'p') {    
             stop = false; 
             offset = (offset >= g_list_length) ? (offset - g_list_length) : 0;  // Lower bound of 0
+             
         }
     } while(stop == false); 
 

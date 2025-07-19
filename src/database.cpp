@@ -686,9 +686,9 @@ void Database::getSailingReports(
         SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
 
         COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
-        (
+        FLOOR((
             (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
-        ) * 100.0 AS occupancy_percentage
+        ) * 100.0) AS occupancy_percentage
 
         FROM sailings
 
@@ -817,9 +817,9 @@ void Database::getSailingReportByID(
         SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
 
         COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
-        (
+        FLOOR((
             (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
-        ) * 100.0 AS occupancy_percentage
+        ) * 100.0) AS occupancy_percentage
 
         FROM sailings
 
@@ -948,10 +948,12 @@ void Database::addReservation(
     bool reserved_for_low_lane = false;
 
     // NOTE (SAVIZ): I think I might be missing margins here (0.5 meters or something?):
+    // NOTE (Henry): Add the 0.5 meters to the check later
+    // NOTE (Henry): Check if vehicles is short or equal to 2 meters, if it is then it can go into the low lane
     if(vehicle.length <= sailing.low_remaining_length)
     {
         reserved_for_low_lane = true;
-        new_low_remaining_length = sailing.low_remaining_length - vehicle.length;
+        new_low_remaining_length = sailing.low_remaining_length - vehicle.length - 0.5;
     }
 
     else if(vehicle.length <= sailing.high_remaining_length)
@@ -1253,7 +1255,10 @@ void Database::completeBoarding(
     //
     // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
     // 1- Calculate the amont of money to be paid (set in the 'amount_paid' field) when boarding based on the vehicle's dimensions.
-
+    // 14$ for short and low (LOW IS HEIGHT, SHORT IS LENGTH, TALL IS HEIGHT, LONG IS LENGTH)
+    // 2$ /m for long and low 
+    // 3$ /m for tall (3/m of the LENGTH)
+    // Note: Long is longer than 7 meters
     // 1) Verify reservation exists
     const char* sql_query_check = R"SQL(
         SELECT 1 FROM reservations
