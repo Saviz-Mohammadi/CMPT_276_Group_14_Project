@@ -176,7 +176,7 @@ void SailingManagementState::createSailing()
             double lcl = referred_vessel.low_ceiling_lane_length;
             double hcl = referred_vessel.high_ceiling_lane_length;
 
-            Sailing new_sailing{ 0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl };
+            Sailing new_sailing(0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl);
 
             m_database->addSailing(new_sailing, g_is_successful, g_outcome_message);
 

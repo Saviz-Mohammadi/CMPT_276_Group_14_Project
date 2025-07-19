@@ -1,21 +1,17 @@
 #include <catch2/catch_all.hpp>
 #include "utilities.hpp"
 
-TEST_CASE("Utilities: Sailing ID functions", "[Utilities]") 
-{
-    std::string true_sailing_id = "ABC-12-34";
-    std::string true_terminal = "ABC";
-    int true_day = 12;
-    int true_hour = 34;
-
-    SECTION("Create sailing ID ABC-12-34") 
+void testCreateSailingID(std::string true_sailing_id, std::string true_terminal, int true_day, int true_hour) {
+    SECTION("Create sailing ID " + true_sailing_id)
     {
         std::string sailing_id_out;
         Utilities::createSailingID(true_terminal, true_day, true_hour, sailing_id_out);
         REQUIRE(sailing_id_out == true_sailing_id);
     }
+}
 
-    SECTION("Parse sailing ID ABC-12-34")
+void testExtractSailingID(std::string true_sailing_id, std::string true_terminal, int true_day, int true_hour) {
+    SECTION("Parse sailing ID " + true_sailing_id)
     {
         std::string terminal_out;
         int day_out;
@@ -27,28 +23,14 @@ TEST_CASE("Utilities: Sailing ID functions", "[Utilities]")
     }
 }
 
-TEST_CASE("Utilities: Sailing ID functions with leading zeroes", "[Utilities]")
+TEST_CASE("Utilities: Sailing ID functions", "[Utilities]") 
 {
-    std::string true_sailing_id = "WWW-01-00";
-    std::string true_terminal = "WWW";
-    int true_day = 1;
-    int true_hour = 0;
+    testCreateSailingID("ABC-12-34", "ABC", 12, 34);
+    testExtractSailingID("ABC-12-34", "ABC", 12, 34);
 
-    SECTION("Create sailing ID WWW-01-00")
-    {
-        std::string sailing_id_out;
-        Utilities::createSailingID(true_terminal, true_day, true_hour, sailing_id_out);
-        REQUIRE(sailing_id_out == true_sailing_id);
-    }
+    testCreateSailingID("HIJ-00-00", "HIJ", 0, 0);
+    testExtractSailingID("HIJ-00-00", "HIJ", 0, 0);
 
-    SECTION("Parse sailing ID WWW-01-00")
-    {
-        std::string terminal_out;
-        int day_out;
-        int hour_out;
-        Utilities::extractSailingID(true_sailing_id, terminal_out, day_out, hour_out);
-        REQUIRE(terminal_out == true_terminal);
-        REQUIRE(day_out == true_day);
-        REQUIRE(hour_out == true_hour);
-    }
+    testCreateSailingID("CCC-09-20", "CCC", 9, 20);
+    testExtractSailingID("CCC-09-20", "CCC", 9, 20);
 }

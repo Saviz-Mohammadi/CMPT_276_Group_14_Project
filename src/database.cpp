@@ -1390,6 +1390,23 @@ void Database::completeBoarding(
     // 3) Calculate amount to be paid:
     double amount = 0.0;
 
+    
+    bool tall = vehicle.height > 2.0;
+    bool _long = vehicle.length > 7.0;   
+    if (tall)
+    {
+        amount = vehicle.length * 3;
+    }
+    else if (_long) // short and long
+    {
+        amount = vehicle.length * 2;
+    }
+    else // not long and not tall
+    {
+        amount = 14;
+    }
+
+    /*
     bool is_not_tall_and_not_long = false;
 
     // Long vehicles pay $2 per meter:
@@ -1411,6 +1428,7 @@ void Database::completeBoarding(
     {
         amount = 14.0;
     }
+    */
 
     // 4) Update amount_paid in reservations
     const char* sql_query_update = R"SQL(
