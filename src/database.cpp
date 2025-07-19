@@ -679,16 +679,19 @@ void Database::getSailingReports(
     std::string& outcome_message
     )
 {
-    // TODO (SAVIZ): Is the way I use here to calculate the percentage of occupancy correct? Or am I missing something...
+    // NOTE (SAVIZ): I was planning to use the FLOOR() function in SQLite, but enabling it proved to be somewhat troublesome. So, I decided to use TRUNC() instead, as it achieves the same result (as we don't have negative values).
 
     // 1) Creating the SQL query command:
     const char* sql_query_sailing_reports = R"SQL(
         SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
 
         COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
-        FLOOR((
+        TRUNC
+        (
+            (
             (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
-        ) * 100.0) AS occupancy_percentage
+            ) * 100.0
+        ) AS occupancy_percentage
 
         FROM sailings
 
@@ -810,16 +813,19 @@ void Database::getSailingReportByID(
     std::string& outcome_message
     )
 {
-    // TODO (SAVIZ): Is the way I use here to calculate the percentage of occupancy correct? Or am I missing something...
+    // NOTE (SAVIZ): I was planning to use the FLOOR() function in SQLite, but enabling it proved to be somewhat troublesome. So, I decided to use TRUNC() instead, as it achieves the same result (as we don't have negative values).
 
     // 1) Creating the SQL query command:
     const char* sql_query_sailing_report = R"SQL(
         SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
 
         COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
-        FLOOR((
+        TRUNC
+        (
+            (
             (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
-        ) * 100.0) AS occupancy_percentage
+            ) * 100.0
+        ) AS occupancy_percentage
 
         FROM sailings
 
@@ -943,14 +949,11 @@ void Database::addReservation(
     )
 {
     // 1) Check space and choose a lane:
-    double new_low_remaining_length = 0;
-    double new_high_remaining_length = 0;
+    double new_low_remaining_length = sailing.low_remaining_length;
+    double new_high_remaining_length = sailing.high_remaining_length;
     bool reserved_for_low_lane = false;
 
-    // NOTE (SAVIZ): I think I might be missing margins here (0.5 meters or something?):
-    // NOTE (Henry): Add the 0.5 meters to the check later
-    // NOTE (Henry): Check if vehicles is short or equal to 2 meters, if it is then it can go into the low lane
-    if(vehicle.length <= sailing.low_remaining_length)
+    if(vehicle.length <= sailing.low_remaining_length && vehicle.height <= 2)
     {
         reserved_for_low_lane = true;
         new_low_remaining_length = sailing.low_remaining_length - vehicle.length - 0.5;
@@ -959,42 +962,68 @@ void Database::addReservation(
     else if(vehicle.length <= sailing.high_remaining_length)
     {
         reserved_for_low_lane = false;
-        remainingHigh = sailing.high_remaining_length - vehicle.length;
+        new_high_remaining_length = sailing.high_remaining_length - vehicle.length - 0.5;
     }
 
     else
     {
-        // no room in either lane
-        is_successful   = false;
-        outcome_message = "Reservation failed: not enough space on vessel.";
+        is_successful = false;
+        outcome_message = std::string("Reservation creation failed: ") + std::string("not enough space on sailing.");
+
         return;
     }
 
-    // 2) Update sailings table to deduct the vehicle’s length
-    const char* sql_update_sailing = R"SQL(
-        UPDATE sailings
-           SET low_remaining_length  = ?,
-               high_remaining_length = ?
-         WHERE sailing_id_pk = ?;
+    // 2) Update sailings table to deduct the vehicle’s length:
+    const char* sql_query_update_sailing = R"SQL(
+        UPDATE sailings SET low_remaining_length = ?, high_remaining_length = ?
+        WHERE sailing_id_pk = ?;
     )SQL";
 
-    sqlite3_stmt* stmt_update = nullptr;
-    int rc = sqlite3_prepare_v2(m_sqlite3, sql_update_sailing, -1, &stmt_update, nullptr);
-    if (rc != SQLITE_OK) {
-        is_successful   = false;
-        outcome_message = std::string("Failed to update sailing: ") + sqlite3_errmsg(m_sqlite3);
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_update_sailing,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
+
         return;
     }
 
-    sqlite3_bind_double(stmt_update, 1, remainingLow);
-    sqlite3_bind_double(stmt_update, 2, remainingHigh);
-    sqlite3_bind_int   (stmt_update, 3, sailing.sailing_id);
-    rc = sqlite3_step(stmt_update);
-    sqlite3_finalize(stmt_update);
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        1,
+        new_low_remaining_length
+        );
 
-    if (rc != SQLITE_DONE) {
-        is_successful   = false;
-        outcome_message = std::string("Failed to update sailing: ") + sqlite3_errmsg(m_sqlite3);
+    sqlite3_bind_double(
+        prepared_sql_statement,
+        2,
+        new_high_remaining_length
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        3,
+        sailing.sailing_id
+        );
+
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
+
         return;
     }
 
@@ -1004,9 +1033,7 @@ void Database::addReservation(
         VALUES (?, ?, ?, ?);
     )SQL";
 
-    sqlite3_stmt* prepared_sql_statement = nullptr;
-
-    int return_code = sqlite3_prepare_v2(
+    return_code = sqlite3_prepare_v2(
         m_sqlite3,
         sql_query_insert_reservation,
         -1,
@@ -1044,7 +1071,7 @@ void Database::addReservation(
     sqlite3_bind_int(
         prepared_sql_statement,
         4,
-        reservedForLowLane ? 1 : 0 // TODO (SAVIZ): Based on the calculations above, determine which lane the vehicle should be assigned to here.
+        reserved_for_low_lane ? 1 : 0
         );
 
     return_code = sqlite3_step(prepared_sql_statement);
@@ -1071,12 +1098,6 @@ void Database::removeReservation(
     std::string& outcome_message
     )
 {
-    // TODO (SAVIZ): There are a couple of things that we need to do here:
-    //
-    // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
-    // 1- Calculate the length to be returned to the associated sailing based on the vehicle's dimensions. (Take into account margins too)
-    // 2- Return the length to the correct lane based on 'reserved_for_low_lane'.
-
     // 1) Check 'reserved_for_low_lane' flag before deleting
     const char* sql_query_check = R"SQL(
         SELECT reserved_for_low_lane FROM reservations
@@ -1185,7 +1206,7 @@ void Database::removeReservation(
     }
 
     // 3) Return length to sailing lanes:
-    double amount = vehicle.length + 0.5; // TODO (SAVIZ): Is this the correct idea?
+    double amount = vehicle.length + 0.5;
 
     const char* sql_query_update_sailing = nullptr;
 
@@ -1251,17 +1272,7 @@ void Database::completeBoarding(
     std::string &outcome_message
     )
 {
-    // TODO (SAVIZ): There are a couple of things that we need to do here:
-    //
-    // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
-    // 1- Calculate the amont of money to be paid (set in the 'amount_paid' field) when boarding based on the vehicle's dimensions.
-    //    14$ for short length and low height
-    //    2$ per m of length for long length and low height
-    //    3$ per m of length for tall height
-    //    all dimensions based on car not on lane
-    //    tall cars are > 2m tall
-    //    long cars are > 7m long
-    // 1) Verify reservation exists
+    // 1) Check reservation exists:
     const char* sql_query_check = R"SQL(
         SELECT 1 FROM reservations
         WHERE sailing_id_fk = ? AND vehicle_id_fk = ?
@@ -1305,15 +1316,103 @@ void Database::completeBoarding(
     if(return_code != SQLITE_ROW)
     {
         is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + "No reserevation found.";
+        outcome_message = std::string("Boarding failed: ") + std::string("No reserevation found.");
 
         return;
     }
 
-    // 2) Calculate amount to be paid:
-    double amount = vehicle.length * 10; // TODO (SAVIZ): How to calculate this?
+    // 2) Check if vehicle is already boarded:
+    const char* sql_query_paid = R"SQL(
+        SELECT amount_paid FROM reservations
+        WHERE sailing_id_fk = ? AND vehicle_id_fk = ?
+        LIMIT 1;
+    )SQL";
 
-    // 3) Update amount_paid in reservations
+    return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_paid,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Boarding failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+
+        return;
+    }
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        1,
+        sailing.sailing_id
+        );
+
+    sqlite3_bind_int(
+        prepared_sql_statement,
+        2,
+        vehicle.vehicle_id
+        );
+
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    if(return_code == SQLITE_ROW)
+    {
+        double already_paid = sqlite3_column_double(
+            prepared_sql_statement,
+            0
+            );
+
+        sqlite3_finalize(prepared_sql_statement);
+
+        if(already_paid != 0.0)
+        {
+            is_successful = false;
+            outcome_message = std::string("Boarding failed: ") + std::string("vehicle has already been boarded (amount_paid = ") + std::to_string(already_paid) + ").";
+
+            return;
+        }
+    }
+
+    else
+    {
+        // This really shouldn’t happen, since we just saw the row, but check anyway:
+        sqlite3_finalize(prepared_sql_statement);
+
+        is_successful = false;
+        outcome_message = std::string("Boarding failed: ") + std::string("could not verify prior payment status.");
+
+        return;
+    }
+
+    // 3) Calculate amount to be paid:
+    double amount = 0.0;
+
+    bool is_not_tall_and_not_long = false;
+
+    // Long vehicles pay $2 per meter:
+    if(vehicle.length > 7.0)
+    {
+        amount += vehicle.length * 2.0;
+        is_not_tall_and_not_long = true;
+    }
+
+    // Tall vehicles pay $3 per meter:
+    if(vehicle.height > 2.0)
+    {
+        amount += vehicle.length * 3.0;
+        is_not_tall_and_not_long = true;
+    }
+
+    // Short & low vehicles pay a flat fee
+    if(is_not_tall_and_not_long)
+    {
+        amount = 14.0;
+    }
+
+    // 4) Update amount_paid in reservations
     const char* sql_query_update = R"SQL(
         UPDATE reservations SET amount_paid = ?
         WHERE sailing_id_fk = ? AND vehicle_id_fk = ?;
@@ -1365,7 +1464,7 @@ void Database::completeBoarding(
         return;
     }
 
-    // 4) Success
+    // 5) Success
     is_successful = true;
     outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount);
 }

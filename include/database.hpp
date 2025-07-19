@@ -293,7 +293,7 @@ public:
 
 
 
-    // NEED HELP
+    // DONE
     // ----------------------------------------------------------------------------
     void getSailingReports(
         int count,                                   // [IN]  | The number of sailing reports to be retrieved.
@@ -321,7 +321,7 @@ public:
 
 
 
-    // NEED HELP
+    // DONE
     // ----------------------------------------------------------------------------
     void getSailingReportByID(
         Sailing sailing,               // [IN]  | The sailing being targeted for reporting.
@@ -347,7 +347,7 @@ public:
 
 
 
-    // NEED HELP
+    // DONE
     // ----------------------------------------------------------------------------
     void addReservation(
         Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
@@ -379,7 +379,7 @@ public:
 
 
 
-    // NEED HELP
+    // DONE
     // ----------------------------------------------------------------------------
     void removeReservation(
         Sailing sailing,             // [IN]  | The sailing that the reservation is associated to.
