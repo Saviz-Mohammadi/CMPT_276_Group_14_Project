@@ -163,25 +163,25 @@ void SailingManagementState::createSailing()
         user_choice
     ); 
 
-    Sailing new_sailing; 
     switch(user_choice)
     {
         // Attempt Sailing creationg
         case 'y':
-        case 'Y':
+        case 'Y': 
+        { // curly braces allow variables to be defined only within the scope of this case
             Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
 
             // Extracting HCL and LCL from vessel
-            m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message); 
+            m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message);
             double lcl = referred_vessel.low_ceiling_lane_length;
             double hcl = referred_vessel.high_ceiling_lane_length;
 
-            new_sailing = Sailing(0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl); 
+            Sailing new_sailing{ 0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl };
 
             m_database->addSailing(new_sailing, g_is_successful, g_outcome_message);
-        
 
-            if(g_is_successful)
+
+            if (g_is_successful)
             {
                 std::cout << "Sailing created with ID of " << sailing_id_str << std::endl;
             }
@@ -191,6 +191,7 @@ void SailingManagementState::createSailing()
                 std::cout << g_outcome_message << "\n";
             }
             break;
+        }
         case 'n':
         case 'N':
             std::cout << "Canceled sailing creation" << std::endl;
