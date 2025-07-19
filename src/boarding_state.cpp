@@ -91,6 +91,10 @@ void BoardingState::startBoarding()
         // didnt find the vehicle, create a new one
         if (!g_is_successful) 
         {
+#ifdef DEBUG_MODE
+            std::cout << "[DEBUG] didn't find vehicle record. Asking for information to create one." << std::endl;
+#endif
+
             s_vehicle.license_plate = license_plate;
             continuouslyPromptForString(
                 "Please enter the phone number of the owner: ",
@@ -148,12 +152,18 @@ void BoardingState::startBoarding()
             g_outcome_message
         );
 
+        bool user_wants_to_break = false;
+
         switch (s_user_choice)
         {
-        case 'y':
-        case 'Y':
-            continue;
+        case 'n':
+        case 'N':
+            user_wants_to_break = true;
         }
-        break;
+
+        if (user_wants_to_break)
+        {
+            break;
+        }
     }
 }

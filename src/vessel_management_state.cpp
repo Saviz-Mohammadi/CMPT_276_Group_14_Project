@@ -1,10 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <regex>
-#include <ctime>
 #include <iomanip>
 #include "global.hpp"
 #include "input.hpp"
+#include "utilities.hpp"
 #include "state_manager.hpp"
 #include "vessel_management_state.hpp"
 #include "database.hpp"
@@ -12,6 +12,9 @@
 // ----------------------------------------------------------------------------
 VesselManagementState::VesselManagementState()
 {
+#ifdef DEBUG_MODE
+    std::cout << "[Debug] Constructor called: VesselManagementState()" << "\n";
+#endif
 }
 
 // ----------------------------------------------------------------------------
@@ -41,6 +44,7 @@ void VesselManagementState::onProcess()
         std::vector<char>{'0', '1', '2'},
         user_choice
         );
+    std::cout << "\n";
 
     switch(user_choice)
     {
@@ -79,14 +83,14 @@ void VesselManagementState::createVessel()
         );
 
     continuouslyPromptForReal(
-        "Please enter the \"High-Ceiling Lane Length\" (HCLL) [0-1200]: ",
+        "Please enter the high-ceiling lane length [0-1200]: ",
         0,
         1200,
         vessel.high_ceiling_lane_length
         );
 
     continuouslyPromptForReal(
-        "Please enter the \"Low-Ceiling Lane Length\" (LCLL) [0-1200]: ",
+        "Please enter the low-ceiling lane length [0-1200]: ",
         0,
         1200,
         vessel.low_ceiling_lane_length
@@ -97,6 +101,7 @@ void VesselManagementState::createVessel()
         g_allowed_yes_no_responses,
         user_choice
         );
+    std::cout << "\n";
 
     // Decide what to do based on input:
     // ****************************************************************************
@@ -161,12 +166,17 @@ void VesselManagementState::listVessels()
         // If there are no more records to show based on offset:
         if(vessels.empty())
         {
-            // NOTE (SAVIZ): I understand that the value technically cannot be less than zero, but it's good programming practice to account for such cases nonetheless:
-            if(offset == 0) // If we are at the start of the list.
+            if (offset < 0) 
             {
-                std::cout << "No more previous records available for displaying!" << "\n\n";
+#ifdef DEBUG_MODE
+                std::cout << "[Debug] list offset < 0" << "\n\n";
+#endif
+                break;
             }
-
+            else if(offset == 0) // If we are at the start of the list.
+            {
+                std::cout << "No records available for displaying!" << "\n\n";
+            }
             else // If we are at the end of the list.
             {
                 // Clamp top:
@@ -174,46 +184,43 @@ void VesselManagementState::listVessels()
 
                 std::cout << "No more next records available for displaying!" << "\n\n";
             }
-
-            continue;  // In any case, skip the printing.
         }
-
-        // Print the list:
-        // ****************************************************************************
-
-        std::time_t time = std::time(nullptr);
-        std::tm* time_ptr = std::localtime(&time);
-
-        // Report title:
-        std::cout << "Vessel Report" << std::string(18, ' ') << std::put_time(time_ptr, "%Y-%m-%d  %H:%M:%S") << "\n";
-
-        // Column headers:
-        std::cout
-            << " ID  "
-            << std::setw(25) << std::left  << "Name" << "  "
-            << std::setw(6)  << std::right << "LCLL" << "  "
-            << std::setw(6)  << std::right << "HCLL" << "\n";
-
-        // One row for each fetched vessel record
-        for(const Vessel& vessel : vessels)
+        else 
         {
+            // Print the report
+            // ****************************************************************************
+     
+            // Report title:
+            std::cout << "Vessel Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
+
+            // Column headers:
             std::cout
-                << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
-                << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
-                << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length  // LCLL column
-                << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
-                << "\n";
+                << " ID  "
+                << std::setw(25) << std::left  << "Name" << "  "
+                << std::setw(6)  << std::right << "LCLL" << "  "
+                << std::setw(6)  << std::right << "HCLL" << "\n";
+
+            // One row for each fetched vessel record
+            for(const Vessel& vessel : vessels)
+            {
+                std::cout
+                    << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
+                    << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
+                    << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
+                    << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
+                    << "\n";
+            }
+            std::cout << "\n";
         }
 
         // Prompt for input:
         // ****************************************************************************
 
-        std::cout
-            << "\n\n"
-            << "<p> >> View the previous 5 vessels."
-            << "<n> >> View the next 5 vessels."
-            << "<e> >> Exit the list."
-            << "\n\n";
+        std::cout <<
+            "<p> >> View the previous 5 vessels.\n"
+            "<n> >> View the next 5 vessels.\n"
+            "<e> >> Exit the list.\n"
+            "\n";
 
         char user_choice = '\0';
 
@@ -250,7 +257,7 @@ void VesselManagementState::listVessels()
             break;
         }
 
-        std::cout << "\n\n";
+        std::cout << "\n";
 
         if(user_wants_to_exit)
         {

@@ -57,15 +57,11 @@ int main(int argc, char *argv[])
 
     //  Section: State setup
     // ------------------------------------------------------------------------
-
-    /*
-
+    
     StateManager state_manager;
 
     state_manager.init(database);
     state_manager.run();
-
-    */
 
     // ------------------------------------------------------------------------
 

@@ -1,5 +1,6 @@
 #include "input.hpp"
 #include <iostream>
+#include <sstream>
 
 void promptForInteger(
     const std::string& input_prompt,

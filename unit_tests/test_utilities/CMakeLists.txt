@@ -3,12 +3,12 @@
 # [[ ----------------------------------------------------------------------- ]]
 
 # NOTE (SAVIZ): Each unit test can act as a project. Project name cannot contain any spaces. Use underlines instead.
-project("Test_Containers"
+project("Test_Utilities"
 
     VERSION 0.0.1
 
     DESCRIPTION "A simple unit test to make sure that the
-                 containers module is working correctly."
+                 utilities module is working correctly."
 
     LANGUAGES CXX)
 
@@ -27,18 +27,16 @@ set(EXECUTABLE_NAME "${PROJECT_NAME}")
 # [[ ----------------------------------------------------------------------- ]]
 
 set(HEADERS
-    "${CMAKE_SOURCE_DIR}/include/containers.hpp"
     "${CMAKE_SOURCE_DIR}/include/utilities.hpp"
 )
 
 set(SOURCES
-    "${CMAKE_SOURCE_DIR}/src/containers.cpp"
     "${CMAKE_SOURCE_DIR}/src/utilities.cpp"
 )
 
 set(TEST_FILES
 
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/test_containers.cpp")
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/test_utilities.cpp")
 
 # [[ ----------------------------------------------------------------------- ]]
 # [[ ----------------------------------------------------------------------- ]]
