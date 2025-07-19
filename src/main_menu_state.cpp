@@ -39,7 +39,7 @@ void MainMenuState::onProcess()
         std::vector<char>{'0','1','2','3','4'},
         user_choice
         );
-    std::cout << "\n\n";
+    std::cout << "\n";
 
     switch (user_choice) {    
     case '1':

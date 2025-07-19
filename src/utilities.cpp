@@ -47,7 +47,7 @@ std::string Utilities::getLocalDateAndTime()
 
     std::ostringstream output_stream;
 
-    output_stream << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+    output_stream << std::put_time(&tm, "%Y-%m-%d  %H:%M:%S");
 
     return(output_stream.str());
 }

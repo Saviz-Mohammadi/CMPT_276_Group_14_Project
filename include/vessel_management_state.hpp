@@ -156,21 +156,6 @@ private:
     // ----------------------------------------------------------------------------
 
 
-    // ----------------------------------------------------------------------------
-    void printVesselList(
-        // std::vector<Vessel>& vessels // [IN] list of vessels to print on one report
-    );
-    /*
-    *   [Description]
-    *   Prints to the screen the vessel report with the correct columns and spacing given a list of vessels.
-    *
-    *   [Return]
-    *   void
-    *
-    *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
-    */
-    // ----------------------------------------------------------------------------
-};
+    };
 
 #endif // VESSEL_MANAGEMENT_STATE_HPP

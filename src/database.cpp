@@ -1255,10 +1255,12 @@ void Database::completeBoarding(
     //
     // Since both 'Sailing' and 'Vehicle' data are available here to us, we can perform the following operations:
     // 1- Calculate the amont of money to be paid (set in the 'amount_paid' field) when boarding based on the vehicle's dimensions.
-    // 14$ for short and low (LOW IS HEIGHT, SHORT IS LENGTH, TALL IS HEIGHT, LONG IS LENGTH)
-    // 2$ /m for long and low 
-    // 3$ /m for tall (3/m of the LENGTH)
-    // Note: Long is longer than 7 meters
+    //    14$ for short length and low height
+    //    2$ per m of length for long length and low height
+    //    3$ per m of length for tall height
+    //    all dimensions based on car not on lane
+    //    tall cars are > 2m tall
+    //    long cars are > 7m long
     // 1) Verify reservation exists
     const char* sql_query_check = R"SQL(
         SELECT 1 FROM reservations
