@@ -276,51 +276,119 @@ void SailingManagementState::deleteSailing()
 
 // ----------------------------------------------------------------------------
 void SailingManagementState::listSailingReports()
-{   
-    // Checker
-    bool stop = false; 
-    // Variables for prompting
-    std::string prompt; 
-    std::string output ;
+{
+    // Offset the starting record by the length amount:
+    int offset = 0;
 
-    // Sailing variables
-    std::vector<SailingReport> sailing_reports; 
+    // NOTE (SAVIZ): I am pretty sure we can save some performance if we create the vector once and reserve it once.
+    std::vector<SailingReport> sailing_reports;
 
-    // Display variables
-    int current = 1;
-    int offset = 0; 
+    sailing_reports.reserve(g_list_length);
 
+    // Continue listing sailing reports forever until the user exits:
+    while(true)
+    {
+        m_database->getSailingReports(
+            g_list_length,
+            offset,
+            sailing_reports,
+            g_is_successful,
+            g_outcome_message
+            );
 
-    // Beginning display
-    std::cout << "Sailing Report                                                 " << "YYYY-MM-DD" << "  " << "HH:MM:SS\n"; // Replace placeholders with variables of time later
-    std::cout << "    Sailing ID  Vessel Name                       LCLR    HCLR  Vehicles  \%Occupied\n"; 
-    
+        // Edge cases:
+        // ****************************************************************************
 
+        if(!g_is_successful)
+        {
+            std::cout << g_outcome_message << "\n\n";
 
-    do {
-        m_database->getSailingReports(g_list_length, offset, sailing_reports, g_is_successful, g_outcome_message);
-        for (const SailingReport& report : sailing_reports) {
-            std::string sailing_id_str;
-            Utilities::createSailingID(report.sailing.departure_terminal, report.sailing.departure_day, report.sailing.departure_hour, sailing_id_str);
-            std::cout
-                << std::setw(2) << std::right << current << ") "
-                << std::setw(10) << std::left << sailing_id_str << " "
-                << std::setw(30) << std::left << report.vessel.vessel_name
-                << std::fixed << std::setprecision(1)
-                << std::setw(7) << std::right << report.sailing.low_remaining_length // Clamp to >= 0 here
-                << std::setw(7) << std::right << report.sailing.high_remaining_length
-                << std::setw(9) << std::right << report.vehicle_count
-                << std::setw(10) << std::right << report.occupancy_percentage << "%"
-                << "\n";
-            ++current; 
+            break; // Go back to menu.
         }
 
-        std::cout
-            << "\n\n"
-            << "<p> >> View the previous 5 sailings."
-            << "<n> >> View the next 5 sailings."
-            << "<e> >> Exit the list."
-            << "\n\n";
+        // If there are no more records to show based on offset:
+        if(sailing_reports.empty())
+        {
+            if (offset < 0)
+            {
+#ifdef DEBUG_MODE
+                std::cout << "[Debug] list offset < 0" << "\n\n";
+#endif
+                break;
+            }
+
+            else if(offset == 0) // If we are at the start of the list.
+            {
+                std::cout << "No records available for displaying!" << "\n\n";
+            }
+
+            else // If we are at the end of the list.
+            {
+                // Clamp top:
+                offset -= g_list_length;
+
+                std::cout << "No more next records available for displaying!" << "\n\n";
+            }
+        }
+
+        else
+        {
+            // Print the report
+            // ****************************************************************************
+
+            // TODO (SAVIZ): All you have to do is to replace the header and the output with how the sailing report should look like:
+            //
+            //
+            // << std::setw(10) << std::left << sailing_id_str << " "
+            // << std::setw(30) << std::left << report.vessel.vessel_name
+            // << std::fixed << std::setprecision(1)
+            // << std::setw(7) << std::right << report.sailing.low_remaining_length
+            // << std::setw(7) << std::right << report.sailing.high_remaining_length
+            // << std::setw(9) << std::right << report.vehicle_count
+            // << std::setw(10) << std::right << report.occupancy_percentage << "%";
+
+            // Report title:
+            std::cout << "Sailing Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
+
+            // Column headers:
+            std::cout
+                << " ID  "
+                << std::setw(25) << std::left  << "Name" << "  "
+                << std::setw(6)  << std::right << "LCLL" << "  "
+                << std::setw(6)  << std::right << "HCLL" << "\n";
+
+            // One row for each fetched sailing report record
+            for(const SailingReport& sailing_report : sailing_reports)
+            {
+                std::string sailing_id = "";
+
+                // Squish the ID togther:
+                Utilities::createSailingID(
+                    sailing_report.sailing.departure_terminal,
+                    sailing_report.sailing.departure_day,
+                    sailing_report.sailing.departure_hour,
+                    sailing_id
+                    );
+
+                // Print the sailing:
+                std::cout
+                    << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
+                    << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
+                    << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
+                    << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
+                    << "\n";
+            }
+            std::cout << "\n";
+        }
+
+        // Prompt for input:
+        // ****************************************************************************
+
+        std::cout <<
+            "<p> >> View the previous 5 sailings.\n"
+            "<n> >> View the next 5 sailings.\n"
+            "<e> >> Exit the list.\n"
+            "\n";
 
         char user_choice = '\0';
 
@@ -328,23 +396,42 @@ void SailingManagementState::listSailingReports()
             "Please enter your selection [<p>, <n>, <e>]: ",
             g_allowed_navigation_responses,
             user_choice
-        );
+            );
 
-        if(std::tolower(user_choice) == 'e') {
-            stop = true; 
-            break; 
-        } 
-        else if (std::tolower(user_choice) == 'n') {
-            stop = false; 
-            offset += g_list_length; 
-        }
-        else if (std::tolower(user_choice) == 'p') {    
-            stop = false; 
-            offset = (offset >= g_list_length) ? (offset - g_list_length) : 0;  // Lower bound of 0
-             
-        }
-    } while(stop == false); 
+        // Decide what to do next:
+        // ****************************************************************************
 
+        bool user_wants_to_exit = false;
+
+        switch(user_choice)
+        {
+        case 'p':
+        case 'P':
+            offset -= g_list_length;
+
+            // Clamp bottom:
+            if(offset <= 0)
+            {
+                offset = 0;
+            }
+            break;
+        case 'n':
+        case 'N':
+            offset += g_list_length;
+            break;
+        case 'e':
+        case 'E':
+            user_wants_to_exit = true;
+            break;
+        }
+
+        std::cout << "\n";
+
+        if(user_wants_to_exit)
+        {
+            break;
+        }
+    }
 }
 
 // ----------------------------------------------------------------------------
