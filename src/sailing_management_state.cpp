@@ -18,13 +18,11 @@
 // ----------------------------------------------------------------------------
 SailingManagementState::SailingManagementState()
 {
-
 }
 
 // ----------------------------------------------------------------------------
 SailingManagementState::~SailingManagementState()
 {
-
 }
 
 // ----------------------------------------------------------------------------
@@ -43,16 +41,17 @@ void SailingManagementState::onEnter()
 // ----------------------------------------------------------------------------
 void SailingManagementState::onProcess()
 {   
-    // Variables
-    std::string prompt = "Please enter your selection [0-4]: ";
+    // Get input:
     char user_choice = '\0'; 
 
+    continuouslyPromptForCharacter(
+        "Please enter your selection [0-4]: ",
+        std::vector<char>{'0', '1', '2', '3', '4'},
+        user_choice
+        );
 
-    // Get user choice:
-    continuouslyPromptForCharacter(prompt, std::vector<char>{'0', '1', '2', '3', '4'}, user_choice);
 
-
-    // Switch on selection and start the appropriate action:
+    // Decide the appropriate action based on input:
     switch (user_choice)
     {
     case '1':
@@ -76,7 +75,6 @@ void SailingManagementState::onProcess()
 // ----------------------------------------------------------------------------
 void SailingManagementState::onExit()
 {
-
 }
 
 // ----------------------------------------------------------------------------
@@ -91,166 +89,183 @@ Now the input modules should entirely be responsible for bad input
 
 Note (Henry) 3: There should be possible solutions to prompt the user again after bad input like existing sailing or nonexistant vessel, they are commentented out.
 Uncomment them and replace it with them if you want to 
-*/ 
+*/
 void SailingManagementState::createSailing()
 {
-    // Variables for prompting    
-    std::string sailing_id_str; 
-    char user_choice = '0'; 
+    // Get vessel from user:
+    // ****************************************************************************
 
-    // Sailing varbiables
-    int sailing_id_int;
-    int vessel_id;
-    std::string departure_terminal;
-    int departure_day;
-    int departure_hour;
+    // TODO (SAVIZ): One question: Should we abort the operation and let them start over if they fail to select a correct existing Vessel? Or just continue asking them for it even if they get stuck?
 
-    Sailing new_sailing; 
-    Vessel referred_vessel; 
-    vessel_id = -1; 
-    bool valid_vessel = false; 
-    bool valid_sailing = false; 
-    // Get Vessel ID to create
-
+    int vessel_id = -1;
+    Vessel found_vessel;
 
     do {
-        vessel_id = -1; 
         continuouslyPromptForInteger(
-        "Please enter the ID of the vessel for the sailing: ", 
-        0, 
-        std::numeric_limits<int>::max(), 
-        vessel_id
-    );
-        m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message); 
-        if(!g_is_successful) {
-            std::cout << "Invalid Vessel ID, please try again"; 
-            valid_vessel = false; 
-        } 
-        else if (g_is_successful == true) {
-            valid_vessel = true; 
+            "Please enter the ID of the vessel for the sailing: ",
+            0,
+            std::numeric_limits<int>::max(),
+            vessel_id
+            );
+
+        m_database->getVesselByID(
+            vessel_id,
+            found_vessel,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(!g_is_successful)
+        {
+            std::cout << "Invalid Vessel ID, please try again: " << g_outcome_message << "\n\n";
         }
-        
-    } while(valid_vessel = false); 
+    }while(!g_is_successful);
 
-    // Get Sailing ID to create
 
+    // Check if sailing already exists:
+    // ****************************************************************************
+
+    // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that already exists?
+
+    std::string sailing_id_string = "";
+    std::string departure_terminal = "";
+    int departure_day = 0;
+    int departure_hour = 0;
+    Sailing new_sailing;
 
     do {
-        promptForString(
+        continuouslyPromptForString(
             "Please enter the ID of the sailing [TTT-dd-hh]: ",
-            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"), //TTT-dd-hh pattern
-            sailing_id_str, 
-            g_is_successful, 
-            g_outcome_message
+            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            sailing_id_string
         );
 
-        Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
-        m_database->getSailingByID( departure_terminal, departure_day, departure_hour, new_sailing, g_is_successful, g_outcome_message);
-        if(g_is_successful) {
-            valid_sailing = false; 
-            std::cout << "Sailing ID already exists"; 
-        } else {
-            valid_sailing = true; 
+        Utilities::extractSailingID(
+            sailing_id_string,
+            departure_terminal,
+            departure_day,
+            departure_hour
+            );
+
+        m_database->getSailingByID(
+            departure_terminal,
+            departure_day,
+            departure_hour,
+            new_sailing,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(g_is_successful)
+        {
+            std::cout << "Sailing ID already exists." << "\n\n";
         }
-    } while(valid_sailing == false); 
+    }while(!g_is_successful); // Note Ethan: is this supposed to be while(successful)? because we want to continue if we fail to find the given sailing id.
 
+    // Prompting for confirmation and creating the sailing:
+    // ****************************************************************************
 
-    // Prompting confirmation of sailing creation
+    char user_choice = '0';
 
     continuouslyPromptForCharacter(
         "Are you sure you want to create this new sailing [y/n]? ",
         g_allowed_yes_no_responses,
         user_choice
-    ); 
+    );
 
     switch(user_choice)
     {
-        // Attempt Sailing creationg
+        // Create sailing if 'yes' is selected:
         case 'y':
-        case 'Y': 
-        { // curly braces allow variables to be defined only within the scope of this case
-            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
+        case 'Y':
+            m_database->addSailing(
+                new_sailing,
+                g_is_successful,
+                g_outcome_message
+                );
 
-            // Extracting HCL and LCL from vessel
-            m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message);
-            double lcl = referred_vessel.low_ceiling_lane_length;
-            double hcl = referred_vessel.high_ceiling_lane_length;
-
-            Sailing new_sailing(0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl);
-
-            m_database->addSailing(new_sailing, g_is_successful, g_outcome_message);
-
-
-            if (g_is_successful)
-            {
-                std::cout << "Sailing created with ID of " << sailing_id_str << std::endl;
-            }
-
-            else
-            {
-                std::cout << g_outcome_message << "\n";
-            }
+            // In case of success of failure, just display the message that the database produces:
+            std::cout << g_outcome_message << std::endl;
             break;
-        }
+
+        // Abort the creation if 'no' is selected:
         case 'n':
         case 'N':
             std::cout << "Canceled sailing creation" << std::endl;
             break;
     }
-
-   
-
 }
 
 // ----------------------------------------------------------------------------
 void SailingManagementState::deleteSailing()
 {
-    // Variables for prompting    
-    std::string sailing_id_str; 
-    char user_choice = '0'; 
-    int sailing_id_int;
-    std::string departure_terminal;
-    int departure_day;
-    int departure_hour;
+    // Get Sailing by ID:
+    // ****************************************************************************
+
+    // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that does not exist?
+
+    std::string sailing_id_string = "";
+    std::string departure_terminal = "";
+    int departure_day = 0;
+    int departure_hour = 0;
+    Sailing sailing_targeted_for_deletion;
+
+    do {
+        continuouslyPromptForString(
+            "Please enter the ID of the sailing [TTT-dd-hh]: ",
+            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            sailing_id_string
+            );
+
+        Utilities::extractSailingID(
+            sailing_id_string,
+            departure_terminal,
+            departure_day,
+            departure_hour
+            );
+
+        m_database->getSailingByID(
+            departure_terminal,
+            departure_day,
+            departure_hour,
+            sailing_targeted_for_deletion,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(!g_is_successful)
+        {
+            std::cout << g_outcome_message << "\n\n";
+        }
+    }while(!g_is_successful);
 
 
-    // Get Sailing ID to delete
+    // Prompting for confirmation and deleting the sailing:
+    // ****************************************************************************
 
-    promptForString(
-        "Please enter the ID of the sailing [TTT-dd-hh]: ", 
-        sailing_id_str, 
-        g_is_successful, 
-        g_outcome_message
-    );
-
-    // Prompting confirmation of sailing deletion
+    char user_choice = '0';
 
     continuouslyPromptForCharacter(
-        "Are you sure you want to delete this sailing [y/n]? ", 
-        g_allowed_yes_no_responses, 
-        user_choice 
-    ); 
+        "Are you sure you want to delete this sailing [y/n]? ",
+        g_allowed_yes_no_responses,
+        user_choice
+        );
 
-    Sailing referred_sailing; 
     switch(user_choice)
     {
-        // Attempt vessel deletion:
+        // Delete sailing if 'yes' is selected:
         case 'y':
         case 'Y':
-            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour); 
-            m_database->getSailingByID(departure_terminal, departure_day, departure_hour, referred_sailing, g_is_successful, g_outcome_message); 
-            m_database->removeSailing(referred_sailing, g_is_successful, g_outcome_message); 
+            m_database->removeSailing(
+                sailing_targeted_for_deletion,
+                g_is_successful,
+                g_outcome_message
+                );
 
-            if(g_is_successful)
-            {
-                std::cout << "Sailing successfully deleted!" << "\n";
-            }
-
-            else
-            {
-                std::cout << g_outcome_message << "\n";
-            }
+            // In case of success of failure, just display the message that the database produces:
+            std::cout << g_outcome_message << "\n";
             break;
+        // Abort the creation if 'no' is selected:
         case 'n':
         case 'N':
             std::cout << "Sailing deletion operation aborted!" << "\n";
@@ -260,51 +275,119 @@ void SailingManagementState::deleteSailing()
 
 // ----------------------------------------------------------------------------
 void SailingManagementState::listSailingReports()
-{   
-    // Checker
-    bool stop = false; 
-    // Variables for prompting
-    std::string prompt; 
-    std::string output ;
+{
+    // Offset the starting record by the length amount:
+    int offset = 0;
 
-    // Sailing variables
-    std::vector<SailingReport> sailing_reports; 
+    // NOTE (SAVIZ): I am pretty sure we can save some performance if we create the vector once and reserve it once.
+    std::vector<SailingReport> sailing_reports;
 
-    // Display variables
-    int current = 1;
-    int offset = 0; 
+    sailing_reports.reserve(g_list_length);
 
+    // Continue listing sailing reports forever until the user exits:
+    while(true)
+    {
+        m_database->getSailingReports(
+            g_list_length,
+            offset,
+            sailing_reports,
+            g_is_successful,
+            g_outcome_message
+            );
 
-    // Beginning display
-    std::cout << "Sailing Report                                                 " << "YYYY-MM-DD" << "  " << "HH:MM:SS\n"; // Replace placeholders with variables of time later
-    std::cout << "    Sailing ID  Vessel Name                       LCLR    HCLR  Vehicles  \%Occupied\n"; 
-    
+        // Edge cases:
+        // ****************************************************************************
 
+        if(!g_is_successful)
+        {
+            std::cout << g_outcome_message << "\n\n";
 
-    do {
-        m_database->getSailingReports(g_list_length, offset, sailing_reports, g_is_successful, g_outcome_message);
-        for (const SailingReport& report : sailing_reports) {
-            std::string sailing_id_str;
-            Utilities::createSailingID(report.sailing.departure_terminal, report.sailing.departure_day, report.sailing.departure_hour, sailing_id_str);
-            std::cout
-                << std::setw(2) << std::right << current << ") "
-                << std::setw(10) << std::left << sailing_id_str << " "
-                << std::setw(30) << std::left << report.vessel.vessel_name
-                << std::fixed << std::setprecision(1)
-                << std::setw(7) << std::right << report.sailing.low_remaining_length // Clamp to >= 0 here
-                << std::setw(7) << std::right << report.sailing.high_remaining_length
-                << std::setw(9) << std::right << report.vehicle_count
-                << std::setw(10) << std::right << report.occupancy_percentage << "%"
-                << "\n";
-            ++current; 
+            break; // Go back to menu.
         }
 
-        std::cout
-            << "\n\n"
-            << "<p> >> View the previous 5 sailings."
-            << "<n> >> View the next 5 sailings."
-            << "<e> >> Exit the list."
-            << "\n\n";
+        // If there are no more records to show based on offset:
+        if(sailing_reports.empty())
+        {
+            if (offset < 0)
+            {
+#ifdef DEBUG_MODE
+                std::cout << "[Debug] list offset < 0" << "\n\n";
+#endif
+                break;
+            }
+
+            else if(offset == 0) // If we are at the start of the list.
+            {
+                std::cout << "No records available for displaying!" << "\n\n";
+            }
+
+            else // If we are at the end of the list.
+            {
+                // Clamp top:
+                offset -= g_list_length;
+
+                std::cout << "No more next records available for displaying!" << "\n\n";
+            }
+        }
+
+        else
+        {
+            // Print the report
+            // ****************************************************************************
+
+            // TODO (SAVIZ): All you have to do is to replace the header and the output with how the sailing report should look like:
+            //
+            //
+            // << std::setw(10) << std::left << sailing_id_str << " "
+            // << std::setw(30) << std::left << report.vessel.vessel_name
+            // << std::fixed << std::setprecision(1)
+            // << std::setw(7) << std::right << report.sailing.low_remaining_length
+            // << std::setw(7) << std::right << report.sailing.high_remaining_length
+            // << std::setw(9) << std::right << report.vehicle_count
+            // << std::setw(10) << std::right << report.occupancy_percentage << "%";
+
+            // Report title:
+            std::cout << "Sailing Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
+
+            // Column headers:
+            std::cout
+                << " ID  "
+                << std::setw(25) << std::left  << "Name" << "  "
+                << std::setw(6)  << std::right << "LCLL" << "  "
+                << std::setw(6)  << std::right << "HCLL" << "\n";
+
+            // One row for each fetched sailing report record
+            for(const SailingReport& sailing_report : sailing_reports)
+            {
+                std::string sailing_id = "";
+
+                // Squish the ID togther:
+                Utilities::createSailingID(
+                    sailing_report.sailing.departure_terminal,
+                    sailing_report.sailing.departure_day,
+                    sailing_report.sailing.departure_hour,
+                    sailing_id
+                    );
+
+                // Print the sailing:
+                // std::cout
+                //     << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
+                //     << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
+                //     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
+                //     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
+                //     << "\n";
+            }
+            std::cout << "\n";
+        }
+
+        // Prompt for input:
+        // ****************************************************************************
+
+        std::cout <<
+            "<p> >> View the previous 5 sailings.\n"
+            "<n> >> View the next 5 sailings.\n"
+            "<e> >> Exit the list.\n"
+            "\n";
 
         char user_choice = '\0';
 
@@ -312,66 +395,123 @@ void SailingManagementState::listSailingReports()
             "Please enter your selection [<p>, <n>, <e>]: ",
             g_allowed_navigation_responses,
             user_choice
-        );
+            );
 
-        if(std::tolower(user_choice) == 'e') {
-            stop = true; 
-            break; 
-        } 
-        else if (std::tolower(user_choice) == 'n') {
-            stop = false; 
-            offset += g_list_length; 
-        }
-        else if (std::tolower(user_choice) == 'p') {    
-            stop = false; 
-            offset = (offset >= g_list_length) ? (offset - g_list_length) : 0;  // Lower bound of 0
-             
-        }
-    } while(stop == false); 
+        // Decide what to do next:
+        // ****************************************************************************
 
+        bool user_wants_to_exit = false;
+
+        switch(user_choice)
+        {
+        case 'p':
+        case 'P':
+            offset -= g_list_length;
+
+            // Clamp bottom:
+            if(offset <= 0)
+            {
+                offset = 0;
+            }
+            break;
+        case 'n':
+        case 'N':
+            offset += g_list_length;
+            break;
+        case 'e':
+        case 'E':
+            user_wants_to_exit = true;
+            break;
+        }
+
+        std::cout << "\n";
+
+        if(user_wants_to_exit)
+        {
+            break;
+        }
+    }
 }
 
 // ----------------------------------------------------------------------------
 void SailingManagementState::listSailingReport()
 {
-    // Variables for prompting    
-    std::string sailing_id_str; 
-    char user_choice = '0'; 
+    // Get Sailing by ID:
+    // ****************************************************************************
 
-    // Variables to store sailing data
-    int sailing_id_int;
-    std::string departure_terminal;
-    int departure_day;
-    int departure_hour;
+    // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that does not exist?
+
+    std::string sailing_id_string = "";
+    std::string departure_terminal = "";
+    int departure_day = 0;
+    int departure_hour = 0;
+    Sailing sailing_targeted_for_reporting;
+
+    do {
+        continuouslyPromptForString(
+            "Please enter the ID of the sailing [TTT-dd-hh]: ",
+            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            sailing_id_string
+            );
+
+        Utilities::extractSailingID(
+            sailing_id_string,
+            departure_terminal,
+            departure_day,
+            departure_hour
+            );
+
+        m_database->getSailingByID(
+            departure_terminal,
+            departure_day,
+            departure_hour,
+            sailing_targeted_for_reporting,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(!g_is_successful)
+        {
+            std::cout << g_outcome_message << "\n\n";
+        }
+    }while(!g_is_successful);
 
 
-    // Get Sailing ID to display
+    // Get Sailing report and print it:
+    // ****************************************************************************
 
-    promptForString(
-        "Please enter the ID of the sailing [TTT-dd-hh]: ", 
-        sailing_id_str, 
-        g_is_successful, 
+    SailingReport sailing_report;
+
+    m_database->getSailingReportByID(
+        sailing_targeted_for_reporting,
+        sailing_report,
+        g_is_successful,
         g_outcome_message
-    );
+        );
+
+    std::string sailing_id = "";
+
+    // Squish the ID togther:
+    Utilities::createSailingID(
+        sailing_report.sailing.departure_terminal,
+        sailing_report.sailing.departure_day,
+        sailing_report.sailing.departure_hour,
+        sailing_id
+        );
 
 
-    Sailing referred_sailing;
-    SailingReport report; 
-    Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour); 
-    m_database->getSailingByID(departure_terminal, departure_day, departure_hour, referred_sailing, g_is_successful, g_outcome_message); 
-    m_database->getSailingReportByID(referred_sailing, report, g_is_successful, g_outcome_message); 
+    // TODO (SAVIZ): You can print the same output from the last method here:
 
-   
-    std::cout << " Sailing ID  Vessel Name                       LCLR    HCLR  Vehicles  \%Occupied\n"; 
-    std::cout
-        << " " 
-        << std::setw(10) << std::left << sailing_id_str << " "
-        << std::setw(30) << std::left << report.vessel.vessel_name
-        << std::fixed << std::setprecision(1)
-        << std::setw(7) << std::right << report.sailing.low_remaining_length
-        << std::setw(7) << std::right << report.sailing.high_remaining_length
-        << std::setw(9) << std::right << report.vehicle_count
-        << std::setw(10) << std::right << report.occupancy_percentage << "%"
-        << "\n";
-        
+    // std::cout << " Sailing ID  Vessel Name                       LCLR    HCLR  Vehicles  \%Occupied\n";
+    // std::cout
+    // << " "
+    // << std::setw(10) << std::left << sailing_id_str << " "
+    // << std::setw(30) << std::left << report.vessel.vessel_name
+    // << std::fixed << std::setprecision(1)
+    // << std::setw(7) << std::right << report.sailing.low_remaining_length
+    // << std::setw(7) << std::right << report.sailing.high_remaining_length
+    // << std::setw(9) << std::right << report.vehicle_count
+    // << std::setw(10) << std::right << report.occupancy_percentage << "%"
+    // << "\n";
+
 }

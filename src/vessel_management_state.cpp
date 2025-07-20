@@ -112,16 +112,7 @@ void VesselManagementState::createVessel()
         case 'y':
         case 'Y':
             State::m_database->addVessel(vessel, g_is_successful, g_outcome_message);
-
-            if(g_is_successful)
-            {
-                std::cout << "New vessel successfully created!" << "\n";
-            }
-
-            else
-            {
-                std::cout << g_outcome_message << "\n";
-            }
+            std::cout << g_outcome_message << "\n";
             break;
         case 'n':
         case 'N':
@@ -138,13 +129,14 @@ void VesselManagementState::listVessels()
     // Offset the starting record by the length amount:
     int offset = 0;
 
+    // NOTE (SAVIZ): I am pretty sure we can save some performance if we create the vector once and reserve it once.
+    std::vector<Vessel> vessels;
+
+    vessels.reserve(g_list_length);
+
     // Continue listing vessels forever until the user exits:
     while(true)
     {
-        std::vector<Vessel> vessels;
-
-        vessels.reserve(g_list_length);
-
         m_database->getVessels(
             g_list_length,
             offset,
