@@ -686,12 +686,9 @@ void Database::getSailingReports(
         SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
 
         COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
-        TRUNC
         (
-            (
             (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
-            ) * 100.0
-        ) AS occupancy_percentage
+        ) * 100.0 AS occupancy_percentage
 
         FROM sailings
 
@@ -820,12 +817,9 @@ void Database::getSailingReportByID(
         SELECT sailings.departure_terminal, sailings.departure_day, sailings.departure_hour, sailings.low_remaining_length, sailings.high_remaining_length, vessels.vessel_name,
 
         COUNT(reservations.vehicle_id_fk) AS reserved_vehicle_count,
-        TRUNC
         (
-            (
             (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length - sailings.low_remaining_length - sailings.high_remaining_length) / (vessels.low_ceiling_lane_length + vessels.high_ceiling_lane_length)
-            ) * 100.0
-        ) AS occupancy_percentage
+        ) * 100.0 AS occupancy_percentage
 
         FROM sailings
 
