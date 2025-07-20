@@ -18,13 +18,11 @@
 // ----------------------------------------------------------------------------
 SailingManagementState::SailingManagementState()
 {
-
 }
 
 // ----------------------------------------------------------------------------
 SailingManagementState::~SailingManagementState()
 {
-
 }
 
 // ----------------------------------------------------------------------------
@@ -43,16 +41,17 @@ void SailingManagementState::onEnter()
 // ----------------------------------------------------------------------------
 void SailingManagementState::onProcess()
 {   
-    // Variables
-    std::string prompt = "Please enter your selection [0-4]: ";
+    // Get input:
     char user_choice = '\0'; 
 
+    continuouslyPromptForCharacter(
+        "Please enter your selection [0-4]: ",
+        std::vector<char>{'0', '1', '2', '3', '4'},
+        user_choice
+        );
 
-    // Get user choice:
-    continuouslyPromptForCharacter(prompt, std::vector<char>{'0', '1', '2', '3', '4'}, user_choice);
 
-
-    // Switch on selection and start the appropriate action:
+    // Decide the appropriate action based on input:
     switch (user_choice)
     {
     case '1':
@@ -76,7 +75,6 @@ void SailingManagementState::onProcess()
 // ----------------------------------------------------------------------------
 void SailingManagementState::onExit()
 {
-
 }
 
 // ----------------------------------------------------------------------------
@@ -91,115 +89,112 @@ Now the input modules should entirely be responsible for bad input
 
 Note (Henry) 3: There should be possible solutions to prompt the user again after bad input like existing sailing or nonexistant vessel, they are commentented out.
 Uncomment them and replace it with them if you want to 
-*/ 
+*/
 void SailingManagementState::createSailing()
 {
-    // Variables for prompting    
-    std::string sailing_id_str; 
-    char user_choice = '0'; 
+    // Get vessel from user:
+    // ****************************************************************************
 
-    // Sailing varbiables
-    int sailing_id_int;
-    int vessel_id;
-    std::string departure_terminal;
-    int departure_day;
-    int departure_hour;
+    // TODO (SAVIZ): One question: Should we abort the operation and let them start over if they fail to select a correct existing Vessel? Or just continue asking them for it even if they get stuck?
 
-    Sailing new_sailing; 
-    Vessel referred_vessel; 
-    vessel_id = -1; 
-    bool valid_vessel = false; 
-    bool valid_sailing = false; 
-    // Get Vessel ID to create
-
+    int vessel_id = -1;
+    Vessel found_vessel;
 
     do {
-        vessel_id = -1; 
         continuouslyPromptForInteger(
-        "Please enter the ID of the vessel for the sailing: ", 
-        0, 
-        std::numeric_limits<int>::max(), 
-        vessel_id
-    );
-        m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message); 
-        if(!g_is_successful) {
-            std::cout << "Invalid Vessel ID, please try again"; 
-            valid_vessel = false; 
-        } 
-        else if (g_is_successful == true) {
-            valid_vessel = true; 
+            "Please enter the ID of the vessel for the sailing: ",
+            0,
+            std::numeric_limits<int>::max(),
+            vessel_id
+            );
+
+        m_database->getVesselByID(
+            vessel_id,
+            found_vessel,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(!g_is_successful)
+        {
+            std::cout << "Invalid Vessel ID, please try again: " << g_outcome_message << "\n\n";
         }
-        
-    } while(valid_vessel = false); 
+    }while(!g_is_successful);
 
-    // Get Sailing ID to create
 
+    // Check if sailing already exists:
+    // ****************************************************************************
+
+    // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that already exists?
+
+    std::string sailing_id_string = "";
+    std::string departure_terminal = "";
+    int departure_day = 0;
+    int departure_hour = 0;
+    Sailing new_sailing;
 
     do {
-        promptForString(
+        continuouslyPromptForString(
             "Please enter the ID of the sailing [TTT-dd-hh]: ",
-            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"), //TTT-dd-hh pattern
-            sailing_id_str, 
-            g_is_successful, 
-            g_outcome_message
+            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            sailing_id_string
         );
 
-        Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
-        m_database->getSailingByID( departure_terminal, departure_day, departure_hour, new_sailing, g_is_successful, g_outcome_message);
-        if(g_is_successful) {
-            valid_sailing = false; 
-            std::cout << "Sailing ID already exists"; 
-        } else {
-            valid_sailing = true; 
+        Utilities::extractSailingID(
+            sailing_id_string,
+            departure_terminal,
+            departure_day,
+            departure_hour
+            );
+
+        m_database->getSailingByID(
+            departure_terminal,
+            departure_day,
+            departure_hour,
+            new_sailing,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(g_is_successful)
+        {
+            std::cout << "Sailing ID already exists." << "\n\n";
         }
-    } while(valid_sailing == false); 
+    }while(!g_is_successful);
 
 
-    // Prompting confirmation of sailing creation
+    // Prompting for confirmation and creating the sailing:
+    // ****************************************************************************
+
+    char user_choice = '0';
 
     continuouslyPromptForCharacter(
         "Are you sure you want to create this new sailing [y/n]? ",
         g_allowed_yes_no_responses,
         user_choice
-    ); 
+    );
 
     switch(user_choice)
     {
-        // Attempt Sailing creationg
+        // Create sailing if 'yes' is selected:
         case 'y':
-        case 'Y': 
-        { // curly braces allow variables to be defined only within the scope of this case
-            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour);
+        case 'Y':
+            m_database->addSailing(
+                new_sailing,
+                g_is_successful,
+                g_outcome_message
+                );
 
-            // Extracting HCL and LCL from vessel
-            m_database->getVesselByID(vessel_id, referred_vessel, g_is_successful, g_outcome_message);
-            double lcl = referred_vessel.low_ceiling_lane_length;
-            double hcl = referred_vessel.high_ceiling_lane_length;
-
-            Sailing new_sailing{ 0, vessel_id, departure_terminal, departure_day, departure_hour, lcl, hcl };
-
-            m_database->addSailing(new_sailing, g_is_successful, g_outcome_message);
-
-
-            if (g_is_successful)
-            {
-                std::cout << "Sailing created with ID of " << sailing_id_str << std::endl;
-            }
-
-            else
-            {
-                std::cout << g_outcome_message << "\n";
-            }
+            // In case of success of failure, just display the message that the database produces:
+            std::cout << g_outcome_message << std::endl;
             break;
-        }
+
+        // Abort the creation if 'no' is selected:
         case 'n':
         case 'N':
             std::cout << "Canceled sailing creation" << std::endl;
             break;
     }
-
-   
-
 }
 
 // ----------------------------------------------------------------------------
