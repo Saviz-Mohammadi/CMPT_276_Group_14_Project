@@ -139,12 +139,14 @@ void VesselManagementState::listVessels()
     int offset = 0;
 
     // Continue listing vessels forever until the user exits:
+
+    // NOTE (SAVIZ): I am pretty sure we can save some performance if we create the vector once and reserve it once.
+    std::vector<Vessel> vessels;
+
+    vessels.reserve(g_list_length);
+
     while(true)
     {
-        std::vector<Vessel> vessels;
-
-        vessels.reserve(g_list_length);
-
         m_database->getVessels(
             g_list_length,
             offset,
