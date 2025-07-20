@@ -200,52 +200,73 @@ void SailingManagementState::createSailing()
 // ----------------------------------------------------------------------------
 void SailingManagementState::deleteSailing()
 {
-    // Variables for prompting    
-    std::string sailing_id_str; 
-    char user_choice = '0'; 
-    int sailing_id_int;
-    std::string departure_terminal;
-    int departure_day;
-    int departure_hour;
+    // Get Sailing by ID:
+    // ****************************************************************************
+
+    // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that does not exist?
+
+    std::string sailing_id_string = "";
+    std::string departure_terminal = "";
+    int departure_day = 0;
+    int departure_hour = 0;
+    Sailing sailing_targeted_for_deletion;
+
+    do {
+        continuouslyPromptForString(
+            "Please enter the ID of the sailing [TTT-dd-hh]: ",
+            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            sailing_id_string
+            );
+
+        Utilities::extractSailingID(
+            sailing_id_string,
+            departure_terminal,
+            departure_day,
+            departure_hour
+            );
+
+        m_database->getSailingByID(
+            departure_terminal,
+            departure_day,
+            departure_hour,
+            sailing_targeted_for_deletion,
+            g_is_successful,
+            g_outcome_message
+            );
+
+        if(!g_is_successful)
+        {
+            std::cout << g_outcome_message << "\n\n";
+        }
+    }while(!g_is_successful);
 
 
-    // Get Sailing ID to delete
+    // Prompting for confirmation and deleting the sailing:
+    // ****************************************************************************
 
-    promptForString(
-        "Please enter the ID of the sailing [TTT-dd-hh]: ", 
-        sailing_id_str, 
-        g_is_successful, 
-        g_outcome_message
-    );
-
-    // Prompting confirmation of sailing deletion
+    char user_choice = '0';
 
     continuouslyPromptForCharacter(
-        "Are you sure you want to delete this sailing [y/n]? ", 
-        g_allowed_yes_no_responses, 
-        user_choice 
-    ); 
+        "Are you sure you want to delete this sailing [y/n]? ",
+        g_allowed_yes_no_responses,
+        user_choice
+        );
 
-    Sailing referred_sailing; 
     switch(user_choice)
     {
-        // Attempt vessel deletion:
+        // Delete sailing if 'yes' is selected:
         case 'y':
         case 'Y':
-            Utilities::extractSailingID(sailing_id_str, departure_terminal, departure_day, departure_hour); 
-            m_database->getSailingByID(departure_terminal, departure_day, departure_hour, referred_sailing, g_is_successful, g_outcome_message); 
-            m_database->removeSailing(referred_sailing, g_is_successful, g_outcome_message); 
+            m_database->removeSailing(
+                sailing_targeted_for_deletion,
+                g_is_successful,
+                g_outcome_message
+                );
 
-            if(g_is_successful)
-            {
-                std::cout << "Sailing successfully deleted!" << "\n";
-            }
-
-            else
-            {
-                std::cout << g_outcome_message << "\n";
-            }
+            // In case of success of failure, just display the message that the database produces:
+            std::cout << g_outcome_message << "\n";
             break;
+        // Abort the creation if 'no' is selected:
         case 'n':
         case 'N':
             std::cout << "Sailing deletion operation aborted!" << "\n";
