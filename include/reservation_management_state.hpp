@@ -19,7 +19,8 @@
  *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations regarding reservations.
+ * This file is responsible for providing a state/mode where we can complete operations
+ *  regarding reservations.
 */
 
 // ============================================================================
@@ -38,7 +39,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the ReservationManagementState class. used to instantiate a physical object in memory.
+    *   Constructor for the ReservationManagementState class. used to instantiate a
+    *   physical object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -56,7 +58,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the ReservationManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *   Destructor for the ReservationManagementState class. Ensures proper cleanup of
+    *   resources and polymorphic destruction.
     *
     *   [Return]
     *   N/A
@@ -72,14 +75,16 @@ public:
 
     /*
     *   [Description]
-    *   Called when entering the reservation management state. Use this method to display menus,
+    *   Called when entering the reservation management state. Use this method to display
+    *   menus,
     *   initialize UI components, or reset state-specific variables.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -98,7 +103,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -109,14 +115,16 @@ public:
 
     /*
     *   [Description]
-    *   Called when exiting the reservation management state. Perform any necessary cleanup,
+    *   Called when exiting the reservation management state. Perform any necessary
+    *   cleanup,
     *   such as clearing buffers or saving temporary data.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -126,7 +134,8 @@ private:
 
     /*
     *   [Description]
-    *   Initiates the workflow for creating a reservation entry (sailing remaining length will be reduced as a result of this).
+    *   Initiates the workflow for creating a reservation entry (sailing remaining
+    *   length will be reduced as a result of this).
     *   Obtains and validates input with the help of input module.
     *   In addition, interacts with the databse module to create the reservation.
     *
@@ -134,7 +143,8 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -145,7 +155,8 @@ private:
 
     /*
     *   [Description]
-    *   Initiates the workflow for deleting a reservation entry (sailing remaining length will be increased as a result of this).
+    *   Initiates the workflow for deleting a reservation entry (sailing remaining
+    *   length will be increased as a result of this).
     *   Obtains and validates input with the help of input module.
     *   In addition, interacts with the databse module to delete the reservation.
     *
@@ -153,7 +164,8 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 };

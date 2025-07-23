@@ -19,7 +19,8 @@
  *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations regarding switching to other menus and exiting.
+ * This file is responsible for providing a state/mode where we can complete operations 
+ * regarding switching to other menus and exiting.
 */
 
 // ============================================================================
@@ -38,7 +39,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the MainMenuState class. used to instantiate a physical object in memory.
+    *   Constructor for the MainMenuState class. used to instantiate a physical object
+    *   in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -56,7 +58,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the MainMenuState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *   Destructor for the MainMenuState class. Ensures proper cleanup of resources 
+    *   and polymorphic destruction.
     *
     *   [Return]
     *   N/A
@@ -79,7 +82,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -97,7 +101,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -115,7 +120,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 };

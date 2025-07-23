@@ -19,7 +19,8 @@
  *
  * [PURPOSE]
  *
- * This file is responsible for providing a base for all other states to inherit from and adhere to.
+ * This file is responsible for providing a base for all other states to inherit from
+ *  and adhere to.
 */
 
 // ============================================================================
@@ -57,7 +58,8 @@ public:
 
     /*
     *   [Description]
-    *   Virtual destructor for the State base class. Ensures that destruction is polymorphic.
+    *   Virtual destructor for the State base class. Ensures that destruction is 
+    *   polymorphic.
     *   This means that all subclasses’ cleanup code is invoked correctly.
     *   Derived destructors must handle their own teardown logic.
     *
@@ -85,7 +87,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -95,14 +98,17 @@ public:
 
     /*
     *   [Description]
-    *   This pure virtual function defines the behavior that should occur when entering a state.
-    *   Subclasses should use this method as a setup phase for initializing variables, displaying initial output, and related tasks.
+    *   This pure virtual function defines the behavior that should occur when entering
+    *   a state.
+    *   Subclasses should use this method as a setup phase for initializing variables,
+    *   displaying initial output, and related tasks.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external 
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -113,15 +119,19 @@ public:
 
     /*
     *   [Description]
-    *   This pure virtual function defines the primary behavior that should occur while the system is in a given state.
-    *   Subclasses should implement this method to handle the main loop of the state, gather input, and invoke relevant logic.
-    *   It should also determine the next state to transition to upon exiting, based on applicable conditions.
+    *   This pure virtual function defines the primary behavior that should occur while
+    *   the system is in a given state.
+    *   Subclasses should implement this method to handle the main loop of the state, 
+    *   gather input, and invoke relevant logic.
+    *   It should also determine the next state to transition to upon exiting, based on 
+    *   applicable conditions.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external 
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -132,22 +142,27 @@ public:
 
     /*
     *   [Description]
-    *   This pure virtual function defines the behavior that should occur when exiting a state.
-    *   Subclasses should use this method as a cleanup phase for releasing resources, resetting variables, and performing other teardown tasks.
+    *   This pure virtual function defines the behavior that should occur when exiting 
+    *   a state.
+    *   Subclasses should use this method as a cleanup phase for releasing resources, 
+    *   resetting variables, and performing other teardown tasks.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
     
 protected:
-    // A pointer to the 'StateManager', allowing access to methods related to state transitions and management.
+    // A pointer to the 'StateManager', allowing access to methods related to state
+    // transitions and management.
     StateManager* m_state_manager;
 
-    // A pointer to the 'Database', providing access to underlying database functionality.
+    // A pointer to the 'Database', providing access to underlying database 
+    // functionality.
     Database* m_database;
 };
 

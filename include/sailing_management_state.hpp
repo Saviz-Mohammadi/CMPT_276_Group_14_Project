@@ -19,7 +19,8 @@
  *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations regarding sailings.
+ * This file is responsible for providing a state/mode where we can complete operations
+ * regarding sailings.
 */
 
 // ============================================================================
@@ -38,7 +39,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the SailingManagementState class. used to instantiate a physical object in memory.
+    *   Constructor for the SailingManagementState class. used to instantiate a physical
+    *   object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -56,7 +58,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the SailingManagementState class. Ensures proper cleanup of resources and polymorphic destruction.
+    *   Destructor for the SailingManagementState class. Ensures proper cleanup of
+    *   resources and polymorphic destruction.
     *
     *   [Return]
     *   N/A
@@ -72,14 +75,16 @@ public:
 
     /*
     *   [Description]
-    *   Called when entering the sailing management state. Use this method to display menus,
+    *   Called when entering the sailing management state. Use this method to display
+    *   menus,
     *   initialize UI components, or reset state-specific variables.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -91,14 +96,16 @@ public:
     /*
     *   [Description]
     *   Main processing loop for the sailing management state. Handles user input,
-    *   delegates actions such as creating, deleting sailings, and listing sailing reports.
+    *   delegates actions such as creating, deleting sailings, and listing sailing
+    *   reports.
     *   Also, determines state transitions.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -116,7 +123,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -134,7 +142,8 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -147,13 +156,15 @@ private:
     *   [Description]
     *   Initiates the workflow for deleting a sailing entry.
     *   Obtains and validates input with the help of input module.
-    *   In addition, interacts with the databse module to delete the sailing as well as reservations associated with the sailing.
+    *   In addition, interacts with the databse module to delete the sailing as well as
+    *   reservations associated with the sailing.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -164,14 +175,17 @@ private:
 
     /*
     *   [Description]
-    *   Initiates the workflow for retrieving and displaying a summary of sailing reports (with a certain count).
-    *   Accomplishes this by interacting with the databse module to obtain the list of sailing reports.
+    *   Initiates the workflow for retrieving and displaying a summary of sailing
+    *   reports (with a certain count).
+    *   Accomplishes this by interacting with the databse module to obtain the list
+    *   of sailing reports.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -182,14 +196,17 @@ private:
 
     /*
     *   [Description]
-    *   Initiates the workflow for retrieving and displaying a summary of sailing report (just one).
-    *   Accomplishes this by interacting with the databse module to obtain the sailing report.
+    *   Initiates the workflow for retrieving and displaying a summary of sailing report
+    *   (just one).
+    *   Accomplishes this by interacting with the databse module to obtain the sailing
+    *   report.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 };

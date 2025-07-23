@@ -19,7 +19,8 @@
  *
  * [PURPOSE]
  *
- * This file is responsible for providing a centralized location for orchestrating all states and managing transitions between them.
+ * This file is responsible for providing a centralized location for orchestrating all 
+ * states and managing transitions between them.
 */
 
 // ============================================================================
@@ -56,7 +57,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the StateManager class. used to instantiate a physical object in memory.
+    *   Constructor for the StateManager class. used to instantiate a physical object 
+    *   in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -74,7 +76,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the StateManager class. Ensures proper cleanup of resources and polymorphic destruction.
+    *   Destructor for the StateManager class. Ensures proper cleanup of resources and 
+    *   polymorphic destruction.
     *
     *   [Return]
     *   N/A
@@ -87,20 +90,24 @@ public:
 public:
     // ----------------------------------------------------------------------------
     void init(
-        Database* database // [IN] | A pointer to the database instance that each underlying State will require.
+        Database* database // [IN] | A pointer to the database instance that each '
+                           //        underlying State will require.
         );
 
     /*
     *   [Description]
     *   This function attempts to initialize the required member fields with data.
-    *   It will create each underlying State and make sure they get pointers/references to the data that they require.
-    *   It is important to call this method before invoking anything else in the StateManager.
+    *   It will create each underlying State and make sure they get pointers/references
+    *   to the data that they require.
+    *   It is important to call this method before invoking anything else in the 
+    *   StateManager.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -111,7 +118,8 @@ public:
 
     /*
     *   [Description]
-    *   This function triggers the main Finite State Machine loop by calling the 'onEnter()', 'onProcess()', and 'onExit()' methods of each underlying state.
+    *   This function triggers the main Finite State Machine loop by calling the 
+    *   'onEnter()', 'onProcess()', and 'onExit()' methods of each underlying state.
     *   The loop begins with the initial state, which is MainMenuState.
     *   It is important to call 'init()' before invoking this method.
     *
@@ -119,7 +127,8 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
@@ -132,13 +141,15 @@ public:
 
     /*
     *   [Description]
-    *   This function allows each underlying state to specify the next state that the StateManager should transition to.
+    *   This function allows each underlying state to specify the next state that the 
+    *   StateManager should transition to.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external components do not need to manage exception handling for its operations.
+    *   This method is designed to handle all errors internally, ensuring that external
+    *   components do not need to manage exception handling for its operations.
     */
     // ----------------------------------------------------------------------------
 
