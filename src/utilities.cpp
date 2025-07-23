@@ -4,7 +4,8 @@
 #include <iomanip>
 #include "utilities.hpp"
 
-void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal, int& departure_day, int& departure_hour) {
+void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal, int& departure_day, int& departure_hour)
+{
     // String stream
     std::stringstream string_stream(sailing_id);
 

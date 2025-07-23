@@ -2,7 +2,7 @@
 #include "utilities.hpp"
 #include "containers.hpp"
 
-TEST_CASE("Vehicle: default constructor initializes to zeros and empty strings", "[Vehicle]")
+TEST_CASE("Vehicle constructor test: default constructor initializes to zeros and empty strings", "[Vehicle]")
 {
     Vehicle vehicle;
 
@@ -13,7 +13,7 @@ TEST_CASE("Vehicle: default constructor initializes to zeros and empty strings",
     REQUIRE(Utilities::almostEqual(vehicle.height, 0.0));
 }
 
-TEST_CASE("Vehicle: parameterized constructor sets all members", "[Vehicle]")
+TEST_CASE("Vehicle constructor test: parameterized constructor sets all members", "[Vehicle]")
 {
     Vehicle vehicle(
         42,
@@ -30,7 +30,7 @@ TEST_CASE("Vehicle: parameterized constructor sets all members", "[Vehicle]")
     REQUIRE(Utilities::almostEqual(vehicle.height, 12.3));
 }
 
-TEST_CASE("Vessel: default constructor initializes to zeros and empty string", "[Vessel]")
+TEST_CASE("Vessel constructor test: default constructor initializes to zeros and empty string", "[Vessel]")
 {
     Vessel vessel;
 
@@ -40,7 +40,7 @@ TEST_CASE("Vessel: default constructor initializes to zeros and empty string", "
     REQUIRE(Utilities::almostEqual(vessel.high_ceiling_lane_length, 0.0));
 }
 
-TEST_CASE("Vessel: parameterized constructor sets all members", "[Vessel]")
+TEST_CASE("Vessel constructor test: parameterized constructor sets all members", "[Vessel]")
 {
     Vessel vessel(
         7,
@@ -55,7 +55,7 @@ TEST_CASE("Vessel: parameterized constructor sets all members", "[Vessel]")
     REQUIRE(Utilities::almostEqual(vessel.high_ceiling_lane_length, 25.5));
 }
 
-TEST_CASE("Sailing: default constructor initializes to zeros and empty terminal", "[Sailing]")
+TEST_CASE("Sailing constructor test: default constructor initializes to zeros and empty terminal", "[Sailing]")
 {
     Sailing sailing;
 
@@ -68,7 +68,7 @@ TEST_CASE("Sailing: default constructor initializes to zeros and empty terminal"
     REQUIRE(Utilities::almostEqual(sailing.high_remaining_length, 0.0));
 }
 
-TEST_CASE("Sailing: parameterized constructor sets all members", "[Sailing]")
+TEST_CASE("Sailing constructor test: parameterized constructor sets all members", "[Sailing]")
 {
     Sailing sailing(
         13,
@@ -89,7 +89,7 @@ TEST_CASE("Sailing: parameterized constructor sets all members", "[Sailing]")
     REQUIRE(Utilities::almostEqual(sailing.high_remaining_length, 8.75));
 }
 
-TEST_CASE("Reservation: default constructor initializes to zeros and false", "[Reservation]")
+TEST_CASE("Reservation constructor test: default constructor initializes to zeros and false", "[Reservation]")
 {
     Reservation reservation;
 
@@ -99,7 +99,7 @@ TEST_CASE("Reservation: default constructor initializes to zeros and false", "[R
     REQUIRE(reservation.reserved_for_low_lane == false);
 }
 
-TEST_CASE("Reservation: parameterized constructor sets all members", "[Reservation]")
+TEST_CASE("Reservation constructor test: parameterized constructor sets all members", "[Reservation]")
 {
     Reservation reservation(
         13,
@@ -114,7 +114,7 @@ TEST_CASE("Reservation: parameterized constructor sets all members", "[Reservati
     REQUIRE(reservation.reserved_for_low_lane == true);
 }
 
-TEST_CASE("SailingReport: default constructor initializes to default sub‑objects and zeroes", "[SailingReport]")
+TEST_CASE("SailingReport constructor test: default constructor initializes to default sub‑objects and zeroes", "[SailingReport]")
 {
     SailingReport sailing_report;
 
@@ -135,9 +135,8 @@ TEST_CASE("SailingReport: default constructor initializes to default sub‑objec
     REQUIRE(Utilities::almostEqual(sailing_report.occupancy_percentage, 0.0));
 }
 
-TEST_CASE("SailingReport: parameterized constructor sets all sub‑objects and fields", "[SailingReport]")
+TEST_CASE("SailingReport constructor test: parameterized constructor sets all sub‑objects and fields", "[SailingReport]")
 {
-    Vehicle dummyVehicle;
     Vessel vessel(7, "Sea Hare", 30.0, 35.0);
     Sailing sailing(21, 7, "Dock A", 22, 14, 15.5, 10.25);
     int count = 5;
