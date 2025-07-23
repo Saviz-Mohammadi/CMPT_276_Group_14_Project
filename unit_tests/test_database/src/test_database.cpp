@@ -1,5 +1,6 @@
 #include <catch2/catch_all.hpp>
 #include <iostream>
+#include <filesystem>
 #include "database.hpp"
 #include "utilities.hpp"
 
@@ -13,7 +14,7 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
     Database database;
 
-    database.openConnection("database.db", is_successful, outcome_message);
+    database.openConnection("vessel_test.db", is_successful, outcome_message);
 
     // If the operation is not successful, then just abort:
     REQUIRE(is_successful);
@@ -54,12 +55,37 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
     REQUIRE(retrieved_vessel.low_ceiling_lane_length == new_vessel.low_ceiling_lane_length);
     REQUIRE(retrieved_vessel.high_ceiling_lane_length == new_vessel.high_ceiling_lane_length);
 
+    // This time it should fail, because the vessel already exists:
+    database.addVessel(
+        new_vessel,
+        new_vessel_id,
+        is_successful,
+        outcome_message
+        );
+
+    std::cout << outcome_message << "\n\n";
+
+    REQUIRE(!is_successful);
 
     //  Section: Cleanup
     // ****************************************************************************
 
     database.cutConnection(is_successful, outcome_message);
 
+    std::cout << outcome_message << "\n\n";
+
     // If the operation is not successful, then just print message:
     REQUIRE(is_successful);
+
+    std::filesystem::path path_to_file = "./vessel_test.db";
+
+    if(std::filesystem::remove(path_to_file))
+    {
+        std::cout << "Deleted successfully\n";
+    }
+
+    else
+    {
+        std::cout << "File did not exist\n";
+    }
 }
