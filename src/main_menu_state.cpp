@@ -1,3 +1,48 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Main Menu State
+ *
+ *
+ * [FILE NAME]
+ *
+ * main_menu_state.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - No persistent data; purely dispatches to other states.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Lightweight: no heap allocations or large containers.
+ *
+ * Input abstraction:
+ *  - Uses `continuouslyPromptForCharacter` to centralize prompt, validation, and error feedback.
+ *
+ * Error handling & feedback:
+ *  - Assumes valid input due to validation helper; defaults to exit on unexpected input.
+ *
+ * State management:
+ *  - Inherits from `State`; uses `m_state_manager->selectNextState()` to transition.
+ *
+ * Future enhancements:
+ *  - Add graceful shutdown procedures in `onExit()`.
+ *  - Integrate logging or analytics around menu selections.
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include <iostream>
 #include "input.hpp"
 #include "main_menu_state.hpp"

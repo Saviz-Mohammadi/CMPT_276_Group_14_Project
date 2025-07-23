@@ -1,3 +1,47 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Global Configuration
+ *
+ *
+ * [FILE NAME]
+ *
+ * global.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Holds application‑wide default values for pagination, prompt results, and size limits.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Uses static globals for direct, low‑overhead access.
+ *  - Simplifies code by avoiding parameter passing, at the cost of global state.
+ *
+ * Usage:
+ *  - `g_list_length` determines how many records to fetch/display by default.
+ *  - `g_is_successful` and `g_outcome_message` communicate status from input helpers.
+ *  - `g_allowed_yes_no_responses` and `g_allowed_navigation_responses` centralize valid input choices.
+ *  - `g_vessel_name_length` bounds vessel name inputs.
+ *  - `g_vehicle_*` variables define valid ranges for vehicle dimensions.
+ *
+ * Future enhancements:
+ *  - Encapsulate into a configuration struct or singleton for testability.
+ *  - Load defaults from a config file or environment to allow runtime customization.
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include "global.hpp"
 
 // how many items to return by default
@@ -16,6 +60,9 @@ std::vector<char> g_allowed_navigation_responses = {
     'N', 'n',   // Next
     'E', 'e'    // Exit
 };
+
+// Vessel name length
+int g_vessel_name_length = 25;
 
 // Vehicle size ranges
 double g_vehicle_min_length = 0;

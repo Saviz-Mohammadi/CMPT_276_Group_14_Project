@@ -18,22 +18,29 @@
  *
  *
  * [DESIGN NOTES]
- * 
- * (Note, Ethan) the assignment document says "memory/speed/complexity trade-offs, 
- * representation choices and alternatives. Also, comments on private/static module 
- * constants, types, and variables."
- * 
- * When an operation started here is to return to the Vessels menu after it finishes, the 
- * Vessel Management State tells the State Manager to run this state next and then exits. 
- * This way OnEnter() is called again and the menu is printed again without need for an 
- * infinite loop.
- * 
- * The containers for storing vessel information and character input collected from the 
- * user could be stored in static variables declared in the scope of this .cpp file since 
- * only one vessel/user selection is operated on at one time, but were instead declared
- * inside each method requiring them to save small amout of memory when the method/module
- * goes out of scope.
- * 
+ *
+ * Data representation:
+ *  -Uses a simple `Vessel` struct for storing information related to vessels.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *
+ *  -`.reserve(g_list_length)` avoids repeated vector reallocations.
+ *  -DB results are pulled 5 at a time into a `std::vector<Vessel>` to avoid using too much memory.
+ *
+ * Input abstraction:
+ *  -Regex‑based string validation (`std::regex(R"([\w ]{1,25})")`) simplifies input checks.
+ *  -`continuouslyPromptFor` helpers centralize prompting, validation, and error feedback.
+ *
+ * Error handling and feedback:
+ *  -Global flags (`g_is_successful`, `g_outcome_message`) carry DB error state.
+ *
+ * Debugging and logging:
+ *  -Controlled by `#ifdef DEBUG_MODE` prints.
+ *  -Could swap to a logging framework with levels (INFO/WARN/ERROR) for production use.
+ *
+ * State management:
+ *  -Inherits from `State` and uses `m_state_manager->selectNextState()` to drive transitions.
+ *
 */
 
 // ============================================================================

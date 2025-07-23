@@ -1,3 +1,51 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Reservation Management State
+ *
+ * [FILE NAME]
+ *
+ * reservation_management_state.cpp
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Uses `Sailing` and `Vehicle` structs for reservation operations.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Validation loops incur extra database calls but ensure correct input.
+ *  - Only small objects and strings are held at any time, minimizing memory usage.
+ *
+ * Input abstraction:
+ *  - Regex patterns enforce sailing‑ID and license‑plate formats.
+ *  - `continuouslyPromptFor...` helpers unify prompting, validation, and error feedback.
+ *
+ * Error handling & feedback:
+ *  - Uses global flags (`g_is_successful`, `g_outcome_message`) to capture and display DB errors.
+ *  - Early `return` on failure aborts the current operation cleanly.
+ *
+ * Debugging & logging:
+ *  - Could wrap additional diagnostics in `#ifdef DEBUG_MODE` blocks if needed.
+ *
+ * State management:
+ *  - Inherits from `State`; uses `m_state_manager->selectNextState()` to loop or return to main menu.
+ *
+ * Future enhancements:
+ *  - Extract common ID‑validation loops into reusable utility functions.
+ *  - Implement transactional semantics to roll back multi‑step failures in reservation creation.
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include <vector>
 #include <iostream>
 #include <regex>

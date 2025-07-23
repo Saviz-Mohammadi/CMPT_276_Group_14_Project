@@ -1,3 +1,55 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * State Manager
+ *
+ *
+ * [FILE NAME]
+ *
+ * state_manager.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Maintains an internal pointer `m_state` to the active `State` instance.
+ *  - Holds concrete state instances as members: main menu, vessel management, sailing management, reservation management, boarding.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - States are stored as members (no heap allocations) for minimal overhead.
+ *  - Uses raw pointers for state transitions: fast, but no ownership safety.
+ *
+ * Initialization & lifecycle:
+ *  - Default constructor zeroes `m_state` pointer.
+ *  - `init(database)` binds each state instance to this manager and the shared database.
+ *  - `run()` dispatches `onEnter`/`onProcess`/`onExit` in a loop until `m_state` becomes `nullptr`.
+ *
+ * State transition logic:
+ *  - `selectNextState` switches `m_state` based on the `States` enum.
+ *  - Exit state sets `m_state` to `nullptr`, terminating the run loop.
+ *
+ * Error handling & assumptions:
+ *  - Assumes `init` is always called before `run()`.
+ *  - No null‐checks on `m_state` inside `run()` loop apart from the loop condition.
+ *
+ * Future enhancements:
+ *  - Consider dynamic registration of states (e.g., via map<States, State*>).
+ *  - Replace raw pointers with references or smart pointers for safety.
+ *  - Add logging or metrics around state transitions for diagnostics.
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include "state_manager.hpp"
 
 StateManager::StateManager()
