@@ -1,3 +1,57 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Database
+ *
+ *
+ * [FILE NAME]
+ *
+ * database.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Uses `sqlite3* m_sqlite3` to manage the SQLite connection.
+ *
+ * Connection management:
+ *  - `openConnection` opens the DB file, begins a transaction, and creates tables.
+ *  - `cutConnection` cleanly closes the connection.
+ *
+ * CRUD operations:
+ *  - Vessels: `addVessel`, `getVesselByID`, `getVessels`.
+ *  - Sailings: `addSailing`, `removeSailing`, `getSailingByID`, `getSailingReports`, `getSailingReportByID`.
+ *  - Reservations: `addReservation`, `removeReservation`, `completeBoarding` (handles payment logic and lane updates).
+ *  - Vehicles: `addVehicle`, `getVehicleByID`.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Prepared statements with `sqlite3_prepare_v2` and parameter binding prevent SQL injection.
+ *  - Finalizing statements (`sqlite3_finalize`) after use frees resources promptly.
+ *  - Transaction for schema setup uses `sqlite3_exec` for simplicity.
+ *
+ * Error handling & feedback:
+ *  - Methods report via `bool& is_successful` and `std::string& outcome_message`.
+ *  - Debug prints in ctor/dtor under `DEBUG_MODE`.
+ *  - Does not use exceptions; relies on SQLite return codes.
+ *
+ * Future enhancements:
+ *  - Batch operations and explicit transactions for multi-step updates.
+ *  - Abstract SQL strings into a query builder or ORM layer.
+ *  - Add thread-safety or connection pooling for concurrent scenarios.
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include <iostream>
 #include "database.hpp"
 

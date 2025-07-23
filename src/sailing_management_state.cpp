@@ -1,3 +1,55 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Sailing Management State
+ *
+ *
+ * [FILE NAME]
+ *
+ * sailing_management_state.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Henry Nguyen, Ethan Scott
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Uses a `Sailing` struct for create/delete operations.
+ *  - Uses `SailingReport` for listing and detailed view of sailings.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Reserves `std::vector<SailingReport>` to `g_list_length` to minimize reallocations.
+ *  - Validation loops may incur repeated database calls; consider batch checks or caching.
+ *
+ * Input abstraction:
+ *  - Regex‑based prompts (`std::regex(R"([A-Z]{3}-\d{2}-\d{2})")`) enforce ID formatting.
+ *  - `continuouslyPromptFor...` helpers centralize user input, validation, and error feedback.
+ *
+ * Error handling & feedback:
+ *  - Uses global flags (`g_is_successful`, `g_outcome_message`) to capture DB errors.
+ *  - Re‑prompts user on invalid vessel or sailing IDs.
+ *
+ * Debugging & logging:
+ *  - `#ifdef DEBUG_MODE` can wrap additional diagnostics.
+ *
+ * State management:
+ *  - Inherits from `State`; uses `m_state_manager->selectNextState()` for transitions.
+ *
+ * Future enhancements:
+ *  - Extract common DB‑validation loops into shared utility functions.
+ *  - Improve UX by offering abort vs retry choices explicitly.
+ *  - Implement full pagination display for sailing reports in `listSailingReports()`.
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include <vector>
 #include <limits> 
 #include <iostream>

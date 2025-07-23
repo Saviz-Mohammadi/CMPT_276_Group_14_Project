@@ -1,3 +1,51 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Input Helpers
+ *
+ *
+ * [FILE NAME]
+ *
+ * input.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - All input is read as lines of text (`std::string input_line`), then parsed/formatted.
+ *  - Numeric and character values are extracted via `std::stringstream`.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Uses exception masks on `std::cin` to capture I/O failures: clear but incurs overhead.
+ *  - `std::stringstream` parsing is straightforward but allocates buffers per call.
+ *  - Regex validation (`std::regex_match`) ensures format correctness; may impact performance on large inputs.
+ *
+ * Input abstraction:
+ *  - Low‑level `promptForXxx` functions perform a single attempt with success flag and message.
+ *  - High‑level `continuouslyPromptForXxx` loops until valid input is acquired, displaying errors.
+ *
+ * Error handling & feedback:
+ *  - I/O failures (`badbit`, `failbit`, `eofbit`) caught and converted into user‑friendly messages.
+ *  - Range checks and validation patterns produce clear `"out of range"` or `"invalid format"` messages.
+ *
+ * Future enhancements:
+ *  - Factor out common try‑catch and exception‑mask code into shared utility to reduce duplication.
+ *  - Consider non‑exception parsing (e.g., `std::cin.clear()` + `std::cin.fail()`) for lighter weight.
+ *  - Add thread‑safety or support for alternative input sources (files, network streams).
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include "input.hpp"
 #include <iostream>
 #include <sstream>

@@ -1,3 +1,54 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Boarding State
+ *
+ *
+ * [FILE NAME]
+ *
+ * boarding_state.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Uses static module‐scope `Vehicle s_vehicle` and `Sailing s_sailing` to persist current context across calls.
+ *  - Uses static `char s_user_choice` to capture yes/no decisions.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Static variables avoid repeated allocation but limit reuse and thread‑safety.
+ *  - Looped database calls in `startBoarding()` ensure correctness at cost of multiple round‑trips.
+ *
+ * Input abstraction:
+ *  - Regex‐validated prompts for sailing IDs and license plates.
+ *  - Uses `continuouslyPromptForString` for repeated valid input, and `promptForCharacter` for single‐shot choices.
+ *
+ * Error handling & feedback:
+ *  - Checks `g_is_successful` after each DB call; on failure, prints `g_outcome_message` and retries or aborts.
+ *  - On missing vehicle record, collects owner info then invokes `addVehicle()`.
+ *
+ * Debugging & logging:
+ *  - Wrapped in `#ifdef DEBUG_MODE` to log missing‐vehicle cases.
+ *
+ * State management:
+ *  - Inherits from `State`; `onEnter()` resets static context, `onProcess()` loads sailing then calls `startBoarding()`.
+ *
+ * Future enhancements:
+ *  - Replace static module variables with instance members for better encapsulation.
+ *  - Refactor shared reservation/boarding logic to reuse code with ReservationManagementState.
+ *  - Add an explicit exit option in `onProcess()` to return to main menu.
+ */
+
+// ============================================================================
+// ============================================================================
 
 #include <vector>
 #include <iostream>
@@ -139,6 +190,7 @@ void BoardingState::startBoarding()
         {
             std::cout << "Boarding completed!" << "\n\n";
         }
+
         else
         {
             std::cout << g_outcome_message << "\n\n";

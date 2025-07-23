@@ -41,7 +41,11 @@ int main(int argc, char *argv[])
 
     Database *database = new Database();
 
-    database->openConnection("database.db", is_successful, outcome_message);
+    database->openConnection(
+        "database.db",
+        is_successful,
+        outcome_message
+        );
 
     // If the operation is not successful, then just abort:
     if(!is_successful)
@@ -70,7 +74,10 @@ int main(int argc, char *argv[])
     //  Section: Cleanup
     // ****************************************************************************
 
-    database->cutConnection(is_successful, outcome_message);
+    database->cutConnection(
+        is_successful,
+        outcome_message
+        );
 
     // If the operation is not successful, then just print message:
     if(!is_successful)

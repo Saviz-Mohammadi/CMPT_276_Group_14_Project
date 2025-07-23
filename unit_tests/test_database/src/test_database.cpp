@@ -6,21 +6,27 @@
 
 TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function works correctly", "[Vessel]")
 {
-    //  Section: Database setup
-    // ****************************************************************************
-
     bool is_successful = false;
     std::string outcome_message = "";
 
+
+    //  Database setup
+    // ****************************************************************************
+
     Database database;
 
-    database.openConnection("vessel_test.db", is_successful, outcome_message);
+    database.openConnection(
+        "vessel_test.db",
+        is_successful,
+        outcome_message
+        );
 
-    // If the operation is not successful, then just abort:
+    std::cout << outcome_message << "\n\n";
+
     REQUIRE(is_successful);
 
 
-    //  Section: Make new vessel and check it was created correctly
+    //  Making new vessel and checking it was created correctly
     // ****************************************************************************
 
     Vessel new_vessel;
@@ -42,10 +48,14 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
     REQUIRE(is_successful);
 
-    // Get the vessel back from database and see if it has the correct value:
     Vessel retrieved_vessel;
 
-    database.getVesselByID(new_vessel_id, retrieved_vessel, is_successful, outcome_message);
+    database.getVesselByID(
+        new_vessel_id,
+        retrieved_vessel,
+        is_successful,
+        outcome_message
+        );
 
     std::cout << outcome_message << "\n\n";
 
@@ -55,7 +65,10 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
     REQUIRE(retrieved_vessel.low_ceiling_lane_length == new_vessel.low_ceiling_lane_length);
     REQUIRE(retrieved_vessel.high_ceiling_lane_length == new_vessel.high_ceiling_lane_length);
 
-    // This time it should fail, because the vessel already exists:
+
+    // Attempt to create the same vessel again (This should return failure as a result)
+    // ****************************************************************************
+
     database.addVessel(
         new_vessel,
         new_vessel_id,
@@ -67,14 +80,14 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
     REQUIRE(!is_successful);
 
-    //  Section: Cleanup
+
+    // Cleanup and Reset
     // ****************************************************************************
 
     database.cutConnection(is_successful, outcome_message);
 
     std::cout << outcome_message << "\n\n";
 
-    // If the operation is not successful, then just print message:
     REQUIRE(is_successful);
 
     std::filesystem::path path_to_file = "./vessel_test.db";

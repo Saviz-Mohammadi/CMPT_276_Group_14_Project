@@ -1,10 +1,63 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Utilities
+ *
+ *
+ * [FILE NAME]
+ *
+ * utilities.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ *
+ *
+ * [DESIGN NOTES]
+ *
+ * Data representation:
+ *  - Sailing IDs are strings in the form "Terminal-DD-HH".
+ *  - Local date/time is represented via std::time_t and std::tm.
+ *
+ * Memory / speed / complexity trade‑offs:
+ *  - Uses `std::stringstream`/`std::ostringstream` for clarity; incurs extra allocations.
+ *  - Formatting with `std::setw` and `std::setfill` guarantees two‑digit fields.
+ *
+ * Parsing & formatting abstraction:
+ *  - `extractSailingID` centralizes splitting a sailing‑ID into terminal, day, hour.
+ *  - `createSailingID` centralizes zero‑padded composition of a sailing‑ID.
+ *
+ * Floating‑point comparison:
+ *  - `almostEqual` uses `std::abs` and an epsilon to avoid strict equality pitfalls.
+ *
+ * Date/time retrieval:
+ *  - `getLocalDateAndTime` uses `std::localtime` + `std::put_time` for ISO‑style timestamps.
+ *  - Note: `std::localtime` is not thread‑safe; consider `std::localtime_r` for multithreading.
+ *
+ * Error handling & assumptions:
+ *  - All functions assume well‑formed input; no validation or error reporting is performed.
+ *
+ * Future enhancements:
+ *  - Replace stringstreams with minimal‑allocation parsing/formatting in performance‑critical paths.
+ *  - Adopt thread‑safe or timezone‑aware time utilities if required.
+ *
+ */
+
+// ============================================================================
+// ============================================================================
+
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
 #include "utilities.hpp"
 
-void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal, int& departure_day, int& departure_hour) {
+void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal, int& departure_day, int& departure_hour)
+{
     // String stream
     std::stringstream string_stream(sailing_id);
 
