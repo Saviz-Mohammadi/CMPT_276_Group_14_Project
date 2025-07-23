@@ -1,3 +1,44 @@
+// ============================================================================
+// ============================================================================
+
+/*
+ * [MODULE]
+ *
+ * Vessel Management State
+ *
+ *
+ * [FILE NAME]
+ *
+ * vessel_management_state.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/22 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [DESIGN NOTES]
+ * 
+ * (Note, Ethan) the assignment document says "memory/speed/complexity trade-offs, 
+ * representation choices and alternatives. Also, comments on private/static module 
+ * constants, types, and variables."
+ * 
+ * When an operation started here is to return to the Vessels menu after it finishes, the 
+ * Vessel Management State tells the State Manager to run this state next and then exits. 
+ * This way OnEnter() is called again and the menu is printed again without need for an 
+ * infinite loop.
+ * 
+ * The containers for storing vessel information and character input collected from the 
+ * user could be stored in static variables declared in the scope of this .cpp file since 
+ * only one vessel/user selection is operated on at one time, but were instead declared
+ * inside each method requiring them to save small amout of memory when the method/module
+ * goes out of scope.
+ * 
+*/
+
+// ============================================================================
+// ============================================================================
+
 #include <iostream>
 #include <vector>
 #include <regex>
@@ -36,6 +77,7 @@ void VesselManagementState::onEnter()
 // ----------------------------------------------------------------------------
 void VesselManagementState::onProcess()
 {
+    //Container for users choice from the list of menu operations
     char user_choice = '\0';
 
     // Get user choice:
@@ -46,6 +88,7 @@ void VesselManagementState::onProcess()
         );
     std::cout << "\n";
 
+    //Execute appropriate operation and select next menu state
     switch(user_choice)
     {
         case '1':
@@ -70,7 +113,10 @@ void VesselManagementState::onExit()
 // ----------------------------------------------------------------------------
 void VesselManagementState::createVessel()
 {
+    //Container to hold users input vessel information
     Vessel vessel;
+
+    //Container for users [y/n] choice
     char user_choice = '\0';
 
     // Obtain input for new vessel:
@@ -173,7 +219,7 @@ void VesselManagementState::listVessels()
             }
             else // If we are at the end of the list.
             {
-                // Clamp top:
+                // Clamp offset at the end:
                 offset -= g_list_length;
 
                 std::cout << "No more next records available for displaying!" << "\n\n";
@@ -235,7 +281,7 @@ void VesselManagementState::listVessels()
         case 'P':
             offset -= g_list_length;
 
-            // Clamp bottom:
+            // Clamp offset at bottom of vessel list:
             if(offset <= 0)
             {
                 offset = 0;
