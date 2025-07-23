@@ -125,6 +125,7 @@ void Database::cutConnection(
 
 void Database::addVessel(
     Vessel vessel,
+    int& vessel_id,
     bool& is_successful,
     std::string& outcome_message
     )
@@ -187,6 +188,9 @@ void Database::addVessel(
 
         return;
     }
+
+    // 4) Retrieve new vessel ID
+    vessel_id = static_cast<int>(sqlite3_last_insert_rowid(m_sqlite3));
 
     is_successful = true;
     outcome_message = std::string("Vessel creation succeeded");

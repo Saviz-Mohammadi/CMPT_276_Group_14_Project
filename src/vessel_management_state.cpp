@@ -106,12 +106,14 @@ void VesselManagementState::createVessel()
     // Decide what to do based on input:
     // ****************************************************************************
 
+    int new_vessel_id = -1;
+
     switch(user_choice)
     {
         // Attempt vessel creation:
         case 'y':
         case 'Y':
-            State::m_database->addVessel(vessel, g_is_successful, g_outcome_message);
+            State::m_database->addVessel(vessel, new_vessel_id, g_is_successful, g_outcome_message);
             std::cout << g_outcome_message << "\n";
             break;
         case 'n':

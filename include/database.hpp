@@ -124,6 +124,7 @@ public:
     // ----------------------------------------------------------------------------
     void addVessel(
         Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
+        int& vessel_id,              // [OUT] | The returned ID of the new vessel.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
