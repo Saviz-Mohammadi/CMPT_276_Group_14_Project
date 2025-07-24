@@ -33,6 +33,7 @@
 
 #include <string>
 
+// ----------------------------------------------------------------------------
 struct Vessel
 {
 public:
@@ -45,12 +46,13 @@ public:
     ~Vessel();
 
 public:
-    int vessel_id;
-    std::string vessel_name;
-    double low_ceiling_lane_length;
-    double high_ceiling_lane_length;
+    int vessel_id;                      //unique autoincrementing integer key
+    std::string vessel_name;            //<=25 characters string name of the vessel, unique
+    double low_ceiling_lane_length;     //total combined length in meters of all low lanes
+    double high_ceiling_lane_length;    //total combined length in meters of all high lanes
 };
 
+// ----------------------------------------------------------------------------
 struct Sailing
 {
 public:
@@ -67,15 +69,18 @@ public:
     ~Sailing();
 
 public:
-    int sailing_id;
-    int vessel_id;
-    std::string departure_terminal;
-    int departure_day;
-    int departure_hour;
-    double low_remaining_length;
-    double high_remaining_length;
+    int sailing_id;                     //unique autoincrementing integer key
+    int vessel_id;                      //foreign key from vessel table
+    std::string departure_terminal;     //TTT part of sailing id string
+    int departure_day;                  //DD part of sailing id string
+    int departure_hour;                 //HH part of sailing id string 0-24
+    double low_remaining_length;        //total combined length in meters of free space
+                                        //in low lanes
+    double high_remaining_length;       //total combined length in meters of free space
+                                        //in high lanes
 };
 
+// ----------------------------------------------------------------------------
 struct Reservation
 {
 public:
@@ -89,12 +94,13 @@ public:
     ~Reservation();
 
 public:
-    int sailing_id;
-    int vehicle_id;
-    int amount_paid;
-    bool reserved_for_low_lane;
+    int sailing_id;                 //foreign key from sailing table
+    int vehicle_id;                 //foreign key from sailing table
+    int amount_paid;                //price of fare in cents, 0 or -1 if not boarded
+    bool reserved_for_low_lane;     //needed to check if a short vehicle is in a tall lane
 };
 
+// ----------------------------------------------------------------------------
 struct Vehicle
 {
 public:
@@ -108,13 +114,16 @@ public:
     ~Vehicle();
 
 public:
-    int vehicle_id;
-    std::string license_plate;
-    std::string phone_number;
-    double length;
-    double height;
+    int vehicle_id;             //unique autoincrementing integer key
+    std::string license_plate;  //license plate or the vehicle, 2-10 characters
+    std::string phone_number;   //owner phone number, 8-14 characters
+    double length;              //in meters
+    double height;              //in meters
 };
 
+// ----------------------------------------------------------------------------
+// Contains all neccessary information for all columns in the sailing report
+//
 struct SailingReport
 {
 public:
@@ -128,7 +137,7 @@ public:
     ~SailingReport();
 
 public:
-    Sailing sailing; 
+    Sailing sailing;
     Vessel vessel;
     int vehicle_count;
     double occupancy_percentage;

@@ -1455,18 +1455,18 @@ void Database::completeBoarding(
     }
 
     // 3) Calculate amount to be paid:
-    double amount = 0.0;
+    int amount = 0;
 
     
     bool tall = vehicle.height > 2.0;
     bool _long = vehicle.length > 7.0;   
     if (tall)
     {
-        amount = vehicle.length * 3;
+        amount = (int)(vehicle.length * 3.0 * 100.0);
     }
     else if (_long) // short and long
     {
-        amount = vehicle.length * 2;
+        amount = (int)(vehicle.length * 2.0 * 100.0);
     }
     else // not long and not tall
     {
