@@ -137,10 +137,10 @@ public:
     ~SailingReport();
 
 public:
-    Sailing sailing;
-    Vessel vessel;
-    int vehicle_count;
-    double occupancy_percentage;
+    Sailing sailing;                //the sailing object
+    Vessel vessel;                  //the vessel object
+    int vehicle_count;              //total number of vehicles reserved or boarded on the sailing
+    double occupancy_percentage;    //percentages are fractions of 1. e.g. 98% = 0.98
 };
 
 #endif // CONTAINERS_HPP
