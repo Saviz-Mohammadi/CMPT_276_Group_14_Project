@@ -31,6 +31,7 @@
 #include "database.hpp"
 #include <iostream>
 
+// ----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
     bool is_successful = false;

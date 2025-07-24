@@ -40,6 +40,7 @@
 
 #include "containers.hpp"
 
+// ----------------------------------------------------------------------------
 Vessel::Vessel() :
     vessel_id(0),
     vessel_name(),
@@ -49,6 +50,7 @@ Vessel::Vessel() :
 
 }
 
+// ----------------------------------------------------------------------------
 Vessel::Vessel(
     const int vessel_id,
     const std::string& vessel_name,
@@ -61,8 +63,10 @@ Vessel::Vessel(
 {
 }
 
+// ----------------------------------------------------------------------------
 Vessel::~Vessel() = default;
 
+// ----------------------------------------------------------------------------
 Sailing::Sailing() :
     sailing_id(0),
     vessel_id(0),
@@ -74,6 +78,7 @@ Sailing::Sailing() :
 {
 }
 
+// ----------------------------------------------------------------------------
 Sailing::Sailing(
     const int sailing_id,
     const int vessel_id,
@@ -92,8 +97,10 @@ Sailing::Sailing(
 {
 }
 
+// ----------------------------------------------------------------------------
 Sailing::~Sailing() = default;
 
+// ----------------------------------------------------------------------------
 Reservation::Reservation():
     sailing_id(0),
     vehicle_id(0),
@@ -102,6 +109,7 @@ Reservation::Reservation():
 {   
 }
 
+// ----------------------------------------------------------------------------
 Reservation::Reservation(
     const int sailing_id,
     const int vehicle_id,
@@ -114,6 +122,7 @@ Reservation::Reservation(
 {
 }
 
+// ----------------------------------------------------------------------------
 Reservation::~Reservation()= default;
 
 Vehicle::Vehicle() :
@@ -125,6 +134,7 @@ Vehicle::Vehicle() :
 {
 }
 
+// ----------------------------------------------------------------------------
 Vehicle::Vehicle(
     const int vehicle_id,
     const std::string& license_plate,
@@ -139,8 +149,10 @@ Vehicle::Vehicle(
 {
 }
 
+// ----------------------------------------------------------------------------
 Vehicle::~Vehicle() = default;
 
+// ----------------------------------------------------------------------------
 SailingReport::SailingReport() :
     sailing(),
     vessel(),
@@ -149,6 +161,7 @@ SailingReport::SailingReport() :
 {
 }
 
+// ----------------------------------------------------------------------------
 SailingReport::SailingReport(
     const Sailing& sailing,
     const Vessel& vessel,
@@ -161,4 +174,5 @@ SailingReport::SailingReport(
 {
 }
 
+// ----------------------------------------------------------------------------
 SailingReport::~SailingReport() = default;

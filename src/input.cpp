@@ -50,6 +50,7 @@
 #include <iostream>
 #include <sstream>
 
+// ----------------------------------------------------------------------------
 void promptForInteger(
     const std::string& input_prompt,
     int min,
@@ -142,6 +143,7 @@ void promptForInteger(
     outcome_message = "";
 }
 
+// ----------------------------------------------------------------------------
 void promptForReal(
     const std::string& input_prompt,
     double min,
@@ -234,6 +236,7 @@ void promptForReal(
     outcome_message = "";
 }
 
+// ----------------------------------------------------------------------------
 void promptForCharacter(
     const std::string& input_prompt,
     const std::vector<char>& allowed_options,
@@ -325,6 +328,7 @@ void promptForCharacter(
     outcome_message = "";
 }
 
+// ----------------------------------------------------------------------------
 void promptForString(
     const std::string& input_prompt,
     std::string& acquired_string,
@@ -374,6 +378,7 @@ void promptForString(
     outcome_message = "";
 }
 
+// ----------------------------------------------------------------------------
 void promptForString(
     const std::string& input_prompt,
     const std::regex& pattern,
@@ -441,6 +446,7 @@ void promptForString(
     outcome_message = "";
 }
 
+// ----------------------------------------------------------------------------
 void continuouslyPromptForInteger(
     const std::string& input_prompt,
     int min,
@@ -469,6 +475,7 @@ void continuouslyPromptForInteger(
     }while(!is_successful);
 }
 
+// ----------------------------------------------------------------------------
 void continuouslyPromptForReal(
     const std::string& input_prompt,
     double min,
@@ -497,6 +504,7 @@ void continuouslyPromptForReal(
     }while(!is_successful);
 }
 
+// ----------------------------------------------------------------------------
 void continuouslyPromptForCharacter(
     const std::string& input_prompt,
     const std::vector<char>& allowed_options,
@@ -523,6 +531,7 @@ void continuouslyPromptForCharacter(
     }while(!is_successful);
 }
 
+// ----------------------------------------------------------------------------
 void continuouslyPromptForString(
     const std::string& input_prompt,
     std::string& acquired_string
@@ -547,6 +556,7 @@ void continuouslyPromptForString(
     }while(!is_successful);
 }
 
+// ----------------------------------------------------------------------------
 void continuouslyPromptForString(
     const std::string& input_prompt,
     const std::regex& validation_pattern,

@@ -56,6 +56,7 @@
 #include <iomanip>
 #include "utilities.hpp"
 
+// ----------------------------------------------------------------------------
 void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal, int& departure_day, int& departure_hour)
 {
     // String stream
@@ -68,6 +69,7 @@ void Utilities::extractSailingID(std::string& sailing_id, std::string& terminal,
     string_stream >> departure_day >> dummy >> departure_hour; // Uses dummy to consume the 2nd dash
 }
 
+// ----------------------------------------------------------------------------
 void Utilities::createSailingID(const std::string& terminal, const int departure_day, const int departure_hour, std::string& output_sailing_id)
 {
     std::ostringstream oss;
@@ -79,6 +81,7 @@ void Utilities::createSailingID(const std::string& terminal, const int departure
     output_sailing_id = oss.str();
 }
 
+// ----------------------------------------------------------------------------
 bool Utilities::almostEqual(
     double first_number,
     double second_number,
@@ -88,6 +91,7 @@ bool Utilities::almostEqual(
     return(std::abs(first_number - second_number) < epsilon);
 }
 
+// ----------------------------------------------------------------------------
 std::string Utilities::getLocalDateAndTime()
 {
     std::time_t time = std::time(

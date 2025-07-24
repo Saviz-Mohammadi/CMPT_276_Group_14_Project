@@ -57,6 +57,7 @@
 
 // WARNING (SAVIZ): When using 'sqlite3_prepare_v2()' with 'nullptr' as the final parameter transactions will not work because it counts as multiple statements. If you wish to use this with multiple statements, then you need to bind to a call-back and loop thourgh it.
 
+// ----------------------------------------------------------------------------
 Database::Database() : m_sqlite3(nullptr)
 {
 #ifdef DEBUG_MODE
@@ -64,6 +65,7 @@ Database::Database() : m_sqlite3(nullptr)
 #endif
 }
 
+// ----------------------------------------------------------------------------
 Database::~Database()
 {
 #ifdef DEBUG_MODE
@@ -71,6 +73,7 @@ Database::~Database()
 #endif
 }
 
+// ----------------------------------------------------------------------------
 void Database::openConnection(
     const std::string &path,
     bool& is_successful,
@@ -158,6 +161,7 @@ void Database::openConnection(
     outcome_message = std::string("Connection request succeeded");
 }
 
+// ----------------------------------------------------------------------------
 void Database::cutConnection(
     bool& is_successful,
     std::string& outcome_message
@@ -177,6 +181,7 @@ void Database::cutConnection(
     outcome_message = std::string("Cut connection request succeeded");
 }
 
+// ----------------------------------------------------------------------------
 void Database::addVessel(
     Vessel vessel,
     int& vessel_id,
@@ -253,6 +258,7 @@ void Database::addVessel(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::getVesselByID(
     int vessel_id,
     Vessel& vessel,
@@ -336,6 +342,7 @@ void Database::getVesselByID(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::getVessels(
     int count,
     int offset,
@@ -430,6 +437,7 @@ void Database::getVessels(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::addSailing(
     Sailing sailing,
     bool& is_successful,
@@ -519,6 +527,7 @@ void Database::addSailing(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::removeSailing(
     Sailing sailing,
     bool& is_successful,
@@ -612,6 +621,7 @@ void Database::removeSailing(
     outcome_message = std::string("Sailing deletion succeeded");
 }
 
+// ----------------------------------------------------------------------------
 void Database::getSailingByID(
     std::string departure_terminal,
     int departure_day,
@@ -729,6 +739,7 @@ void Database::getSailingByID(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::getSailingReports(
     int count,
     int offset,
@@ -861,6 +872,7 @@ void Database::getSailingReports(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::getSailingReportByID(
     Sailing sailing,
     SailingReport& sailing_report,
@@ -993,6 +1005,7 @@ void Database::getSailingReportByID(
     sqlite3_finalize(prepared_sql_statement);
 }
 
+// ----------------------------------------------------------------------------
 void Database::addReservation(
     Sailing sailing,
     Vehicle vehicle,
@@ -1143,6 +1156,7 @@ void Database::addReservation(
     outcome_message = std::string("Reservation creation succeeded");
 }
 
+// ----------------------------------------------------------------------------
 void Database::removeReservation(
     Sailing sailing,
     Vehicle vehicle,
@@ -1317,6 +1331,7 @@ void Database::removeReservation(
     outcome_message = std::string("Reservation deletion succeeded: ") + "returned length = " + std::to_string(amount);
 }
 
+// ----------------------------------------------------------------------------
 void Database::completeBoarding(
     Sailing sailing,
     Vehicle vehicle,
@@ -1539,6 +1554,7 @@ void Database::completeBoarding(
     outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount);
 }
 
+// ----------------------------------------------------------------------------
 void Database::addVehicle(
     Vehicle vehicle,
     int& vehicle_id,
@@ -1619,6 +1635,7 @@ void Database::addVehicle(
     outcome_message = std::string("Vehicle created succeeded");
 }
 
+// ----------------------------------------------------------------------------
 void Database::getVehicleByID(
     std::string license_plate,
     Vehicle& vehicle,

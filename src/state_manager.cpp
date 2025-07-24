@@ -52,15 +52,18 @@
 
 #include "state_manager.hpp"
 
+// ----------------------------------------------------------------------------
 StateManager::StateManager()
 {
     m_state = nullptr;
 }
 
+// ----------------------------------------------------------------------------
 StateManager::~StateManager()
 {
 }
 
+// ----------------------------------------------------------------------------
 void StateManager::init(
     Database* database
     )
@@ -94,6 +97,7 @@ void StateManager::init(
         );
 }
 
+// ----------------------------------------------------------------------------
 void StateManager::run()
 {
     while(m_state != nullptr)
@@ -105,6 +109,7 @@ void StateManager::run()
 	}
 }
 
+// ----------------------------------------------------------------------------
 void StateManager::selectNextState(
     States next_state
     )
