@@ -1,9 +1,37 @@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+/*
+ * [MODULE]
+ *
+ * Test Module
+ *
+ *
+ * [FILE NAME]
+ *
+ * test_database.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/20 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [PURPOSE]
+ *
+ * This file is responsible for testing database related functionality.
+*/
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 #include <catch2/catch_all.hpp>
 #include <iostream>
 #include <filesystem>
 #include "database.hpp"
 #include "utilities.hpp"
 
+// ----------------------------------------------------------------------------
 TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function works correctly", "[Vessel]")
 {
     bool is_successful = false;
