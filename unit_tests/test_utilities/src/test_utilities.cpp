@@ -1,6 +1,34 @@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+/*
+ * [MODULE]
+ *
+ * Test Module
+ *
+ *
+ * [FILE NAME]
+ *
+ * test_utilities.cpp
+ *
+ *
+ * [REVISION HISTORY]
+ *
+ * Rev 1 - 2025/07/20 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ *
+ *
+ * [PURPOSE]
+ *
+ * This file is responsible for testing utility functionality.
+*/
+
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 #include <catch2/catch_all.hpp>
 #include "utilities.hpp"
 
+// ----------------------------------------------------------------------------
 TEST_CASE("Extract sailing ID: Testing to make sure that the 'extractSailingID()' function works correctly", "[Utilities]")
 {
     // Creating variables
@@ -31,6 +59,7 @@ TEST_CASE("Extract sailing ID: Testing to make sure that the 'extractSailingID()
     REQUIRE(departure_hour == 34);
 }
 
+// ----------------------------------------------------------------------------
 TEST_CASE("Create sailing ID: Testing to make sure that the 'createSailingID()' function works correctly", "[Utilities]")
 {
     // Creating variables
