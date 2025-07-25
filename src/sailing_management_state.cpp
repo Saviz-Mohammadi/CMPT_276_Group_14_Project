@@ -212,7 +212,7 @@ void SailingManagementState::createSailing()
         {
             std::cout << "Sailing ID already exists." << "\n\n";
         }
-    }while(!g_is_successful); // Note Ethan: is this supposed to be while(successful)? because we want to continue if we fail to find the given sailing id.
+    }while(g_is_successful);
 
     // Prompting for confirmation and creating the sailing:
     // ****************************************************************************
@@ -422,12 +422,12 @@ void SailingManagementState::listSailingReports()
                     );
 
                 // Print the sailing:
-                // std::cout
-                //     << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
-                //     << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
-                //     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
-                //     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
-                //     << "\n";
+                 std::cout
+                     << std::setw(3)  << std::right << sailing_id   << ") " // ID column
+                     << std::setw(25) << std::left  << sailing_report.vessel.vessel_name << "  " // Name column
+                     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << sailing_report.vessel.low_ceiling_lane_length << "  "  // LCLL column
+                     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << sailing_report.vessel.high_ceiling_lane_length // HCLL column
+                     << "\n";
             }
             std::cout << "\n";
         }

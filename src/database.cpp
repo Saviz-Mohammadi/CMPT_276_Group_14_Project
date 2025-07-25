@@ -1551,7 +1551,7 @@ void Database::completeBoarding(
 
     // 5) Success
     is_successful = true;
-    outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount);
+    outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount); //should say which lane to direct the vehicle to as well
 }
 
 // ----------------------------------------------------------------------------

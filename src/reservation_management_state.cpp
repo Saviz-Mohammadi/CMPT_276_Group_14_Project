@@ -172,7 +172,7 @@ void ReservationManagementState::createReservation()
     // ****************************************************************************
 
     // License plate (pattern A76-2H4):
-    std::regex vehicle_license_plate_pattern("[A-Z0-9]{3}-[A-Z0-9]{3}");
+    std::regex vehicle_license_plate_pattern("[A-Z0-9-]{1,10}");
 
     std::string license_plate = "";
 
@@ -199,7 +199,7 @@ void ReservationManagementState::createReservation()
     if(!g_is_successful)
     {
         // Phone number (12-digit only digits):
-        std::regex phone_number_pattern("\\d{12}");
+        std::regex phone_number_pattern("[\\d-]{8,14}");
 
         continuouslyPromptForString(
             "Please enter the phone number of the owner: ",
@@ -336,7 +336,7 @@ void ReservationManagementState::deleteReservation()
     // ****************************************************************************
 
     // License plate (pattern A76-2H4):
-    std::regex vehicle_license_plate_pattern("[A-Z0-9]{3}-[A-Z0-9]{3}");
+    std::regex vehicle_license_plate_pattern("[A-Z0-9-]{1,10}");
 
     std::string license_plate = "";
 

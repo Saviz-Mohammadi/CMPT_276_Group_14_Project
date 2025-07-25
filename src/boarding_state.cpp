@@ -186,6 +186,9 @@ void BoardingState::startBoarding()
         //complete the boarding for this vehicle
         m_database->completeBoarding(s_sailing, s_vehicle, g_is_successful, g_outcome_message);
 
+        std::cout << g_outcome_message << "\n\n";
+
+        /*
         if (g_is_successful) 
         {
             std::cout << "Boarding completed!" << "\n\n";
@@ -195,6 +198,7 @@ void BoardingState::startBoarding()
         {
             std::cout << g_outcome_message << "\n\n";
         }
+        */
 
         promptForCharacter(
             "Do you wish to complete another boarding? [y/n]? ",
