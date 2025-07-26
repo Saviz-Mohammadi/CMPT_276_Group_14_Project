@@ -15,6 +15,10 @@
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan. Fixed using wrong column index from the sqlite row to assign values
+ *         to properties of the SailingReport struct in getsailingreport.
  *
  *
  * [DESIGN NOTES]
@@ -825,19 +829,22 @@ void Database::getSailingReports(
 
         const unsigned char* vessel_name_column_data = sqlite3_column_text(
             prepared_sql_statement,
-            3
+            //3
+            5
             );
 
         sailing_report.vessel.vessel_name = vessel_name_column_data ? reinterpret_cast<const char*>(vessel_name_column_data) : "";
 
         sailing_report.sailing.low_remaining_length = sqlite3_column_double(
             prepared_sql_statement,
-            4
+            //4
+            3
             );
 
         sailing_report.sailing.high_remaining_length = sqlite3_column_double(
             prepared_sql_statement,
-            5
+            //5
+            4
             );
 
         sailing_report.vehicle_count = sqlite3_column_int(

@@ -15,6 +15,10 @@
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Henry Nguyen, Ethan Scott
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan. Fixed SailingManagementState::createSailing() not actually writing
+ *         to the DB. Fixed spacing and alignment of sailing report.
  *
  *
  * [DESIGN NOTES]
@@ -101,6 +105,7 @@ void SailingManagementState::onProcess()
         std::vector<char>{'0', '1', '2', '3', '4'},
         user_choice
         );
+    std::cout << "\n";
 
 
     // Decide the appropriate action based on input:
@@ -391,30 +396,22 @@ void SailingManagementState::listSailingReports()
             // Print the report
             // ****************************************************************************
 
-            // TODO (SAVIZ): All you have to do is to replace the header and the output with how the sailing report should look like:
-            //
-            //
-            // << std::setw(10) << std::left << sailing_id_str << " "
-            // << std::setw(30) << std::left << report.vessel.vessel_name
-            // << std::fixed << std::setprecision(1)
-            // << std::setw(7) << std::right << report.sailing.low_remaining_length
-            // << std::setw(7) << std::right << report.sailing.high_remaining_length
-            // << std::setw(9) << std::right << report.vehicle_count
-            // << std::setw(10) << std::right << report.occupancy_percentage << "%";
-
             // Report title:
-            std::cout << "Sailing Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
+            std::cout << "Sailing Report" << std::string(44, ' ') << Utilities::getLocalDateAndTime() << "\n";
 
             // Column headers:
             std::cout
-                << " ID  "
-                << std::setw(25) << std::left  << "Name" << "  "
-                << std::setw(6)  << std::right << "LCLL" << "  "
-                << std::setw(6)  << std::right << "HCLL" << "\n";
+                << "    Sailing ID  "
+                << std::setw(25) << std::left  << "Vessel Name" << "  "
+                << std::setw(6)  << std::right << "LCLR" << "  "
+                << std::setw(6)  << std::right << "HCLR" << "  "
+                << "Vehicles" << "  "
+                << "%Occupied" << "\n";
 
             // One row for each fetched sailing report record
-            for(const SailingReport& sailing_report : sailing_reports)
+            for(int i = 0; i < sailing_reports.size(); i++)
             {
+                const SailingReport& sailing_report = sailing_reports[i];
                 std::string sailing_id = "";
 
                 // Squish the ID togther:
@@ -426,12 +423,16 @@ void SailingManagementState::listSailingReports()
                     );
 
                 // Print the sailing:
-                 std::cout
-                     << std::setw(3)  << std::right << sailing_id   << ") " // ID column
-                     << std::setw(25) << std::left  << sailing_report.vessel.vessel_name << "  " // Name column
-                     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << sailing_report.vessel.low_ceiling_lane_length << "  "  // LCLL column
-                     << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << sailing_report.vessel.high_ceiling_lane_length // HCLL column
-                     << "\n";
+                std::cout 
+                    << std::setw(2) << std::right << offset + 1 + i << ") "
+                    << sailing_id << "   "
+                    << std::setw(25) << std::left << sailing_report.vessel.vessel_name << "  "
+                    << std::fixed << std::setprecision(1)
+                    << std::setw(6) << std::right << sailing_report.sailing.low_remaining_length << "  "
+                    << std::setw(6) << std::right << sailing_report.sailing.high_remaining_length << "  "
+                    << std::setw(8) << std::right << sailing_report.vehicle_count << "  "
+                    << std::setw(8) << std::right << (int)floor(sailing_report.occupancy_percentage) << "%"
+                    << "\n";
             }
             std::cout << "\n";
         }
@@ -531,6 +532,7 @@ void SailingManagementState::listSailingReport()
             std::cout << g_outcome_message << "\n\n";
         }
     }while(!g_is_successful);
+    std::cout << "\n";
 
 
     // Get Sailing report and print it:
@@ -555,19 +557,28 @@ void SailingManagementState::listSailingReport()
         sailing_id
         );
 
+    // Report title:
+    std::cout << "Sailing Report" << std::string(44, ' ') << Utilities::getLocalDateAndTime() << "\n";
 
-    // TODO (SAVIZ): You can print the same output from the last method here:
+    // Column headers:
+    std::cout
+        << " Sailing ID  "
+        << std::setw(25) << std::left << "Vessel Name" << "  "
+        << std::setw(6) << std::right << "LCLR" << "  "
+        << std::setw(6) << std::right << "HCLR" << "  "
+        << "Vehicles" << "  "
+        << "%Occupied" << "\n";
 
-    // std::cout << " Sailing ID  Vessel Name                       LCLR    HCLR  Vehicles  \%Occupied\n";
-    // std::cout
-    // << " "
-    // << std::setw(10) << std::left << sailing_id_str << " "
-    // << std::setw(30) << std::left << report.vessel.vessel_name
-    // << std::fixed << std::setprecision(1)
-    // << std::setw(7) << std::right << report.sailing.low_remaining_length
-    // << std::setw(7) << std::right << report.sailing.high_remaining_length
-    // << std::setw(9) << std::right << report.vehicle_count
-    // << std::setw(10) << std::right << report.occupancy_percentage << "%"
-    // << "\n";
+    // One row for the report
+    std::cout
+        << " " << sailing_id << "   "
+        << std::setw(25) << std::left << sailing_report.vessel.vessel_name << "  "
+        << std::fixed << std::setprecision(1)
+        << std::setw(6) << std::right << sailing_report.sailing.low_remaining_length << "  "
+        << std::setw(6) << std::right << sailing_report.sailing.high_remaining_length << "  "
+        << std::setw(8) << std::right << sailing_report.vehicle_count << "  "
+        << std::setw(8) << std::right << (int)floor(sailing_report.occupancy_percentage) << "%"
+        << "\n";
+    std::cout << "\n";
 
 }
