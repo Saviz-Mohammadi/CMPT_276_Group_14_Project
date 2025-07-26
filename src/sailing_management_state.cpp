@@ -182,8 +182,8 @@ void SailingManagementState::createSailing()
     std::string sailing_id_string = "";
     std::string departure_terminal = "";
     int departure_day = 0;
-    int departure_hour = 0;
-    Sailing new_sailing;
+    int departure_hour = 0;    
+    Sailing found_sailing;
 
     do {
         continuouslyPromptForString(
@@ -203,7 +203,7 @@ void SailingManagementState::createSailing()
             departure_terminal,
             departure_day,
             departure_hour,
-            new_sailing,
+            found_sailing,
             g_is_successful,
             g_outcome_message
             );
@@ -213,6 +213,8 @@ void SailingManagementState::createSailing()
             std::cout << "Sailing ID already exists." << "\n\n";
         }
     }while(g_is_successful);
+
+    Sailing new_sailing(-1, vessel_id, departure_terminal, departure_day, departure_hour, found_vessel.low_ceiling_lane_length, found_vessel.high_ceiling_lane_length);
 
     // Prompting for confirmation and creating the sailing:
     // ****************************************************************************
@@ -230,6 +232,8 @@ void SailingManagementState::createSailing()
         // Create sailing if 'yes' is selected:
         case 'y':
         case 'Y':
+        {}
+
             m_database->addSailing(
                 new_sailing,
                 g_is_successful,
