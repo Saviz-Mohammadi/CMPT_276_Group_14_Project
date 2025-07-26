@@ -135,7 +135,7 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
     std::cout << "-----End Add Vessel Test-----\n";
 }
 
-TEST_CASE("Add Sailing: Test to make sure that 'addSailing()' works correctly", "[Sailing]")
+TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctly and 'getSailing()' returns the same values", "[Sailing]")
 {
     std::cout << "\n-----Add Sailing Test-----\n";
 
@@ -145,12 +145,10 @@ TEST_CASE("Add Sailing: Test to make sure that 'addSailing()' works correctly", 
     bool is_successful = false;
     std::string outcome_message = "";
 
-    
-    // ****************************************************************************
 
+    // ****************************************************************************
     INFO("Creating database for the test");
     Database database;
-
     // remove the .db if it exists
     if (std::filesystem::remove(path_to_file))
     {
@@ -161,32 +159,33 @@ TEST_CASE("Add Sailing: Test to make sure that 'addSailing()' works correctly", 
     {
         std::cout << "db file did not exist\n";
     }
-
     //create .db file
     database.openConnection(
         file_name,
         is_successful,
         outcome_message
     );
-
     std::cout << outcome_message << "\n";
-
     REQUIRE(is_successful);
 
 
     // ****************************************************************************
-
     INFO("Creating the vessel for the sailing");
     Vessel vessel(-1, "addSailing Test Vessel", 120, 85);
     int vessel_id_out = -1;
-
     database.addVessel(vessel, vessel_id_out, is_successful, outcome_message);
-
-    vessel.vessel_id - vessel_id_out;
-
-    std::cout << outcome_message << "\n";
-
     REQUIRE(is_successful);
+    vessel.vessel_id = vessel_id_out;
+    std::cout << outcome_message << "\n";    
+
+
+    // ****************************************************************************
+    INFO("Check if vessel id returned from addVessel is correct");
+    Vessel vessel_out;
+    database.getVesselByID(vessel.vessel_id, vessel_out, is_successful, outcome_message);
+    std::cout << outcome_message << "\n";
+    REQUIRE(is_successful);
+    REQUIRE(vessel.vessel_id == vessel_out.vessel_id);
 
 
     // ****************************************************************************    
@@ -199,9 +198,7 @@ TEST_CASE("Add Sailing: Test to make sure that 'addSailing()' works correctly", 
 
     // ****************************************************************************    
     INFO("Fetching the sailing record");
-
     Sailing sailing_out;
-
     database.getSailingByID(
         sailing.departure_terminal,
         sailing.departure_day,
@@ -210,15 +207,12 @@ TEST_CASE("Add Sailing: Test to make sure that 'addSailing()' works correctly", 
         is_successful,
         outcome_message
     );
-
     std::cout << outcome_message << "\n";
-
     REQUIRE(is_successful);
 
 
     // ****************************************************************************
     INFO("Check fetched record has correct information");
-
     REQUIRE(sailing_out.vessel_id == sailing.vessel_id);
     REQUIRE(sailing_out.departure_terminal == sailing.departure_terminal);
     REQUIRE(sailing_out.departure_day == sailing.departure_day);
@@ -229,12 +223,8 @@ TEST_CASE("Add Sailing: Test to make sure that 'addSailing()' works correctly", 
 
     // ****************************************************************************
     INFO("Cleanup");
-
     database.cutConnection(is_successful, outcome_message);
-
     std::cout << outcome_message << "\n";
-
     REQUIRE(is_successful);
-
     std::cout << "-----End Add Sailing Test-----\n";
 }
