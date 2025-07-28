@@ -149,6 +149,11 @@ void VesselManagementState::createVessel()
         vessel.low_ceiling_lane_length
         );
 
+    // Confimration:
+    // ****************************************************************************
+
+    std::cout << "\n";
+
     continuouslyPromptForCharacter(
         "Are you sure you want to create this vessel [y/n]? ",
         g_allowed_yes_no_responses,

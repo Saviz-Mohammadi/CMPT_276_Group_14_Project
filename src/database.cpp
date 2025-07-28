@@ -1025,13 +1025,13 @@ void Database::addReservation(
     double new_high_remaining_length = sailing.high_remaining_length;
     bool reserved_for_low_lane = false;
 
-    if(vehicle.length <= sailing.low_remaining_length && vehicle.height <= 2)
+    if(vehicle.length <= (sailing.low_remaining_length - 0.5) && vehicle.height <= 2)
     {
         reserved_for_low_lane = true;
         new_low_remaining_length = sailing.low_remaining_length - vehicle.length - 0.5;
     }
 
-    else if(vehicle.length <= sailing.high_remaining_length)
+    else if(vehicle.length <= (sailing.high_remaining_length - 0.5))
     {
         reserved_for_low_lane = false;
         new_high_remaining_length = sailing.high_remaining_length - vehicle.length - 0.5;

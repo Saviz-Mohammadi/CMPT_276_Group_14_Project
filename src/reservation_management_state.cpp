@@ -247,6 +247,7 @@ void ReservationManagementState::createReservation()
 
         vehicle.vehicle_id = new_vehicle_id;
     }
+    std::cout << "\n";
 
 
     // Ask for confirmation and create reseravtion:
@@ -259,6 +260,7 @@ void ReservationManagementState::createReservation()
         g_allowed_yes_no_responses,
         user_choice
         );
+    std::cout << "\n";
 
     switch(user_choice)
     {
@@ -279,6 +281,7 @@ void ReservationManagementState::createReservation()
         std::cout << "Reservation creation operation aborted!" << "\n";
         break;
     }
+    std::cout << "\n";
 }
 
 // ----------------------------------------------------------------------------
