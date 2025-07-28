@@ -15,6 +15,11 @@
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan. Made the correct outcome message be displayed when creating a 
+ *         new reservation during boarding for a vehicle that didnt already have
+*          a reservation
  *
  *
  * [DESIGN NOTES]
@@ -110,10 +115,12 @@ void BoardingState::onProcess()
     if (!g_is_successful) 
     {
         std::cout << "\n\n" << g_outcome_message << "\n\n";
-        return;
     }
-
-    startBoarding();
+    else 
+    {
+        startBoarding();
+    }
+    m_state_manager->selectNextState(States::MainMenuState);
 }
 
 // ----------------------------------------------------------------------------
@@ -177,16 +184,29 @@ void BoardingState::startBoarding()
                 continue;
             }
         }
-        std::cout << "\n\n";
+        std::cout << "\n";
 
         //try to create a reservation for this vehicle and sailing in case it didnt exist.
         //if one already exists then this will fail
-        m_database->addReservation(s_sailing, s_vehicle, g_is_successful, g_outcome_message);
+        std::string reservation_outcome_message = "";
+        bool reservation_is_successful = false;
+        m_database->addReservation(s_sailing, s_vehicle, reservation_is_successful, reservation_outcome_message);
 
         //complete the boarding for this vehicle
         m_database->completeBoarding(s_sailing, s_vehicle, g_is_successful, g_outcome_message);
 
-        std::cout << g_outcome_message << "\n\n";
+        if (!g_is_successful && !reservation_is_successful) 
+        {
+            //boarding might have failed because addReservation failed
+            //if this is the case then show the reservation message
+            std::cout << reservation_outcome_message << "\n\n";
+        }
+        else
+        {
+            //otherwise just show the boarding success/fail message
+            std::cout << g_outcome_message << "\n\n";
+        }
+        
 
         /*
         if (g_is_successful) 
@@ -207,6 +227,7 @@ void BoardingState::startBoarding()
             g_is_successful,
             g_outcome_message
         );
+        std::cout << "\n";
 
         bool user_wants_to_break = false;
 
