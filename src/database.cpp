@@ -60,6 +60,7 @@
 #include "database.hpp"
 
 // WARNING (SAVIZ): When using 'sqlite3_prepare_v2()' with 'nullptr' as the final parameter transactions will not work because it counts as multiple statements. If you wish to use this with multiple statements, then you need to bind to a call-back and loop thourgh it.
+// NOTE (SAVIZ): A full list of different SQLite codes and what they mean can be found here: https://www.sqlite.org/rescode.html
 
 // ----------------------------------------------------------------------------
 Database::Database() : m_sqlite3(nullptr)
@@ -93,6 +94,12 @@ void Database::openConnection(
 
         return;
     }
+
+    // This line enables 'Extended Result Code List' for better messaging as to what happend:
+    sqlite3_extended_result_codes(
+        this->m_sqlite3,
+        1
+        );
 
     const char* sql_query = R"SQL(
         BEGIN TRANSACTION;
@@ -1093,8 +1100,27 @@ void Database::addReservation(
 
     if(return_code != SQLITE_DONE)
     {
+        if (return_code == SQLITE_CONSTRAINT)
+        {
+            int extended_code = sqlite3_extended_errcode(m_sqlite3);
+
+            if (extended_code == SQLITE_CONSTRAINT_UNIQUE || extended_code == SQLITE_CONSTRAINT_PRIMARYKEY)
+            {
+                outcome_message = std::string("Reservation creation failed: ") + "a reservation already exists for this vehicle and sailing.";
+            }
+
+            else
+            {
+                outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
+            }
+        }
+
+        else
+        {
+            outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
+        }
+
         is_successful = false;
-        outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
