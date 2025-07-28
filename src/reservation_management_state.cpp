@@ -48,7 +48,6 @@
 
 #include <vector>
 #include <iostream>
-#include <regex>
 #include "state.hpp"
 #include "reservation_management_state.hpp"
 #include "state_manager.hpp"
@@ -123,12 +122,9 @@ void ReservationManagementState::createReservation()
 
     std::string sailing_id_string;
 
-    // Sailing ID (assuming format: 3 letters-2 digits-2 digits like "AHS-22-10"):
-    std::regex sailing_id_pattern("[A-Z]{3}-\\d{2}-\\d{2}");
-
     continuouslyPromptForString(
         "Please enter the ID of the sailing [TTT-dd-hh]: ",
-        sailing_id_pattern,
+        g_sailing_id_regex,
         sailing_id_string
         );
 
@@ -171,14 +167,11 @@ void ReservationManagementState::createReservation()
     // Get Vehicle license plate:
     // ****************************************************************************
 
-    // License plate (pattern A76-2H4):
-    std::regex vehicle_license_plate_pattern("[A-Z0-9-]{1,10}");
-
     std::string license_plate = "";
 
     continuouslyPromptForString(
         "Please enter the licence plate of the vehicle: ",
-        vehicle_license_plate_pattern,
+        g_license_plate_regex,
         license_plate
         );
 
@@ -200,12 +193,9 @@ void ReservationManagementState::createReservation()
     // If vehicle is not registered, then ask for more information and create it:
     if(!g_is_successful)
     {
-        // Phone number (12-digit only digits):
-        std::regex phone_number_pattern("[\\d-]{8,14}");
-
         continuouslyPromptForString(
             "Please enter the phone number of the owner: ",
-            phone_number_pattern,
+            g_phone_number_regex,
             vehicle.phone_number
             );
 
@@ -292,12 +282,9 @@ void ReservationManagementState::deleteReservation()
 
     std::string sailing_id_string;
 
-    // Sailing ID (assuming format: 3 letters-2 digits-2 digits like "AHS-22-10"):
-    std::regex sailing_id_pattern("[A-Z]{3}-\\d{2}-\\d{2}");
-
     continuouslyPromptForString(
         "Please enter the ID of the sailing [TTT-dd-hh]: ",
-        sailing_id_pattern,
+        g_sailing_id_regex,
         sailing_id_string
         );
 
@@ -340,14 +327,11 @@ void ReservationManagementState::deleteReservation()
     // Get Vehicle license plate:
     // ****************************************************************************
 
-    // License plate (pattern A76-2H4):
-    std::regex vehicle_license_plate_pattern("[A-Z0-9-]{1,10}");
-
     std::string license_plate = "";
 
     continuouslyPromptForString(
         "Please enter the licence plate of the vehicle: ",
-        vehicle_license_plate_pattern,
+        g_license_plate_regex,
         license_plate
         );
 

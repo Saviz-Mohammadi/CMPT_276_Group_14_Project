@@ -57,7 +57,6 @@
 #include <vector>
 #include <limits> 
 #include <iostream>
-#include <regex>
 #include <ctime>
 #include <iomanip>
 #include <string> 
@@ -193,7 +192,7 @@ void SailingManagementState::createSailing()
     do {
         continuouslyPromptForString(
             "Please enter the ID of the sailing [TTT-dd-hh]: ",
-            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            g_sailing_id_regex,
             sailing_id_string
         );
 
@@ -274,7 +273,7 @@ void SailingManagementState::deleteSailing()
     do {
         continuouslyPromptForString(
             "Please enter the ID of the sailing [TTT-dd-hh]: ",
-            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+            g_sailing_id_regex,
             sailing_id_string
             );
 
@@ -506,7 +505,7 @@ void SailingManagementState::listSailingReport()
 
     continuouslyPromptForString(
         "Please enter the ID of the sailing [TTT-dd-hh]: ",
-        std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+        g_sailing_id_regex,
         sailing_id_string
         );
 

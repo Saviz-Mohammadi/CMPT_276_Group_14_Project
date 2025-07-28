@@ -48,7 +48,6 @@
 
 #include <iostream>
 #include <vector>
-#include <regex>
 #include <iomanip>
 #include "global.hpp"
 #include "input.hpp"
@@ -131,7 +130,7 @@ void VesselManagementState::createVessel()
 
     continuouslyPromptForString(
         "Please enter the name of the new vessel: ",
-        std::regex(R"([\w ]{1,25})"), // Regular expression >> match 1-25 letters, numbers, digits, case insensitive
+        g_vessel_name_regex,
         vessel.vessel_name
         );
 

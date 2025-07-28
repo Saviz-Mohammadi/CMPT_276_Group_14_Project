@@ -58,7 +58,6 @@
 #include <vector>
 #include <iostream>
 #include "state.hpp"
-#include <regex>
 #include "boarding_state.hpp"
 #include "state_manager.hpp"
 #include "input.hpp"
@@ -101,7 +100,7 @@ void BoardingState::onProcess()
     std::string sailing_id;
     continuouslyPromptForString(
         "Please enter the ID of the sailing [TTT-dd-hh]: ",
-        std::regex(R"([A-Z]{3}-\d\d-\d\d)"),
+        g_sailing_id_regex,
         sailing_id
     );
 
@@ -139,7 +138,7 @@ void BoardingState::startBoarding()
         std::string license_plate;
         continuouslyPromptForString(
             "Please enter the license plate of the vehicle: ",
-            std::regex(R"([A-Z\d -]{2,10})"), //regex pattern : 2-10 capital letters, digits, spaces, hyphens
+            g_license_plate_regex,
             license_plate
         );
 
@@ -156,7 +155,7 @@ void BoardingState::startBoarding()
             s_vehicle.license_plate = license_plate;
             continuouslyPromptForString(
                 "Please enter the phone number of the owner: ",
-                std::regex(R"(\d{8,14})"), //regex pattern : 8-14 digits
+                g_phone_number_regex,
                 s_vehicle.phone_number
             );
             continuouslyPromptForReal(

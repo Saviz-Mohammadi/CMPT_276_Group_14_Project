@@ -35,6 +35,7 @@
 
 #include <string>
 #include <vector>
+#include <regex>
 
 // Specifies the default length for returned lists, such as lists of vessels or sailing 
 // reports.
@@ -66,5 +67,17 @@ extern double g_vehicle_min_height;
 
 // Maximum allowed height in meters of vehicles, used to validate user input
 extern double g_vehicle_max_height;
+
+//regex pattern that will match allowed vessel name strings
+extern std::regex g_vessel_name_regex;
+
+//regex pattern that will match allowed sailing ID strings
+extern std::regex g_sailing_id_regex;
+
+//regex pattern that will match allowed license plate strings
+extern std::regex g_license_plate_regex;
+
+//regex pattern that will match allowed phone number strings
+extern std::regex g_phone_number_regex;
 
 #endif // GLOBAL_H

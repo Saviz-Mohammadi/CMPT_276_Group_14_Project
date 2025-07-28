@@ -43,6 +43,7 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include "global.hpp"
+#include <regex>
 
 // how many items to return by default
 int g_list_length = 5;
@@ -69,3 +70,9 @@ double g_vehicle_min_length = 0;
 double g_vehicle_max_length = 100;
 double g_vehicle_min_height = 0;
 double g_vehicle_max_height = 10;
+
+//regex patterns
+std::regex g_vessel_name_regex (R"(^[\w '-]{1,25}$)"); //1-25 letters, spaces, apostrophes, hyphens
+std::regex g_sailing_id_regex (R"(^[A-Z]{3}-\d\d-\d\d$)"); //TTT-HH-DD
+std::regex g_license_plate_regex (R"(^[A-Z\d -]{1,10}$)"); //1-10 capital letters, numbers, spaces, hyphens
+std::regex g_phone_number_regex (R"(^(\d|\d-(?=\d)){8,14}$)"); //8-14 digits and hyphens, where hyphens must have digits on both sides
