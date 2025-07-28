@@ -188,6 +188,8 @@ void ReservationManagementState::createReservation()
 
     Vehicle vehicle;
 
+    vehicle.license_plate = license_plate;
+
     m_database->getVehicleByID(
         license_plate,
         vehicle,

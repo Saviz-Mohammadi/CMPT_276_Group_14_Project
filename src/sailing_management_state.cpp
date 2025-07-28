@@ -504,36 +504,34 @@ void SailingManagementState::listSailingReport()
     int departure_hour = 0;
     Sailing sailing_targeted_for_reporting;
 
-    do {
-        continuouslyPromptForString(
-            "Please enter the ID of the sailing [TTT-dd-hh]: ",
-            std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
-            sailing_id_string
-            );
+    continuouslyPromptForString(
+        "Please enter the ID of the sailing [TTT-dd-hh]: ",
+        std::regex(R"([A-Z]{3}-\d{2}-\d{2})"),
+        sailing_id_string
+        );
 
-        Utilities::extractSailingID(
-            sailing_id_string,
-            departure_terminal,
-            departure_day,
-            departure_hour
-            );
+    Utilities::extractSailingID(
+        sailing_id_string,
+        departure_terminal,
+        departure_day,
+        departure_hour
+        );
 
-        m_database->getSailingByID(
-            departure_terminal,
-            departure_day,
-            departure_hour,
-            sailing_targeted_for_reporting,
-            g_is_successful,
-            g_outcome_message
-            );
+    m_database->getSailingByID(
+        departure_terminal,
+        departure_day,
+        departure_hour,
+        sailing_targeted_for_reporting,
+        g_is_successful,
+        g_outcome_message
+        );
 
-        if(!g_is_successful)
-        {
-            std::cout << g_outcome_message << "\n\n";
-        }
-    }while(!g_is_successful);
-    std::cout << "\n";
+    if(!g_is_successful)
+    {
+        std::cout << g_outcome_message << "\n\n";
 
+        return; // Abort the operation.
+    }
 
     // Get Sailing report and print it:
     // ****************************************************************************

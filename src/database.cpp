@@ -1593,7 +1593,7 @@ void Database::addVehicle(
         return;
     }
 
-    // 2) Bind parameters: license_plate, phone_number, length
+    // 2) Bind parameters: license_plate, phone_number, length, height
     sqlite3_bind_text(
         prepared_sql_statement,
         1,
@@ -1639,7 +1639,7 @@ void Database::addVehicle(
     vehicle_id = static_cast<int>(sqlite3_last_insert_rowid(m_sqlite3));
 
     is_successful = true;
-    outcome_message = std::string("Vehicle created succeeded");
+    outcome_message = std::string("Vehicle creation succeeded");
 }
 
 // ----------------------------------------------------------------------------
@@ -1726,14 +1726,14 @@ void Database::getVehicleByID(
     else if (return_code == SQLITE_DONE)
     {
         is_successful = false;
-        outcome_message = std::string("Get vehicle by failed: ") + std::string("No vehicle found with license plate = ") + license_plate;
+        outcome_message = std::string("Get vehicle by ID failed: ") + std::string("No vehicle found with license plate = ") + license_plate;
     }
 
     // Operation did not complete (something has seriously gone wrong):
     else
     {
         is_successful = false;
-        outcome_message = std::string("Get vehicle by failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
+        outcome_message = std::string("Get vehicle by ID failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
     }
 
     // 4) Clean up:
