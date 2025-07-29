@@ -59,8 +59,8 @@
 #include <iostream>
 #include <ctime>
 #include <iomanip>
-#include <string> 
-#include <cctype> 
+#include <string>
+#include <cctype>
 #include <cmath>
 #include "state.hpp"
 #include "sailing_management_state.hpp"
