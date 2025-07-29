@@ -60,6 +60,37 @@ TEST_CASE("Extract sailing ID: Testing to make sure that the 'extractSailingID()
 }
 
 // ----------------------------------------------------------------------------
+TEST_CASE("Extract sailing ID 2", "[Utilities]")
+{
+    // Creating variables
+    // ****************************************************************************
+
+    std::string sailing_id = "ABC-00-00";
+    std::string departure_terminal;
+    int departure_day;
+    int departure_hour;
+
+
+    // Extracting
+    // ****************************************************************************
+
+    Utilities::extractSailingID(
+        sailing_id,
+        departure_terminal,
+        departure_day,
+        departure_hour
+    );
+
+
+    // Checking
+    // ****************************************************************************
+
+    REQUIRE(departure_terminal == "ABC");
+    REQUIRE(departure_day == 0);
+    REQUIRE(departure_hour == 0);
+}
+
+// ----------------------------------------------------------------------------
 TEST_CASE("Create sailing ID: Testing to make sure that the 'createSailingID()' function works correctly", "[Utilities]")
 {
     // Creating variables
@@ -83,4 +114,30 @@ TEST_CASE("Create sailing ID: Testing to make sure that the 'createSailingID()' 
     // ****************************************************************************
 
     REQUIRE(sailing_id == "CCC-09-20");
+}
+
+// ----------------------------------------------------------------------------
+TEST_CASE("Create sailing ID 2", "[Utilities]")
+{
+    // Creating variables
+    // ****************************************************************************
+
+    std::string sailing_id = "";
+
+
+    // Extracting
+    // ****************************************************************************
+
+    Utilities::createSailingID(
+        "CCC",
+        0,
+        0,
+        sailing_id
+    );
+
+
+    // Checking
+    // ****************************************************************************
+
+    REQUIRE(sailing_id == "CCC-00-00");
 }
