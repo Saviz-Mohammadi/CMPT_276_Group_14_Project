@@ -140,7 +140,7 @@ public:
     Sailing sailing;                //the sailing object
     Vessel vessel;                  //the vessel object
     int vehicle_count;              //total number of vehicles reserved or boarded on the sailing
-    double occupancy_percentage;    //How full is the sailing as a fraction of 1. e.g. 98% = 0.98
+    double occupancy_percentage;    //How full is the sailing out of 100.
 };
 
 #endif // CONTAINERS_HPP
