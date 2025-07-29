@@ -61,6 +61,7 @@
 #include <iomanip>
 #include <string> 
 #include <cctype> 
+#include <cmath>
 #include "state.hpp"
 #include "sailing_management_state.hpp"
 #include "state_manager.hpp"
@@ -218,6 +219,8 @@ void SailingManagementState::createSailing()
         }
     }while(g_is_successful);
 
+    std::cout << "\n";
+
     Sailing new_sailing(-1, vessel_id, departure_terminal, departure_day, departure_hour, found_vessel.low_ceiling_lane_length, found_vessel.high_ceiling_lane_length);
 
     // Prompting for confirmation and creating the sailing:
@@ -230,6 +233,7 @@ void SailingManagementState::createSailing()
         g_allowed_yes_no_responses,
         user_choice
     );
+    std::cout << "\n";
 
     switch(user_choice)
     {
@@ -254,6 +258,7 @@ void SailingManagementState::createSailing()
             std::cout << "Canceled sailing creation" << std::endl;
             break;
     }
+    std::cout << "\n";
 }
 
 // ----------------------------------------------------------------------------
@@ -276,6 +281,7 @@ void SailingManagementState::deleteSailing()
             g_sailing_id_regex,
             sailing_id_string
             );
+        std::cout << "\n";
 
         Utilities::extractSailingID(
             sailing_id_string,
@@ -310,6 +316,7 @@ void SailingManagementState::deleteSailing()
         g_allowed_yes_no_responses,
         user_choice
         );
+    std::cout << "\n";
 
     switch(user_choice)
     {
@@ -331,6 +338,7 @@ void SailingManagementState::deleteSailing()
             std::cout << "Sailing deletion operation aborted!" << "\n";
             break;
     }
+    std::cout << "\n";
 }
 
 // ----------------------------------------------------------------------------
@@ -422,6 +430,7 @@ void SailingManagementState::listSailingReports()
                     );
 
                 // Print the sailing:
+                double occupancy_percentage_formatted = floor(sailing_report.occupancy_percentage * 10) / 10;
                 std::cout 
                     << std::setw(2) << std::right << offset + 1 + i << ") "
                     << sailing_id << "   "
@@ -430,7 +439,7 @@ void SailingManagementState::listSailingReports()
                     << std::setw(6) << std::right << sailing_report.sailing.low_remaining_length << "  "
                     << std::setw(6) << std::right << sailing_report.sailing.high_remaining_length << "  "
                     << std::setw(8) << std::right << sailing_report.vehicle_count << "  "
-                    << std::setw(8) << std::right << (int)floor(sailing_report.occupancy_percentage) << "%"
+                    << std::setw(8) << std::right << occupancy_percentage_formatted << "%"
                     << "\n";
             }
             std::cout << "\n";
@@ -508,6 +517,7 @@ void SailingManagementState::listSailingReport()
         g_sailing_id_regex,
         sailing_id_string
         );
+    std::cout << "\n";
 
     Utilities::extractSailingID(
         sailing_id_string,
@@ -555,7 +565,7 @@ void SailingManagementState::listSailingReport()
         );
 
     // Report title:
-    std::cout << "Sailing Report" << std::string(44, ' ') << Utilities::getLocalDateAndTime() << "\n";
+    std::cout << "Sailing Report" << std::string(41, ' ') << Utilities::getLocalDateAndTime() << "\n";
 
     // Column headers:
     std::cout
@@ -567,6 +577,7 @@ void SailingManagementState::listSailingReport()
         << "%Occupied" << "\n";
 
     // One row for the report
+    double occupancy_percentage_formatted = floor(sailing_report.occupancy_percentage * 10) / 10;
     std::cout
         << " " << sailing_id << "   "
         << std::setw(25) << std::left << sailing_report.vessel.vessel_name << "  "
@@ -574,7 +585,7 @@ void SailingManagementState::listSailingReport()
         << std::setw(6) << std::right << sailing_report.sailing.low_remaining_length << "  "
         << std::setw(6) << std::right << sailing_report.sailing.high_remaining_length << "  "
         << std::setw(8) << std::right << sailing_report.vehicle_count << "  "
-        << std::setw(8) << std::right << (int)floor(sailing_report.occupancy_percentage) << "%"
+        << std::setw(8) << std::right << occupancy_percentage_formatted << "%"
         << "\n";
     std::cout << "\n";
 
