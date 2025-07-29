@@ -156,7 +156,7 @@ void ReservationManagementState::createReservation()
 
     if(!g_is_successful)
     {
-        std::cout << g_outcome_message << "\n\n";
+        std::cout << "\n" << g_outcome_message << "\n\n";
 
         m_state_manager->selectNextState(States::ReservationManagementState);
 

@@ -237,6 +237,7 @@ void VesselManagementState::listVessels()
                 if (offset == 0) // If we are at the start of the list.
                 {
                     std::cout << "No records available for displaying!" << "\n\n";
+                    break;
                 }
                 else // If we are past the end of the list.
                 {
