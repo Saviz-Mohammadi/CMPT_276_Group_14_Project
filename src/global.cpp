@@ -75,4 +75,4 @@ double g_vehicle_max_height = 10;
 std::regex g_vessel_name_regex (R"(^[\w '-]{1,25}$)"); //1-25 letters, spaces, apostrophes, hyphens
 std::regex g_sailing_id_regex (R"(^[A-Z]{3}-\d\d-\d\d$)"); //TTT-HH-DD
 std::regex g_license_plate_regex (R"(^[A-Z\d -]{1,10}$)"); //1-10 capital letters, numbers, spaces, hyphens
-std::regex g_phone_number_regex (R"(^(\d|\d-(?=\d)){8,14}$)"); //8-14 digits and hyphens, where hyphens must have digits on both sides
+std::regex g_phone_number_regex (R"(^(?=.{8,14}$)(?:\d|\d-(?=\d))*$)"); //8-14 digits and hyphens, where hyphens must have digits on both sides
