@@ -253,8 +253,17 @@ void Database::addVessel(
 
     if(return_code != SQLITE_DONE)
     {
+        if (return_code == SQLITE_CONSTRAINT_UNIQUE || return_code == SQLITE_CONSTRAINT_PRIMARYKEY)
+        {
+            outcome_message = std::string("Vessel creation failed: ") + "a vessel with the same name already exists.";
+        }
+
+        else
+        {
+            outcome_message = std::string("Vessel creation failed: ") + sqlite3_errmsg(m_sqlite3);
+        }
+
         is_successful = false;
-        outcome_message = std::string("Vessel creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
 
         sqlite3_finalize(prepared_sql_statement);
 
