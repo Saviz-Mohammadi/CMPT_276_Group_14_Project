@@ -1188,19 +1188,9 @@ void Database::addReservation(
 
     if(return_code != SQLITE_DONE)
     {
-        if (return_code == SQLITE_CONSTRAINT)
+        if (return_code == SQLITE_CONSTRAINT_UNIQUE || return_code == SQLITE_CONSTRAINT_PRIMARYKEY)
         {
-            int extended_code = sqlite3_extended_errcode(m_sqlite3);
-
-            if (extended_code == SQLITE_CONSTRAINT_UNIQUE || extended_code == SQLITE_CONSTRAINT_PRIMARYKEY)
-            {
-                outcome_message = std::string("Reservation creation failed: ") + "a reservation already exists for this vehicle and sailing.";
-            }
-
-            else
-            {
-                outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
-            }
+            outcome_message = std::string("Reservation creation failed: ") + "a reservation already exists for this vehicle and sailing.";
         }
 
         else
@@ -1209,8 +1199,6 @@ void Database::addReservation(
         }
 
         is_successful = false;
-
-        return;
 
         return;
     }
