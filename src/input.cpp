@@ -49,6 +49,15 @@
 #include "input.hpp"
 #include <iostream>
 #include <sstream>
+#include <algorithm>
+
+std::string trim(const std::string& str)
+{
+    const auto begin = std::find_if_not(str.begin(), str.end(), ::isspace);
+    const auto end = std::find_if_not(str.rbegin(), str.rend(), ::isspace).base();
+
+    return (begin < end) ? std::string(begin, end) : "";
+}
 
 // ----------------------------------------------------------------------------
 void promptForInteger(
@@ -80,6 +89,7 @@ void promptForInteger(
     try
     {
         std::getline(std::cin, input_line);
+        input_line = trim(input_line);
     }
 
     catch(const std::ios_base::failure& exception)
@@ -173,6 +183,7 @@ void promptForReal(
     try
     {
         std::getline(std::cin, input_line);
+        input_line = trim(input_line);
     }
 
     catch(const std::ios_base::failure& exception)
@@ -265,6 +276,7 @@ void promptForCharacter(
     try
     {
         std::getline(std::cin, input_line);
+        input_line = trim(input_line);
     }
 
     catch(const std::ios_base::failure& exception)
@@ -355,6 +367,7 @@ void promptForString(
     try
     {
         std::getline(std::cin, input_line);
+        input_line = trim(input_line);
     }
 
     catch(const std::ios_base::failure& exception)
@@ -406,6 +419,7 @@ void promptForString(
     try
     {
         std::getline(std::cin, input_line);
+        input_line = trim(input_line);
     }
 
     catch(const std::ios_base::failure& exception)
