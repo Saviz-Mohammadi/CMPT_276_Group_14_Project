@@ -183,10 +183,15 @@ void VesselManagementState::createVessel()
 }
 
 // ----------------------------------------------------------------------------
+//
+// Allow the offest to go one g_list_length past the ends of the list so when the user
+// goes back one page, they will be at the first/last page of the list.
+//
 void VesselManagementState::listVessels()
-{
-    // Offset the starting record by the length amount:
-    int offset = 0;
+{    
+    int offset = 0; // Offset the starting record by the offset amount
+    bool can_go_next = true; // able to scroll the list to higher offset
+    bool can_go_previous = true; // able to scroll the list to lower offset
 
     // NOTE (SAVIZ): I am pretty sure we can save some performance if we create the vector once and reserve it once.
     std::vector<Vessel> vessels;
@@ -196,72 +201,76 @@ void VesselManagementState::listVessels()
     // Continue listing vessels forever until the user exits:
     while(true)
     {
-        m_database->getVessels(
-            g_list_length,
-            offset,
-            vessels,
-            g_is_successful,
-            g_outcome_message
-            );
+        //reset these each iteration
+        can_go_next = true; 
+        can_go_previous = true; 
 
-        // Edge cases:
-        // ****************************************************************************
-
-        if(!g_is_successful)
+        // if offset negative, do not try getVessels with negative offset
+        if (offset < 0)
         {
-            std::cout << g_outcome_message << "\n\n";
-
-            break; // Go back to menu.
-        }
-
-        // If there are no more records to show based on offset:
-        if(vessels.empty())
-        {
-            if (offset < 0) 
-            {
-#ifdef DEBUG_MODE
-                std::cout << "[Debug] list offset < 0" << "\n\n";
-#endif
-                break;
-            }
-            else if(offset == 0) // If we are at the start of the list.
-            {
-                std::cout << "No records available for displaying!" << "\n\n";
-            }
-            else // If we are at the end of the list.
-            {
-                // Clamp offset at the end:
-                offset -= g_list_length;
-
-                std::cout << "No more next records available for displaying!" << "\n\n";
-            }
+            std::cout << "No more previous records available for displaying!" << "\n\n";
+            can_go_previous = false; // dont allow furthur scrolling into negative offset
         }
         else 
         {
-            // Print the report
+            m_database->getVessels(
+                g_list_length,
+                offset,
+                vessels,
+                g_is_successful,
+                g_outcome_message
+            );
+
+            // Edge cases:
             // ****************************************************************************
-     
-            // Report title:
-            std::cout << "Vessel Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
 
-            // Column headers:
-            std::cout
-                << " ID  "
-                << std::setw(25) << std::left  << "Name" << "  "
-                << std::setw(6)  << std::right << "LCLL" << "  "
-                << std::setw(6)  << std::right << "HCLL" << "\n";
-
-            // One row for each fetched vessel record
-            for(const Vessel& vessel : vessels)
+            if (!g_is_successful)
             {
-                std::cout
-                    << std::setw(3)  << std::right << vessel.vessel_id   << ") " // ID column
-                    << std::setw(25) << std::left  << vessel.vessel_name << "  " // Name column
-                    << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
-                    << std::setw(6)  << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
-                    << "\n";
+                std::cout << g_outcome_message << "\n\n";
+
+                break; // Go back to menu.
             }
-            std::cout << "\n";
+
+            // If there are no more records to show based on offset:
+            if (vessels.empty())
+            {
+                if (offset == 0) // If we are at the start of the list.
+                {
+                    std::cout << "No records available for displaying!" << "\n\n";
+                }
+                else // If we are past the end of the list.
+                {
+                    std::cout << "No more next records available for displaying!" << "\n\n";
+                    can_go_next = false; // do not allow further scrolling into higher offset
+                }
+            }
+            else
+            {
+                // Print the report
+                // ****************************************************************************
+
+                // Report title:
+                std::cout << "Vessel Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
+
+                // Column headers:
+                std::cout
+                    << " ID  "
+                    << std::setw(25) << std::left << "Name" << "  "
+                    << std::setw(6) << std::right << "LCLL" << "  "
+                    << std::setw(6) << std::right << "HCLL" << "\n";
+
+                // One row for each fetched vessel record
+                for (const Vessel& vessel : vessels)
+                {
+                    std::cout
+                        << std::setw(3) << std::right << vessel.vessel_id << ") " // ID column
+                        << std::setw(25) << std::left << vessel.vessel_name << "  " // Name column
+                        << std::setw(6) << std::right << std::fixed << std::setprecision(1) << vessel.low_ceiling_lane_length << "  "  // LCLL column
+                        << std::setw(6) << std::right << std::fixed << std::setprecision(1) << vessel.high_ceiling_lane_length // HCLL column
+                        << "\n";
+                }
+                std::cout << "\n";
+            }
         }
 
         // Prompt for input:
@@ -290,17 +299,17 @@ void VesselManagementState::listVessels()
         {
         case 'p':
         case 'P':
-            offset -= g_list_length;
-
-            // Clamp offset at bottom of vessel list:
-            if(offset <= 0)
+            if (can_go_previous) 
             {
-                offset = 0;
-            }
+                offset -= g_list_length;
+            }            
             break;
         case 'n':
         case 'N':
-            offset += g_list_length;
+            if (can_go_next)
+            {
+                offset += g_list_length;
+            }
             break;
         case 'e':
         case 'E':
