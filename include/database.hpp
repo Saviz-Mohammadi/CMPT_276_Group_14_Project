@@ -82,7 +82,6 @@ public:
     // ----------------------------------------------------------------------------
 
 public:
-    // DONE
     // ----------------------------------------------------------------------------
     void openConnection(
         const std::string& path,     // [IN]  | The path to the database file where 
@@ -121,7 +120,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void cutConnection(
         bool& is_successful,         // [OUT] | The outcome status of the operation, 
@@ -150,7 +148,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void addVessel(
         Vessel vessel,               // [IN]  | Data for the new vessel that will be 
@@ -191,7 +188,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void getVesselByID(
         int vessel_id,               // [IN]  | The ID of vessel to be searched for.
@@ -228,7 +224,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void getVessels(
         int count,                    // [IN]  | The number of vessels to be retrieved.
@@ -265,7 +260,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void addSailing(
         Sailing sailing,             // [IN]  | Data for the new sailing that will be
@@ -311,7 +305,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void removeSailing(
         Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
@@ -349,7 +342,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void getSailingByID(
         std::string departure_terminal, // [IN]  | The departure terminal of the sailing
@@ -391,7 +383,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void getSailingReports(
         int count,                                   // [IN]  | The number of sailing 
@@ -433,7 +424,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void getSailingReportByID(
         Sailing sailing,               // [IN]  | The sailing being targeted for 
@@ -467,7 +457,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void addReservation(
         Sailing sailing,             // [IN]  | The sailing that the new reservation will
@@ -514,7 +503,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void removeReservation(
         Sailing sailing,             // [IN]  | The sailing that the reservation is 
@@ -557,8 +545,40 @@ public:
     // ----------------------------------------------------------------------------
 
 
+    // ----------------------------------------------------------------------------
+    void isBoarded(
+        Sailing sailing,             // [IN]  | The sailing that the reservation is associated to.
+        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to.
+        bool& is_boarded,            // [OUT] | The outcome indicating if the reservation in question is already boarded.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
+        );
 
-    // NEED HELP
+    /*
+    *   [Description]
+    *   This function attempts to return an indication as to weather a reservation is already boarded or not using SQL
+    *   queries.
+    *   Note that it is assumed that 'getVehicleByID()' and 'getSailingByID()' are
+    *   successfully called before this.
+    *   It is important to call 'openConnection()' before invoking this method.
+    *
+    *   [Return]
+    *   void
+    *
+    *   [Errors]
+    *   @ <Invalid ID>
+    *       If an invalid sailing ID is provided, the operation will terminate with a
+    *   failure status and provide an appropriate error message saying "Record does not
+    *   exist!".
+    *   @ <Invalid license plate>
+    *       If an invalid license plate is provided, the operation will terminate with
+    *       a failure status and provide an appropriate error message saying "Record
+    *       does not exist!".
+    */
+    // ----------------------------------------------------------------------------
+
+
+
     // ----------------------------------------------------------------------------
     void completeBoarding(
         Sailing sailing,             // [IN]  | The sailing that the reservation is 
@@ -597,7 +617,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void addVehicle(
         Vehicle vehicle,             // [IN]  | Data for the new vehicle that will be 
@@ -638,7 +657,6 @@ public:
 
 
 
-    // DONE
     // ----------------------------------------------------------------------------
     void getVehicleByID(
         std::string license_plate,      // [IN]  | The license plate of the vehicle

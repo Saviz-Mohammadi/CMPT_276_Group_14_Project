@@ -1394,6 +1394,110 @@ void Database::removeReservation(
     outcome_message = std::string("Reservation deletion succeeded: ") + "returned length = " + std::to_string(amount);
 }
 
+void Database::isBoarded(
+    Sailing sailing,
+    Vehicle vehicle,
+    bool& is_boarded,
+    bool& is_successful,
+    std::string& outcome_message)
+{
+    // 1) Prepare a JOIN across sailings | reservations | vehicles
+    const char* sql_query_check_is_boarded = R"SQL(
+        SELECT reservations.amount_paid FROM reservations
+            JOIN sailings ON reservations.sailing_id_fk = sailings.sailing_id_pk
+            JOIN vehicles ON reservations.vehicle_id_fk = vehicles.vehicle_id_pk
+        WHERE sailings.departure_terminal = ? AND sailings.departure_day = ? AND sailings.departure_hour = ? AND vehicles.license_plate = ?
+        LIMIT 1;
+    )SQL";
+
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_check_is_boarded,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if (return_code != SQLITE_OK)
+    {
+        is_boarded = false;
+
+        is_successful = false;
+
+        outcome_message = std::string("Boarding check failed: ") + sqlite3_errmsg(m_sqlite3);
+
+        return;
+    }
+
+    // 2) Bind the parameters
+    sqlite3_bind_text (
+        prepared_sql_statement,
+        1,
+        sailing.departure_terminal.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    sqlite3_bind_int (
+        prepared_sql_statement,
+        2,
+        sailing.departure_day
+        );
+
+    sqlite3_bind_int (
+        prepared_sql_statement,
+        3,
+        sailing.departure_hour
+        );
+
+    sqlite3_bind_text (
+        prepared_sql_statement,
+        4,
+        vehicle.license_plate.c_str(),
+        -1,
+        SQLITE_TRANSIENT
+        );
+
+    // 3) Step the statement
+    return_code = sqlite3_step(prepared_sql_statement);
+
+    bool payment_was_made = false;
+
+    if (return_code == SQLITE_ROW)
+    {
+        int paid_amount = sqlite3_column_int(
+            prepared_sql_statement,
+            0
+            );
+
+        payment_was_made = (paid_amount != 0);
+
+        is_boarded = payment_was_made;
+
+        is_successful = true;
+
+        outcome_message = payment_was_made ? std::string("Vehicle has already boarded (amount_paid = ") + std::to_string(paid_amount) + ")" : std::string("Reservation exists but vehicle has not yet boarded.");
+    }
+
+    else
+    {
+        is_boarded = false;
+
+        is_successful = false;
+
+        outcome_message = "No reservation found for " + vehicle.license_plate +
+                          "at " + sailing.departure_terminal +
+                          "on day " + std::to_string(sailing.departure_day) +
+                          "at" + std::to_string(sailing.departure_hour);
+    }
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    return;
+}
+
 // ----------------------------------------------------------------------------
 void Database::completeBoarding(
     Sailing sailing,
