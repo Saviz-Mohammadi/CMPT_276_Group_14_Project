@@ -1071,88 +1071,15 @@ void Database::addReservation(
         return;
     }
 
-    // any changes to the DB should go after the last possible point of failure, i.e. dont update sailing length if we havent yet checked if the vehicle is already reserved
-    // 2) Update sailings table to deduct the vehicle’s length:
-    const char* sql_query_update_sailing = R"SQL(
-        UPDATE sailings SET low_remaining_length = ?, high_remaining_length = ?
-        WHERE sailing_id_pk = ?;
-    )SQL";
-
-    sqlite3_stmt* prepared_sql_statement = nullptr;
-
-    int return_code = sqlite3_prepare_v2(
-        m_sqlite3,
-        sql_query_update_sailing,
-        -1,
-        &prepared_sql_statement,
-        nullptr
-        );
-
-    if(return_code != SQLITE_OK)
-    {
-        is_successful = false;
-        outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
-
-        return;
-    }
-
-    sqlite3_bind_double(
-        prepared_sql_statement,
-        1,
-        new_low_remaining_length
-        );
-
-    sqlite3_bind_double(
-        prepared_sql_statement,
-        2,
-        new_high_remaining_length
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        3,
-        sailing.sailing_id
-        );
-
-    return_code = sqlite3_step(prepared_sql_statement);
-
-    sqlite3_finalize(prepared_sql_statement);
-
-    if(return_code != SQLITE_DONE)
-    {
-        if (return_code == SQLITE_CONSTRAINT)
-        {
-            int extended_code = sqlite3_extended_errcode(m_sqlite3);
-
-            if (extended_code == SQLITE_CONSTRAINT_UNIQUE || extended_code == SQLITE_CONSTRAINT_PRIMARYKEY)
-            {
-                //this return_code is from the UPDATE sailings remaining length query, why do we give this error message for that type of query?
-                outcome_message = std::string("Reservation creation failed: ") + "a reservation already exists for this vehicle and sailing.";
-            }
-
-            else
-            {
-                outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
-            }
-        }
-
-        else
-        {
-            outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
-        }
-
-        is_successful = false;
-
-        return;
-    }
-
-    // 3) Insert reservation record:
+    // 2) Insert reservation record:
     const char* sql_query_insert_reservation = R"SQL(
         INSERT INTO reservations (sailing_id_fk, vehicle_id_fk, amount_paid, reserved_for_low_lane)
         VALUES (?, ?, ?, ?);
     )SQL";
 
-    return_code = sqlite3_prepare_v2(
+    sqlite3_stmt* prepared_sql_statement = nullptr;
+
+    int return_code = sqlite3_prepare_v2(
         m_sqlite3,
         sql_query_insert_reservation,
         -1,
@@ -1164,34 +1091,13 @@ void Database::addReservation(
     {
         is_successful = false;
         outcome_message = std::string("Reservation creation failed: ") + std::string(sqlite3_errmsg(m_sqlite3));
-
         return;
     }
 
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        1,
-        sailing.sailing_id
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        2,
-        vehicle.vehicle_id
-        );
-
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        3,
-        0 // NOTE (SAVIZ): When making a reservation, the starting amount should always be '0'.
-        );
-
-    // NOTE (SAVIZ): There simply isn’t a 'sqlite3_bind_bool()' in the API. Booleans in SQL are just integers:
-    sqlite3_bind_int(
-        prepared_sql_statement,
-        4,
-        reserved_for_low_lane ? 1 : 0
-        );
+    sqlite3_bind_int(prepared_sql_statement, 1, sailing.sailing_id);
+    sqlite3_bind_int(prepared_sql_statement, 2, vehicle.vehicle_id);
+    sqlite3_bind_int(prepared_sql_statement, 3, 0); // starting amount = 0
+    sqlite3_bind_int(prepared_sql_statement, 4, reserved_for_low_lane ? 1 : 0);
 
     return_code = sqlite3_step(prepared_sql_statement);
 
@@ -1203,7 +1109,6 @@ void Database::addReservation(
         {
             outcome_message = std::string("Reservation creation failed: ") + "a reservation already exists for this vehicle and sailing.";
         }
-
         else
         {
             outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
@@ -1211,6 +1116,42 @@ void Database::addReservation(
 
         is_successful = false;
 
+        return;
+    }
+
+    // 3) Update sailings table to deduct the vehicle’s length:
+    const char* sql_query_update_sailing = R"SQL(
+        UPDATE sailings SET low_remaining_length = ?, high_remaining_length = ?
+        WHERE sailing_id_pk = ?;
+    )SQL";
+
+    prepared_sql_statement = nullptr;
+    return_code = sqlite3_prepare_v2(
+        m_sqlite3,
+        sql_query_update_sailing,
+        -1,
+        &prepared_sql_statement,
+        nullptr
+        );
+
+    if(return_code != SQLITE_OK)
+    {
+        is_successful = false;
+        outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
+        return;
+    }
+
+    sqlite3_bind_double(prepared_sql_statement, 1, new_low_remaining_length);
+    sqlite3_bind_double(prepared_sql_statement, 2, new_high_remaining_length);
+    sqlite3_bind_int(prepared_sql_statement, 3, sailing.sailing_id);
+
+    return_code = sqlite3_step(prepared_sql_statement);
+    sqlite3_finalize(prepared_sql_statement);
+
+    if(return_code != SQLITE_DONE)
+    {
+        is_successful = false;
+        outcome_message = std::string("Reservation creation failed: ") + sqlite3_errmsg(m_sqlite3);
         return;
     }
 
