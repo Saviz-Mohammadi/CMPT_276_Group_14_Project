@@ -185,39 +185,32 @@ void BoardingState::startBoarding()
         }
         std::cout << "\n";
 
-        //try to create a reservation for this vehicle and sailing in case it didnt exist.
-        //if one already exists then this will fail
         std::string reservation_outcome_message = "";
         bool reservation_is_successful = false;
-        m_database->addReservation(s_sailing, s_vehicle, reservation_is_successful, reservation_outcome_message);
+        std::string boarding_outcome_message = "";
+        bool boarding_is_successful = false;
 
-        //complete the boarding for this vehicle
-        m_database->completeBoarding(s_sailing, s_vehicle, g_is_successful, g_outcome_message);
-
-        if (!g_is_successful && !reservation_is_successful) 
+        //try to board
+        m_database->completeBoarding(s_sailing, s_vehicle, boarding_is_successful, boarding_outcome_message);
+        if (boarding_is_successful)
         {
-            //boarding might have failed because addReservation failed
-            //if this is the case then show the reservation message
+            std::cout << boarding_outcome_message << "\n\n";
+        }
+        else
+        {
+            //if boarding failed, it could be because there was no reservation
+            //try to create a reservation for this vehicle and sailing in case it didnt exist.
+            m_database->addReservation(s_sailing, s_vehicle, reservation_is_successful, reservation_outcome_message);
+
             std::cout << reservation_outcome_message << "\n\n";
-        }
-        else
-        {
-            //otherwise just show the boarding success/fail message
-            std::cout << g_outcome_message << "\n\n";
-        }
-        
 
-        /*
-        if (g_is_successful) 
-        {
-            std::cout << "Boarding completed!" << "\n\n";
+            if (reservation_is_successful) 
+            {
+                //if a reservation was made now we can complete the boarding
+                m_database->completeBoarding(s_sailing, s_vehicle, boarding_is_successful, boarding_outcome_message);
+                std::cout << boarding_outcome_message << "\n\n";
+            }
         }
-
-        else
-        {
-            std::cout << g_outcome_message << "\n\n";
-        }
-        */
 
         promptForCharacter(
             "Do you wish to complete another boarding? [y/n]? ",
