@@ -334,6 +334,7 @@ void ReservationManagementState::deleteReservation()
         g_license_plate_regex,
         license_plate
         );
+    std::cout << "\n";
 
 
     // Check Vehicle exits:
@@ -359,6 +360,13 @@ void ReservationManagementState::deleteReservation()
     }
 
 
+    //TODO must check if vehicle is already boarded before cancelling reservation
+    // ****************************************************************************
+
+
+
+
+
     // Ask for confirmation and create reseravtion:
     // ****************************************************************************
 
@@ -369,6 +377,7 @@ void ReservationManagementState::deleteReservation()
         g_allowed_yes_no_responses,
         user_choice
         );
+    std::cout << "\n";
 
     switch(user_choice)
     {
@@ -381,12 +390,12 @@ void ReservationManagementState::deleteReservation()
             g_is_successful,
             g_outcome_message
             );
+        std::cout << g_outcome_message << "\n\n";
 
-        std::cout << g_outcome_message << "\n";
         break;
     case 'n':
     case 'N':
-        std::cout << "Reservation deletion operation aborted!" << "\n";
+        std::cout << "Reservation deletion operation aborted!" << "\n\n";
         break;
     }
 }

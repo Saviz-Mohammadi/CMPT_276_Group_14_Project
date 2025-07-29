@@ -275,35 +275,34 @@ void SailingManagementState::deleteSailing()
     int departure_hour = 0;
     Sailing sailing_targeted_for_deletion;
 
-    do {
-        continuouslyPromptForString(
-            "Please enter the ID of the sailing [TTT-dd-hh]: ",
-            g_sailing_id_regex,
-            sailing_id_string
-            );
-        std::cout << "\n";
+    continuouslyPromptForString(
+        "Please enter the ID of the sailing [TTT-dd-hh]: ",
+        g_sailing_id_regex,
+        sailing_id_string
+    );
+    std::cout << "\n";
 
-        Utilities::extractSailingID(
-            sailing_id_string,
-            departure_terminal,
-            departure_day,
-            departure_hour
-            );
+    Utilities::extractSailingID(
+        sailing_id_string,
+        departure_terminal,
+        departure_day,
+        departure_hour
+    );
 
-        m_database->getSailingByID(
-            departure_terminal,
-            departure_day,
-            departure_hour,
-            sailing_targeted_for_deletion,
-            g_is_successful,
-            g_outcome_message
-            );
+    m_database->getSailingByID(
+        departure_terminal,
+        departure_day,
+        departure_hour,
+        sailing_targeted_for_deletion,
+        g_is_successful,
+        g_outcome_message
+    );
 
-        if(!g_is_successful)
-        {
-            std::cout << g_outcome_message << "\n\n";
-        }
-    }while(!g_is_successful);
+    if (!g_is_successful)
+    {
+        std::cout << g_outcome_message << "\n\n";
+        return;
+    }
 
 
     // Prompting for confirmation and deleting the sailing:
@@ -407,11 +406,11 @@ void SailingManagementState::listSailingReports()
                 // ****************************************************************************
 
                 // Report title:
-                std::cout << "Sailing Report" << std::string(44, ' ') << Utilities::getLocalDateAndTime() << "\n";
+                std::cout << "Sailing Report" << std::string(45, ' ') << Utilities::getLocalDateAndTime() << "\n";
 
                 // Column headers:
                 std::cout
-                    << "    Sailing ID  "
+                    << "     Sailing ID  "
                     << std::setw(25) << std::left << "Vessel Name" << "  "
                     << std::setw(6) << std::right << "LCLR" << "  "
                     << std::setw(6) << std::right << "HCLR" << "  "
@@ -435,7 +434,7 @@ void SailingManagementState::listSailingReports()
                     // Print the sailing:
                     double occupancy_percentage_formatted = floor(sailing_report.occupancy_percentage * 10) / 10;
                     std::cout
-                        << std::setw(2) << std::right << offset + 1 + i << ") "
+                        << std::setw(3) << std::right << offset + 1 + i << ") "
                         << sailing_id << "   "
                         << std::setw(25) << std::left << sailing_report.vessel.vessel_name << "  "
                         << std::fixed << std::setprecision(1)

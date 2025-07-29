@@ -113,7 +113,7 @@ void BoardingState::onProcess()
 
     if (!g_is_successful) 
     {
-        std::cout << "\n\n" << g_outcome_message << "\n\n";
+        std::cout << "\n" << g_outcome_message << "\n\n";
     }
     else 
     {

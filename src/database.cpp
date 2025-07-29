@@ -1071,6 +1071,7 @@ void Database::addReservation(
         return;
     }
 
+    // any changes to the DB should go after the last possible point of failure, i.e. dont update sailing length if we havent yet checked if the vehicle is already reserved
     // 2) Update sailings table to deduct the vehicle’s length:
     const char* sql_query_update_sailing = R"SQL(
         UPDATE sailings SET low_remaining_length = ?, high_remaining_length = ?
@@ -1125,6 +1126,7 @@ void Database::addReservation(
 
             if (extended_code == SQLITE_CONSTRAINT_UNIQUE || extended_code == SQLITE_CONSTRAINT_PRIMARYKEY)
             {
+                //this return_code is from the UPDATE sailings remaining length query, why do we give this error message for that type of query?
                 outcome_message = std::string("Reservation creation failed: ") + "a reservation already exists for this vehicle and sailing.";
             }
 
