@@ -80,7 +80,7 @@ void MainMenuState::onProcess()
 {
     char user_choice;
     continuouslyPromptForCharacter(
-        "Please enter yout selection [0-4]: ", 
+        "Please enter your selection [0-4]: ", 
         std::vector<char>{'0','1','2','3','4'},
         user_choice
         );

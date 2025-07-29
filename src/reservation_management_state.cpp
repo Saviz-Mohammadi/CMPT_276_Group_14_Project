@@ -373,7 +373,7 @@ void ReservationManagementState::deleteReservation()
     char user_choice = '\0';
 
     continuouslyPromptForCharacter(
-        "Are you sure you want to create this new reservation [y/n]? ",
+        "Are you sure you want to delete this reservation [y/n]? ",
         g_allowed_yes_no_responses,
         user_choice
         );
