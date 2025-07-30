@@ -185,32 +185,48 @@ void BoardingState::startBoarding()
         }
         std::cout << "\n";
 
-        std::string reservation_outcome_message = "";
-        bool reservation_is_successful = false;
-        std::string boarding_outcome_message = "";
-        bool boarding_is_successful = false;
+        //*******************************************************************
+        // Try to board
 
-        //try to board
-        m_database->completeBoarding(s_sailing, s_vehicle, boarding_is_successful, boarding_outcome_message);
-        if (boarding_is_successful)
+        bool is_boarded = false;
+        m_database->isBoarded(s_sailing, s_vehicle, is_boarded, g_is_successful, g_outcome_message);
+
+        if (g_is_successful && is_boarded) //is already boarded
         {
-            std::cout << boarding_outcome_message << "\n\n";
+            std::cout << g_outcome_message << "\n\n";
         }
         else
         {
-            //if boarding failed, it could be because there was no reservation
-            //try to create a reservation for this vehicle and sailing in case it didnt exist.
-            m_database->addReservation(s_sailing, s_vehicle, reservation_is_successful, reservation_outcome_message);
+            std::string reservation_outcome_message = "";
+            bool reservation_is_successful = false;
+            std::string boarding_outcome_message = "";
+            bool boarding_is_successful = false;
 
-            std::cout << reservation_outcome_message << "\n\n";
-
-            if (reservation_is_successful) 
+            //try to board
+            m_database->completeBoarding(s_sailing, s_vehicle, boarding_is_successful, boarding_outcome_message);
+            if (boarding_is_successful)
             {
-                //if a reservation was made now we can complete the boarding
-                m_database->completeBoarding(s_sailing, s_vehicle, boarding_is_successful, boarding_outcome_message);
                 std::cout << boarding_outcome_message << "\n\n";
             }
+            else
+            {
+                //if boarding failed, it could be because there was no reservation
+                //try to create a reservation for this vehicle and sailing in case it didnt exist.
+                m_database->addReservation(s_sailing, s_vehicle, reservation_is_successful, reservation_outcome_message);
+
+                std::cout << reservation_outcome_message << "\n\n";
+
+                if (reservation_is_successful)
+                {
+                    //if a reservation was made now we can complete the boarding
+                    m_database->completeBoarding(s_sailing, s_vehicle, boarding_is_successful, boarding_outcome_message);
+                    std::cout << boarding_outcome_message << "\n\n";
+                }
+            }
         }
+
+        //*********************************************************************
+        // Ask user if they want to break
 
         promptForCharacter(
             "Do you wish to complete another boarding? [y/n]? ",
