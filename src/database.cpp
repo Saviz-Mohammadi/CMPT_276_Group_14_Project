@@ -57,9 +57,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <iostream>
-#include <sstream>
-#include <iomanip>
 #include "database.hpp"
+#include "utilities.hpp"
 
 // WARNING (SAVIZ): When using 'sqlite3_prepare_v2()' with 'nullptr' as the final parameter transactions will not work because it counts as multiple statements. If you wish to use this with multiple statements, then you need to bind to a call-back and loop thourgh it.
 // NOTE (SAVIZ): A full list of different SQLite codes and what they mean can be found here: https://www.sqlite.org/rescode.html
@@ -749,14 +748,10 @@ void Database::getSailingByID(
     {
         is_successful = false;
 
-        std::ostringstream oss;
-        oss << "Get sailing by ID failed: No sailing found for ID of "
-            << departure_terminal
-            << '-'
-            << std::setw(2) << std::setfill('0') << departure_day
-            << '-'
-            << std::setw(2) << std::setfill('0') << departure_hour;
-        outcome_message = oss.str();
+        std::string id_out;
+        Utilities::createSailingID(departure_terminal, departure_day, departure_hour, id_out);
+        
+        outcome_message = std::string("Get sailing by ID failed: No sailing found for ID of ") + id_out;
     }
 
     else
