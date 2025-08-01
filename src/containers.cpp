@@ -14,7 +14,7 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Karan
  *
  *
  * [DESIGN NOTES]

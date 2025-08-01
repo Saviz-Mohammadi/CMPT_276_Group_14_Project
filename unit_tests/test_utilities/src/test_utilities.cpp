@@ -15,6 +15,9 @@
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/20 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan. Added case for a sailing ids with all digits as zero
  *
  *
  * [PURPOSE]

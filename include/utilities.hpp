@@ -14,7 +14,7 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 - 2025/07/22 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ * Rev 1 - 2025/07/22 Original by Saviz Mohammadi, Henry Nguyen
  *
  *
  * [PURPOSE]

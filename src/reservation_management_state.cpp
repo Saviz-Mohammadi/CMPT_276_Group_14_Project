@@ -12,7 +12,17 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * Rev 1 – 2025/07/23 Original by Karan, Saviz
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan.
+ *       - Replaced all instances of hard coded regex patterns, and hard coded vehicle
+ *         dimensions limits with references to global variables
+ *       - Fixed terminal text output spacing
+ *       - Fixed call to database::getVehicleByID() not using the user inputted 
+ *         license plate
+ *         
+ *       
  *
  * [DESIGN NOTES]
  *

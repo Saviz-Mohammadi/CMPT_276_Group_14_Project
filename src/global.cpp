@@ -14,7 +14,11 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan.
+ *       - Added global regex patterns for business strings
  *
  *
  * [DESIGN NOTES]

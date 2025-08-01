@@ -16,9 +16,26 @@
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
  * 
- * Rev 2 - 2025/??/??
- *       - Ethan. Fixed using wrong column index from the sqlite row to assign values
- *         to properties of the SailingReport struct in getsailingreport.
+ * Rev 2 - 2025/07/25
+ *       - Saviz. Complete boarding now returns fare payed in cents
+ * 
+ * Rev 3 - 2025/??/??
+ *       - Ethan. 
+ *       - Fixed getSailingReports assigning incorrect columns from the database
+ *         to the out parameters
+ *       - Fixed not accounting for 0.5m spacing of the new vehicle when trying to create
+ *         a reservation
+ * 
+ *       - Saviz.
+ *       - Made various outcome_messages on failed operations more user friendly. 
+ *         outcome_message used to be whatever error SQLite returned.
+ *       - Fixed addReservation deducting space from the sailing regardless of whether
+ *         or not the reservation was successful
+ *       - Added isBoarded function definition
+ *       - Corrected the format of the printed sailing id in the error message when
+ *         a sailing is not found by getSailingByID()
+ * 
+ * 
  *
  *
  * [DESIGN NOTES]

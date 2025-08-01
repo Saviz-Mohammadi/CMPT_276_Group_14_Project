@@ -16,9 +16,14 @@
  *
  * Rev 1 - 2025/07/05 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  * 
- * Rev 2 - 2025/07/22 Modified by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ * Rev 2 - 2025/07/22 Modified by Ethan Scott
  *       - added g_is_successful, g_outcome_message, g_vehicle_min_length, 
  *         g_vehicle_max_length, g_vehicle_min_height, g_vehicle_max_height
+ * 
+ * Rev 3 - 2025/??/??
+ *       - Ethan
+ *       - added g_vessel_name_regex, g_sailing_id_regex, g_license_plate_regex, 
+ *         g_phone_number_regex variable declarations
  *
  *
  * [PURPOSE]

@@ -15,6 +15,12 @@
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * 
+ * Rev 2 - 2025/??/??.
+ *       - Saviz.
+ *       - Added trim function and call trim in each input method to remove spaces
+ *         at the end of inputs
+ *      
  *
  *
  * [DESIGN NOTES]

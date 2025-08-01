@@ -14,12 +14,21 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
+ * Rev 1 – 2025/07/23 Original by Ethan
  * 
- * Rev 2 - 2025/??/??
- *       - Ethan. Made the correct outcome message be displayed when creating a 
+ * Rev 2 - 2025/07/25
+ *       - Ethan
+ *       - Made the correct outcome message be displayed when creating a 
  *         new reservation during boarding for a vehicle that didnt already have
-*          a reservation
+ *         a reservation
+ * 
+ * Rev 3 - 2025/??/??
+ *       - Ethan
+ *       - replaced all hard coded regex patterns with references to global
+ *       - fixed terminal output text spacing
+ *       - made the correct outcome message be displayed when trying to board
+ *         a vehicle that was already boarded
+ * 
  *
  *
  * [DESIGN NOTES]

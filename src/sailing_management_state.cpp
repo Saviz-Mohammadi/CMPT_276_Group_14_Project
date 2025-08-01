@@ -14,11 +14,27 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Henry Nguyen, Ethan Scott
+ * Rev 1 – 2025/07/23 Original by Henry Nguyen
  * 
- * Rev 2 - 2025/??/??
- *       - Ethan. Fixed SailingManagementState::createSailing() not actually writing
- *         to the DB. Fixed spacing and alignment of sailing report.
+ * Rev 2 - 2025/07/25
+ *       - Ethan.
+         - Fixed createSailing() not writing to the DB.
+ *       - Fixed spacing and alignment of sailing report.
+ *       - ListSailingReports() no longer prints absolutely no output.
+ *       - CreateSailing() no longer gets stuck in infinite loop and passes 
+ *         the correct variable for the sailing out parameter in 
+ *         database::addSailing() call
+ * 
+ * Rev 3 - 2025/??/??
+ *       - Ethan.
+ *       - Fixed various terminal text output formatting and line spacing
+ *       - Replaced all instanced of hard coded regex patterns with references to
+ *         global variables 
+ *       - Changed logic for list scrolling on sailing report. No longer skips
+ *         a page when scrolling to the end of the list then scrolling back. 
+ *         Also immediately returns to the sailing menu when there are no sailings.
+ *       - Fixed incorrect sailing report columns, spacing, and values displayed in
+ *         the rows
  *
  *
  * [DESIGN NOTES]

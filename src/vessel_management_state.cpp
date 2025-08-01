@@ -14,7 +14,16 @@
  *
  * [REVISION HISTORY]
  *
- * Rev 1 - 2025/07/22 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
+ * Rev 1 - 2025/07/22 Original by Ethan, Saviz
+ * 
+ * Rev 2 - 2025/??/??
+ *       - Ethan.
+ *       - Replaced all instanced of hard coded regex patterns with references to global
+ *         variables.
+ *       - Fixed various terminal text output line spacing
+ *       - Changed logic for list scrolling on vessel list. No longer skips
+ *         a page when scrolling to the end of the list then scrolling back. 
+ *         Also immediately returns to the vessel menu when there are no vessels.
  *
  *
  * [DESIGN NOTES]

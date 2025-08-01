@@ -25,6 +25,12 @@
  *         Vehicle struct as in parameters instead of the individual elements of 
  *         the reservation ID
  *       - added addVehicle()
+ * 
+ * Rev 3 - 2025/??/??
+ *       - Saviz
+ *       - Added isBoarded function declaration
+ *      
+ * 
  *
  *
  * [PURPOSE]
