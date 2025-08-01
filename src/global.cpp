@@ -62,9 +62,6 @@ std::vector<char> g_allowed_navigation_responses = {
     'E', 'e'    // Exit
 };
 
-// Vessel name length
-int g_vessel_name_length = 25;
-
 // Vehicle size ranges
 double g_vehicle_min_length = 0;
 double g_vehicle_max_length = 100;

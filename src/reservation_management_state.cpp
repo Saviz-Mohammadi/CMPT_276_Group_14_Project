@@ -199,21 +199,19 @@ void ReservationManagementState::createReservation()
             vehicle.phone_number
             );
 
-        // TODO (SAVIZ): Does this range make sense?
         // Vehicle length [0–99.9]:
         continuouslyPromptForReal(
             "Please enter the length of the vehicle [0-99.9]: ",
-            0,
-            99,
+            g_vehicle_min_length,
+            g_vehicle_max_length,
             vehicle.length
             );
 
-        // TODO (SAVIZ): Same here?
         // Vehicle height [0–9.9]
         continuouslyPromptForReal(
             "Please enter the height of the vehicle [0-9.9]: ",
-            0.0,
-            9.9,
+            g_vehicle_min_height,
+            g_vehicle_max_height,
             vehicle.height
             );
 

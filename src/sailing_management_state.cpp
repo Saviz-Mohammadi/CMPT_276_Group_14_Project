@@ -163,7 +163,6 @@ void SailingManagementState::createSailing()
         std::numeric_limits<int>::max(),
         vessel_id
     );
-    std::cout << "\n";
 
     m_database->getVesselByID(
         vessel_id,
@@ -174,7 +173,7 @@ void SailingManagementState::createSailing()
 
     if (!g_is_successful)
     {
-        std::cout << g_outcome_message << "\n\n";
+        std::cout << "\n" << g_outcome_message << "\n\n";
         return;
     }
 
@@ -218,7 +217,6 @@ void SailingManagementState::createSailing()
             std::cout << "\n" << "Sailing ID already exists." << "\n\n";
         }
     }while(g_is_successful);
-
     std::cout << "\n";
 
     Sailing new_sailing(-1, vessel_id, departure_terminal, departure_day, departure_hour, found_vessel.low_ceiling_lane_length, found_vessel.high_ceiling_lane_length);

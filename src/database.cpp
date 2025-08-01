@@ -126,7 +126,8 @@ void Database::openConnection(
             FOREIGN KEY(vessel_id_fk) REFERENCES vessels(vessel_id_pk),
 
             -- Making the combination of the sailing ID unique:
-            UNIQUE(departure_terminal, departure_day, departure_hour)
+            UNIQUE(departure_terminal, departure_day, departure_hour),
+            UNIQUE(departure_day, departure_hour, vessel_id_fk)
         );
 
         -- VEHICLES
