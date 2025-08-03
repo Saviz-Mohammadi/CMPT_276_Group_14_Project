@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Vessel Management State
- *
- *
  * [FILE NAME]
  *
  * vessel_management_state.cpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -24,7 +16,6 @@
  *       - Changed logic for list scrolling on vessel list. No longer skips
  *         a page when scrolling to the end of the list then scrolling back. 
  *         Also immediately returns to the vessel menu when there are no vessels.
- *
  *
  * [DESIGN NOTES]
  *
@@ -49,11 +40,7 @@
  *
  * State management:
  *  -Inherits from `State` and uses `m_state_manager->selectNextState()` to drive transitions.
- *
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <iostream>
 #include <vector>

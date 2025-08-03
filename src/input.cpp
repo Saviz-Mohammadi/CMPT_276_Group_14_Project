@@ -1,27 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Input Helpers
- *
- *
  * [FILE NAME]
  *
  * input.cpp
  *
- *
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
- * 
- * Rev 2 - 2025/??/??.
+ *
+ * Rev 2 - 2025/08/03.
  *       - Saviz.
  *       - Added trim function and call trim in each input method to remove spaces
  *         at the end of inputs
- *      
- *
  *
  * [DESIGN NOTES]
  *
@@ -41,16 +31,7 @@
  * Error handling & feedback:
  *  - I/O failures (`badbit`, `failbit`, `eofbit`) caught and converted into user‑friendly messages.
  *  - Range checks and validation patterns produce clear `"out of range"` or `"invalid format"` messages.
- *
- * Future enhancements:
- *  - Factor out common try‑catch and exception‑mask code into shared utility to reduce duplication.
- *  - Consider non‑exception parsing (e.g., `std::cin.clear()` + `std::cin.fail()`) for lighter weight.
- *  - Add thread‑safety or support for alternative input sources (files, network streams).
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include "input.hpp"
 #include <iostream>

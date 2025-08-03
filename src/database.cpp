@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Database
- *
- *
  * [FILE NAME]
  *
  * database.cpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -18,10 +10,10 @@
  * 
  * Rev 2 - 2025/07/25
  *       - Saviz. Complete boarding now returns fare payed in cents
- * 
- * Rev 3 - 2025/??/??
+ *
+ * Rev 3 - 2025/08/03
  *       - Ethan. 
- *       - Fixed getSailingReports assigning incorrect columns from the database
+ *       - Fixed getSailingReports() assigning incorrect columns from the database
  *         to the out parameters
  *       - Fixed not accounting for 0.5m spacing of the new vehicle when trying to create
  *         a reservation
@@ -34,9 +26,6 @@
  *       - Added isBoarded function definition
  *       - Corrected the format of the printed sailing id in the error message when
  *         a sailing is not found by getSailingByID()
- * 
- * 
- *
  *
  * [DESIGN NOTES]
  *
@@ -62,16 +51,7 @@
  *  - Methods report via `bool& is_successful` and `std::string& outcome_message`.
  *  - Debug prints in ctor/dtor under `DEBUG_MODE`.
  *  - Does not use exceptions; relies on SQLite return codes.
- *
- * Future enhancements:
- *  - Batch operations and explicit transactions for multi-step updates.
- *  - Abstract SQL strings into a query builder or ORM layer.
- *  - Add thread-safety or connection pooling for concurrent scenarios.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <iostream>
 #include "database.hpp"

@@ -1,21 +1,12 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Utilities
- *
- *
  * [FILE NAME]
  *
  * utilities.cpp
  *
- *
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Henry, Saviz Mohammadi
- *
  *
  * [DESIGN NOTES]
  *
@@ -40,15 +31,7 @@
  *
  * Error handling & assumptions:
  *  - All functions assume well‑formed input; no validation or error reporting is performed.
- *
- * Future enhancements:
- *  - Replace stringstreams with minimal‑allocation parsing/formatting in performance‑critical paths.
- *  - Adopt thread‑safe or timezone‑aware time utilities if required.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <iostream>
 #include <string>

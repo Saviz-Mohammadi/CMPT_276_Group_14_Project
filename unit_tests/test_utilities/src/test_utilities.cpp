@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Test Module
- *
- *
  * [FILE NAME]
  *
  * test_utilities.cpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -19,14 +11,10 @@
  * Rev 2 - 2025/??/??
  *       - Ethan. Added case for a sailing ids with all digits as zero
  *
- *
  * [PURPOSE]
  *
  * This file is responsible for testing utility functionality.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <catch2/catch_all.hpp>
 #include "utilities.hpp"

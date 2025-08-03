@@ -1,21 +1,12 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * State Manager
- *
- *
  * [FILE NAME]
  *
  * state_manager.cpp
  *
- *
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi
- *
  *
  * [DESIGN NOTES]
  *
@@ -39,16 +30,7 @@
  * Error handling & assumptions:
  *  - Assumes `init` is always called before `run()`.
  *  - No null‐checks on `m_state` inside `run()` loop apart from the loop condition.
- *
- * Future enhancements:
- *  - Consider dynamic registration of states (e.g., via map<States, State*>).
- *  - Replace raw pointers with references or smart pointers for safety.
- *  - Add logging or metrics around state transitions for diagnostics.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include "state_manager.hpp"
 

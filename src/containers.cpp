@@ -1,21 +1,12 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Containers
- *
- *
  * [FILE NAME]
  *
  * containers.cpp
  *
- *
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Karan
- *
  *
  * [DESIGN NOTES]
  *
@@ -28,15 +19,7 @@
  * Extensibility:
  *  - Parameterized constructors allow explicit initialization of all fields.
  *  - Destructor defaults used for clarity; no custom cleanup required.
- *
- * Future enhancements:
- *  - Add input validation (e.g., non‐negative lengths, valid ID formats).
- *  - Provide conversion or formatting helpers (to/from string representations).
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include "containers.hpp"
 

@@ -1,29 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Test Module
- *
- *
  * [FILE NAME]
  *
  * test_database.cpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/20 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *
- *
  * [PURPOSE]
  *
  * This file is responsible for testing database related functionality.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <catch2/catch_all.hpp>
 #include <iostream>

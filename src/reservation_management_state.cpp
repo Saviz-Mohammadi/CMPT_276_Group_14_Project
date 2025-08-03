@@ -1,11 +1,5 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Reservation Management State
- *
  * [FILE NAME]
  *
  * reservation_management_state.cpp
@@ -21,8 +15,6 @@
  *       - Fixed terminal text output spacing
  *       - Fixed call to database::getVehicleByID() not using the user inputted 
  *         license plate
- *         
- *       
  *
  * [DESIGN NOTES]
  *
@@ -46,15 +38,7 @@
  *
  * State management:
  *  - Inherits from `State`; uses `m_state_manager->selectNextState()` to loop or return to main menu.
- *
- * Future enhancements:
- *  - Extract common ID‑validation loops into reusable utility functions.
- *  - Implement transactional semantics to roll back multi‑step failures in reservation creation.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <vector>
 #include <iostream>

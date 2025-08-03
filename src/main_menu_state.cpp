@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Main Menu State
- *
- *
  * [FILE NAME]
  *
  * main_menu_state.cpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -18,7 +10,6 @@
  * 
  * Rev 2 - 2025/??/??
  *       - Henry. Fix spelling mistake in output text
- *
  *
  * [DESIGN NOTES]
  *
@@ -36,15 +27,7 @@
  *
  * State management:
  *  - Inherits from `State`; uses `m_state_manager->selectNextState()` to transition.
- *
- * Future enhancements:
- *  - Add graceful shutdown procedures in `onExit()`.
- *  - Integrate logging or analytics around menu selections.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <iostream>
 #include "input.hpp"

@@ -1,25 +1,16 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Global Configuration
- *
- *
  * [FILE NAME]
  *
  * global.cpp
  *
- *
  * [REVISION HISTORY]
  *
  * Rev 1 – 2025/07/23 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
- * 
- * Rev 2 - 2025/??/??
+ *
+ * Rev 2 - 2025/08/03
  *       - Ethan.
  *       - Added global regex patterns for business strings
- *
  *
  * [DESIGN NOTES]
  *
@@ -36,15 +27,7 @@
  *  - `g_allowed_yes_no_responses` and `g_allowed_navigation_responses` centralize valid input choices.
  *  - `g_vessel_name_length` bounds vessel name inputs.
  *  - `g_vehicle_*` variables define valid ranges for vehicle dimensions.
- *
- * Future enhancements:
- *  - Encapsulate into a configuration struct or singleton for testability.
- *  - Load defaults from a config file or environment to allow runtime customization.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include "global.hpp"
 #include <regex>

@@ -1,21 +1,12 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * State
- *
- *
  * [FILE NAME]
  *
  * state.cpp
  *
- *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/23 Original by Saviz Mohammadi
- *
  *
  * [DESIGN NOTES]
  *
@@ -31,16 +22,7 @@
  *
  * Error handling & assumptions:
  *  - No null‑pointer checks: assumes `init` is always called before any use of the pointers.
- *
- * Future enhancements:
- *  - Consider replacing raw pointers with smart pointers or references for stronger ownership semantics.
- *  - Add assertions, logging, or error checks to catch uninitialized usage.
- *
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 
 #include "state.hpp"
 

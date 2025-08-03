@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Boarding State
- *
- *
  * [FILE NAME]
  *
  * boarding_state.cpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -21,15 +13,12 @@
  *       - Made the correct outcome message be displayed when creating a 
  *         new reservation during boarding for a vehicle that didnt already have
  *         a reservation
- * 
- * Rev 3 - 2025/??/??
+ *
+ * Rev 3 - 2025/08/03
  *       - Ethan
  *       - replaced all hard coded regex patterns with references to global
  *       - fixed terminal output text spacing
- *       - made the correct outcome message be displayed when trying to board
- *         a vehicle that was already boarded
- * 
- *
+ *       - made the correct outcome message be displayed when trying to board a vehicle that was already boarded
  *
  * [DESIGN NOTES]
  *
@@ -54,15 +43,7 @@
  *
  * State management:
  *  - Inherits from `State`; `onEnter()` resets static context, `onProcess()` loads sailing then calls `startBoarding()`.
- *
- * Future enhancements:
- *  - Replace static module variables with instance members for better encapsulation.
- *  - Refactor shared reservation/boarding logic to reuse code with ReservationManagementState.
- *  - Add an explicit exit option in `onProcess()` to return to main menu.
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <vector>
 #include <iostream>

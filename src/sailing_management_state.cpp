@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Sailing Management State
- *
- *
  * [FILE NAME]
  *
  * sailing_management_state.cpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -24,8 +16,8 @@
  *       - CreateSailing() no longer gets stuck in infinite loop and passes 
  *         the correct variable for the sailing out parameter in 
  *         database::addSailing() call
- * 
- * Rev 3 - 2025/??/??
+ *
+ * Rev 3 - 2025/08/03
  *       - Ethan.
  *       - Fixed various terminal text output formatting and line spacing
  *       - Replaced all instanced of hard coded regex patterns with references to
@@ -35,7 +27,6 @@
  *         Also immediately returns to the sailing menu when there are no sailings.
  *       - Fixed incorrect sailing report columns, spacing, and values displayed in
  *         the rows
- *
  *
  * [DESIGN NOTES]
  *
@@ -60,15 +51,7 @@
  *
  * State management:
  *  - Inherits from `State`; uses `m_state_manager->selectNextState()` for transitions.
- *
- * Future enhancements:
- *  - Extract common DB‑validation loops into shared utility functions.
- *  - Improve UX by offering abort vs retry choices explicitly.
- *  - Implement full pagination display for sailing reports in `listSailingReports()`.
  */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #include <vector>
 #include <limits> 
