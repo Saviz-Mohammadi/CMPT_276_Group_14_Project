@@ -1511,10 +1511,13 @@ void Database::completeBoarding(
 
     // 2) Check if vehicle is already boarded:
     const char* sql_query_paid = R"SQL(
-        SELECT amount_paid FROM reservations
+        SELECT amount_paid, reserved_for_low_lane FROM reservations
         WHERE sailing_id_fk = ? AND vehicle_id_fk = ?
         LIMIT 1;
     )SQL";
+
+    double already_paid = 0.0;
+    int reserved_for_low_lane = -1;
 
     return_code = sqlite3_prepare_v2(
         m_sqlite3,
@@ -1546,31 +1549,38 @@ void Database::completeBoarding(
 
     return_code = sqlite3_step(prepared_sql_statement);
 
-    if(return_code == SQLITE_ROW)
+    if (return_code == SQLITE_ROW)
     {
-        double already_paid = sqlite3_column_double(
+        already_paid = sqlite3_column_double(
             prepared_sql_statement,
             0
             );
-
-        sqlite3_finalize(prepared_sql_statement);
-
-        if(already_paid != 0.0)
-        {
-            is_successful = false;
-            outcome_message = std::string("Boarding failed: ") + std::string("vehicle has already been boarded (amount_paid = ") + std::to_string(already_paid) + ").";
-
-            return;
-        }
+        reserved_for_low_lane = sqlite3_column_int(
+            prepared_sql_statement,
+            1
+            );
     }
 
     else
     {
-        // This really shouldn’t happen, since we just saw the row, but check anyway:
+        // shouldn’t happen, but just in case:
         sqlite3_finalize(prepared_sql_statement);
 
         is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + std::string("could not verify prior payment status.");
+        outcome_message = std::string("Boarding failed: could not verify prior payment status");
+
+        return;
+    }
+
+    sqlite3_finalize(prepared_sql_statement);
+
+    // if they’re already paid, stop here and tell them how much and which lane:
+    if (already_paid != 0.0)
+    {
+        const char* lane_str = (reserved_for_low_lane == 1) ? "low lane" : "high lane";
+
+        is_successful = false;
+        outcome_message = std::string("Boarding failed: vehicle has already been boarded ") + "(amount_paid = " + std::to_string(already_paid) + ") " + "and was reserved for the " + lane_str + ".";
 
         return;
     }
@@ -1638,17 +1648,21 @@ void Database::completeBoarding(
 
     sqlite3_finalize(prepared_sql_statement);
 
-    if(return_code != SQLITE_DONE)
+    if (return_code != SQLITE_DONE)
     {
+        const char* lane_str = (reserved_for_low_lane == 1) ? "low lane" : "high lane";
+
         is_successful = false;
-        outcome_message = std::string("Boarding failed: ") + sqlite3_errmsg(m_sqlite3);
+        outcome_message = std::string("Boarding failed: could not update payment to ") + std::to_string(amount) + " for the " + lane_str + ": " + sqlite3_errmsg(m_sqlite3);
 
         return;
     }
 
-    // 5) Success
+    // 5) Success: tell them exactly what just happened:
+    const char* lane_str = (reserved_for_low_lane == 1) ? "low lane" : "high lane";
+
     is_successful = true;
-    outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount); //should say which lane to direct the vehicle to as well
+    outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount) + " and reserved lane = " + lane_str + ".";
 }
 
 // ----------------------------------------------------------------------------

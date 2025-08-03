@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Global Module
- *
- *
  * [FILE NAME]
  *
  * global.hpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -19,21 +11,16 @@
  * Rev 2 - 2025/07/22 Modified by Ethan Scott
  *       - added g_is_successful, g_outcome_message, g_vehicle_min_length, 
  *         g_vehicle_max_length, g_vehicle_min_height, g_vehicle_max_height
- * 
- * Rev 3 - 2025/??/??
- *       - Ethan
- *       - added g_vessel_name_regex, g_sailing_id_regex, g_license_plate_regex, 
- *         g_phone_number_regex variable declarations
  *
+ * Rev 3 - 2025/08/03
+ *       - Ethan
+ *       - added g_vessel_name_regex, g_sailing_id_regex, g_license_plate_regex, g_phone_number_regex variable declarations
  *
  * [PURPOSE]
  *
  * This file is responsible for providing a centralized location for global configurations.
  * These configurations are shared and used throughout the program.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef GLOBAL_HPP
 #define GLOBAL_HPP
@@ -42,23 +29,19 @@
 #include <vector>
 #include <regex>
 
-// Specifies the default length for returned lists, such as lists of vessels or sailing 
-// reports.
+// Specifies the default length for returned lists, such as lists of vessels or sailing reports.
 extern int g_list_length;
 
-// global variable to pass to input functions to avoid creating multiple instances to 
-// check success.
+// Global variable to pass to input functions to avoid creating multiple instances to check success.
 extern bool g_is_successful;
 
-// global variable to pass to input functions to avoid creating multiple instances to 
-// get outcome messages.
+// Global variable to pass to input functions to avoid creating multiple instances to get outcome messages.
 extern std::string g_outcome_message;
 
 // A default set of accepted characters for yes/no questions, intended for repeated use.
 extern std::vector<char> g_allowed_yes_no_responses;
 
-// A default set of accepted characters for navigational questions (Previous, Next, Exit), 
-// intended for repeated use.
+// A default set of accepted characters for navigational questions (Previous, Next, Exit), intended for repeated use.
 extern std::vector<char> g_allowed_navigation_responses;
 
 // Minimum allowed length in meters of vehicles, used to validate user input

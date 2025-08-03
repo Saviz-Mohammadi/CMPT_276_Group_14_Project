@@ -1,30 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Finite State Machine Module
- *
- *
  * [FILE NAME]
  *
  * main_menu_state.hpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *
- *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations 
- * regarding switching to other menus and exiting.
+ * This file is responsible for providing a state/mode where we can complete operations regarding switching to other menus and exiting the program.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef MAIN_MENU_STATE_HPP
 #define MAIN_MENU_STATE_HPP
@@ -39,8 +26,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the MainMenuState class. used to instantiate a physical object
-    *   in memory.
+    *   Constructor for the MainMenuState class.
+    *   Used to instantiate a physical object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -58,8 +45,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the MainMenuState class. Ensures proper cleanup of resources 
-    *   and polymorphic destruction.
+    *   Destructor for the MainMenuState class.
+    *   Won't do any heavy work.
     *
     *   [Return]
     *   N/A
@@ -82,8 +69,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -101,8 +87,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -120,8 +105,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 };

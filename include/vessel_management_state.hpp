@@ -1,30 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Finite State Machine Module
- *
- *
  * [FILE NAME]
  *
  * vessel_management_state.hpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *
- *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations
- * regarding vessels.
+ * This file is responsible for providing a state/mode where we can complete operations regarding vessels.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef VESSEL_MANAGEMENT_STATE_HPP
 #define VESSEL_MANAGEMENT_STATE_HPP
@@ -40,8 +27,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the VesselManagementState class. used to instantiate a physical
-    *   object in memory.
+    *   Constructor for the VesselManagementState class.
+    *   Used to instantiate a physical object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -58,8 +45,8 @@ public:
     ~VesselManagementState() override;
     /*
     *   [Description]
-    *   Destructor for the VesselManagementState class. Ensures proper cleanup of
-    *   resources and polymorphic destruction.
+    *   Destructor for the VesselManagementState class.
+    *   Won't do any heavy work.
     *
     *   [Return]
     *   N/A
@@ -75,16 +62,13 @@ public:
 
     /*
     *   [Description]
-    *   Called when entering the vessel management state. Use this method to display
-    *   menus,
-    *   initialize UI components, or reset state-specific variables.
+    *   Called when entering the vessel management state. Use this method to display menus, initialize UI components, or reset state-specific variables.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -95,16 +79,13 @@ public:
 
     /*
     *   [Description]
-    *   Main processing loop for the vessel management state. Handles user input,
-    *   delegates actions such as creating or listing vessels, and determines state
-    *   transitions.
+    *   Main processing loop for the vessel management state. Handles user input, delegates actions such as creating or listing vessels, and determines state transitions.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -115,15 +96,13 @@ public:
 
     /*
     *   [Description]
-    *   Called when exiting the vessel management state. Perform any necessary cleanup,
-    *   such as clearing buffers or saving temporary data.
+    *   Called when exiting the vessel management state. Perform any necessary cleanup, such as clearing buffers or saving temporary data.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -141,8 +120,7 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -160,8 +138,7 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 

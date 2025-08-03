@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Finite State Machine Module
- *
- *
  * [FILE NAME]
  *
  * bording_state.hpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -19,15 +11,10 @@
  * Rev 2 - 2025/07/22 Modified by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *       - added private function StartBoarding()
  *
- *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations
- * regarding boarding.
+ * This file is responsible for providing a state/mode where we can complete operations regarding boarding.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef BOARDING_STATE_HPP
 #define BOARDING_STATE_HPP
@@ -42,8 +29,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the BoardingState class. used to instantiate a physical object
-    *   in memory.
+    *   Constructor for the 'BoardingState' class.
+    *   Used to instantiate a physical object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -61,8 +48,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the BoardingState class. Ensures proper cleanup of resources
-    *   and polymorphic destruction.
+    *   Destructor for the 'BoardingState' class.
+    *   Won't do any heavy work.
     *
     *   [Return]
     *   N/A
@@ -85,8 +72,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -103,8 +89,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -122,8 +107,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -136,13 +120,13 @@ private:
     *   Initiates the boarding process for passengers.
     *   Obtains and validates input with the help of the input module.
     *   In addition, interacts with the Database to record boardings.
+    *   Permits exit, should the need arise.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 };
