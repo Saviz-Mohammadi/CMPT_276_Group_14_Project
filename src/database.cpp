@@ -1581,32 +1581,8 @@ void Database::completeBoarding(
     }
     else // not long and not tall
     {
-        amount = 14;
+        amount = 14 * 100;
     }
-
-    /*
-    bool is_not_tall_and_not_long = false;
-
-    // Long vehicles pay $2 per meter:
-    if(vehicle.length > 7.0)
-    {
-        amount += vehicle.length * 2.0;
-        is_not_tall_and_not_long = true;
-    }
-
-    // Tall vehicles pay $3 per meter:
-    if(vehicle.height > 2.0)
-    {
-        amount += vehicle.length * 3.0;
-        is_not_tall_and_not_long = true;
-    }
-
-    // Short & low vehicles pay a flat fee
-    if(is_not_tall_and_not_long)
-    {
-        amount = 14.0;
-    }
-    */
 
     // 4) Update amount_paid in reservations
     const char* sql_query_update = R"SQL(
