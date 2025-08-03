@@ -1,32 +1,18 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Container Module
- *
- *
  * [FILE NAME]
  *
  * containers.hpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/05 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  * 
- *
  * [PURPOSE]
  *
- * This file defines a set of struct containers, each corresponding to an entity in 
- * the database.
- * This is useful for transferring data and providing a clear representation of each
- * entity within the project.
+ * This file defines a set of struct containers, each corresponding to an entity in the database.
+ * This is useful for transferring data and providing a clear representation of each entity within the project.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef CONTAINERS_HPP
 #define CONTAINERS_HPP
@@ -74,10 +60,8 @@ public:
     std::string departure_terminal;     //TTT part of sailing id string
     int departure_day;                  //DD part of sailing id string
     int departure_hour;                 //HH part of sailing id string 0-24
-    double low_remaining_length;        //total combined length in meters of free space
-                                        //in low lanes
-    double high_remaining_length;       //total combined length in meters of free space
-                                        //in high lanes
+    double low_remaining_length;        //total combined length in meters of free space in low lanes
+    double high_remaining_length;       //total combined length in meters of free space in high lanes
 };
 
 // ----------------------------------------------------------------------------
@@ -122,8 +106,7 @@ public:
 };
 
 // ----------------------------------------------------------------------------
-// Contains all neccessary information for all columns in the sailing report
-//
+// A sailing report holds various details, so this struct was created to package and transfer them as one unit making the entire process easier.
 struct SailingReport
 {
 public:

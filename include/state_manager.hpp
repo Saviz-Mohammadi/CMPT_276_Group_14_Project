@@ -1,30 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Finite State Machine Module
- *
- *
  * [FILE NAME]
  *
  * state_manager.hpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *
- *
  * [PURPOSE]
  *
- * This file is responsible for providing a centralized location for orchestrating all 
- * states and managing transitions between them.
+ * This file is responsible for providing a centralized location for orchestrating all states and managing transitions between them.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef STATEMANAGER_HPP
 #define STATEMANAGER_HPP
@@ -57,8 +44,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the StateManager class. used to instantiate a physical object 
-    *   in memory.
+    *   Constructor for the StateManager class.
+    *   Used to instantiate a physical object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -76,8 +63,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the StateManager class. Ensures proper cleanup of resources and 
-    *   polymorphic destruction.
+    *   Destructor for the StateManager class.
+    *   Won't do any heavy work.
     *
     *   [Return]
     *   N/A
@@ -90,8 +77,7 @@ public:
 public:
     // ----------------------------------------------------------------------------
     void init(
-        Database* database // [IN] | A pointer to the database instance that each '
-                           //        underlying State will require.
+        Database* database // [IN] | A pointer to the database instance that each underlying State will require.
         );
 
     /*
@@ -106,8 +92,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -118,8 +103,7 @@ public:
 
     /*
     *   [Description]
-    *   This function triggers the main Finite State Machine loop by calling the 
-    *   'onEnter()', 'onProcess()', and 'onExit()' methods of each underlying state.
+    *   This function triggers the main Finite State Machine loop by calling the 'onEnter()', 'onProcess()', and 'onExit()' methods of each underlying state.
     *   The loop begins with the initial state, which is MainMenuState.
     *   It is important to call 'init()' before invoking this method.
     *
@@ -127,8 +111,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -141,15 +124,13 @@ public:
 
     /*
     *   [Description]
-    *   This function allows each underlying state to specify the next state that the 
-    *   StateManager should transition to.
+    *   This function allows each underlying state to specify the next state that the StateManager should transition to.
     *
     *   [Return]
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 

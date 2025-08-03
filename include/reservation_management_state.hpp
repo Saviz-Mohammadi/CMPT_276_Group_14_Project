@@ -1,30 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Finite State Machine Module
- *
- *
  * [FILE NAME]
  *
  * reservation_management_state.hpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/5 Original by Saviz Mohammadi, Ethan Scott, Henry Nguyen, Karanveer
  *
- *
  * [PURPOSE]
  *
- * This file is responsible for providing a state/mode where we can complete operations
- *  regarding reservations.
+ * This file is responsible for providing a state/mode where we can complete operations regarding reservations.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef RESERVATION_MANAGEMENT_STATE_HPP
 #define RESERVATION_MANAGEMENT_STATE_HPP
@@ -39,8 +26,8 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the ReservationManagementState class. used to instantiate a
-    *   physical object in memory.
+    *   Constructor for the ReservationManagementState class.
+    *   Used to instantiate a physical object in memory.
     *   Won't do any heavy work.
     *
     *   [Return]
@@ -58,8 +45,8 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the ReservationManagementState class. Ensures proper cleanup of
-    *   resources and polymorphic destruction.
+    *   Destructor for the ReservationManagementState class.
+    *   Won't do any heavy work.
     *
     *   [Return]
     *   N/A
@@ -83,8 +70,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -103,8 +89,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -123,8 +108,7 @@ public:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -134,8 +118,7 @@ private:
 
     /*
     *   [Description]
-    *   Initiates the workflow for creating a reservation entry (sailing remaining
-    *   length will be reduced as a result of this).
+    *   Initiates the workflow for creating a reservation entry (sailing remaining length will be reduced as a result of this).
     *   Obtains and validates input with the help of input module.
     *   In addition, interacts with the databse module to create the reservation.
     *
@@ -143,8 +126,7 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 
@@ -155,8 +137,7 @@ private:
 
     /*
     *   [Description]
-    *   Initiates the workflow for deleting a reservation entry (sailing remaining
-    *   length will be increased as a result of this).
+    *   Initiates the workflow for deleting a reservation entry (sailing remaining length will be increased as a result of this).
     *   Obtains and validates input with the help of input module.
     *   In addition, interacts with the databse module to delete the reservation.
     *
@@ -164,8 +145,7 @@ private:
     *   void
     *
     *   [Errors]
-    *   This method is designed to handle all errors internally, ensuring that external
-    *   components do not need to manage exception handling for its operations.
+    *   N/A
     */
     // ----------------------------------------------------------------------------
 };

@@ -1,16 +1,8 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Database Module
- *
- *
  * [FILE NAME]
  *
  * database.hpp
- *
  *
  * [REVISION HISTORY]
  *
@@ -25,22 +17,15 @@
  *         Vehicle struct as in parameters instead of the individual elements of 
  *         the reservation ID
  *       - added addVehicle()
- * 
- * Rev 3 - 2025/??/??
- *       - Saviz
- *       - Added isBoarded function declaration
- *      
- * 
  *
+ * Rev 3 - 2025/08/3
+ *       - Saviz
+ *       - Added isBoarded() function declaration.
  *
  * [PURPOSE]
  *
- * This file is responsible for providing a centralized location for orchestrating 
- * all database related functionality.
+ * This file is responsible for providing a centralized location for orchestrating all database related functionality.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef DATABASE_HPP
 #define DATABASE_HPP
@@ -58,8 +43,7 @@ public:
 
     /*
     *   [Description]
-    *   Constructor for the Database class, used to instantiate a physical object in 
-    *   memory.
+    *   Constructor for the Database class, used to instantiate a physical object in memory.
     *
     *   [Return]
     *   N/A
@@ -76,8 +60,7 @@ public:
 
     /*
     *   [Description]
-    *   Destructor for the Database class, responsible for deallocating the object 
-    *   from memory.
+    *   Destructor for the Database class, responsible for deallocating the object from memory.
     *
     *   [Return]
     *   N/A
@@ -90,13 +73,9 @@ public:
 public:
     // ----------------------------------------------------------------------------
     void openConnection(
-        const std::string& path,     // [IN]  | The path to the database file where 
-                                     //         the connection is to be established.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the
-                                     //         result of the operation.
+        const std::string& path,     // [IN]  | The path to the database file where the connection is to be established.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -128,11 +107,8 @@ public:
 
     // ----------------------------------------------------------------------------
     void cutConnection(
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful 
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -156,14 +132,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void addVessel(
-        Vessel vessel,               // [IN]  | Data for the new vessel that will be 
-                                     //         created.
+        Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
         int& vessel_id,              // [OUT] | The returned ID of the new vessel.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful 
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -198,11 +170,8 @@ public:
     void getVesselByID(
         int vessel_id,               // [IN]  | The ID of vessel to be searched for.
         Vessel& vessel,              // [OUT] | The vessel that is found.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful 
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -233,14 +202,10 @@ public:
     // ----------------------------------------------------------------------------
     void getVessels(
         int count,                    // [IN]  | The number of vessels to be retrieved.
-        int offset,                   // [IN]  | Determines the starting point the 
-                                      //         retrieve query.
+        int offset,                   // [IN]  | Determines the starting point the retrieve query.
         std::vector<Vessel>& vessels, // [OUT] | The list of vessels that were retrieved.
-        bool& is_successful,          // [OUT] | The outcome status of the operation,
-                                      //         indicating whether it was successful 
-                                      //         or not.
-        std::string& outcome_message  // [OUT] | A descriptive message explaining the 
-                                      //         result of the operation.
+        bool& is_successful,          // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message  // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -268,13 +233,9 @@ public:
 
     // ----------------------------------------------------------------------------
     void addSailing(
-        Sailing sailing,             // [IN]  | Data for the new sailing that will be
-                                     //         created.
-        bool& is_successful,         // [OUT] | The outcome status of the operation,
-                                     //         indicating whether it was successful
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the
-                                     //         result of the operation.
+        Sailing sailing,             // [IN]  | Data for the new sailing that will be created.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -314,11 +275,8 @@ public:
     // ----------------------------------------------------------------------------
     void removeSailing(
         Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
-        bool& is_successful,         // [OUT] | The outcome status of the operation,
-                                     //         indicating whether it was successful 
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -350,18 +308,12 @@ public:
 
     // ----------------------------------------------------------------------------
     void getSailingByID(
-        std::string departure_terminal, // [IN]  | The departure terminal of the sailing
-                                        //         in the form of 3 characters.
-        int departure_day,              // [IN]  | The departure day of the sailing in 
-                                        //         the form of 2 digits.
-        int departure_hour,             // [IN]  | The departure hour of the sailing in 
-                                        //         the form of 2 digits.
+        std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
+        int departure_day,              // [IN]  | The departure day of the sailing in  the form of 2 digits.
+        int departure_hour,             // [IN]  | The departure hour of the sailing in the form of 2 digits.
         Sailing& sailing,               // [OUT] | The sailing object data to be stored.
-        bool& is_successful,            // [OUT] | The outcome status of the operation,
-                                        //         indicating whether it was successful 
-                                        //         or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the 
-                                        //         result of the operation.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -391,20 +343,11 @@ public:
 
     // ----------------------------------------------------------------------------
     void getSailingReports(
-        int count,                                   // [IN]  | The number of sailing 
-                                                     //         reports to be retrieved.
-        int offset,                                  // [IN]  | Determines the starting 
-                                                     //         point the retrieve query.
-        std::vector<SailingReport>& sailing_reports, // [OUT] | The list of sailing 
-                                                     //         reports that were 
-                                                     //         retrieved.
-        bool& is_successful,                         // [OUT] | The outcome status of the
-                                                     //         operation, indicating 
-                                                     //         whether it was successful
-                                                     //         or not.
-        std::string& outcome_message                 // [OUT] | A descriptive message 
-                                                     //         explaining the result of 
-                                                     //         the operation.
+        int count,                                   // [IN]  | The number of sailing reports to be retrieved.
+        int offset,                                  // [IN]  | Determines the starting point the retrieve query.
+        std::vector<SailingReport>& sailing_reports, // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,                         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message                 // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -432,15 +375,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void getSailingReportByID(
-        Sailing sailing,               // [IN]  | The sailing being targeted for 
-                                       //         reporting.
-        SailingReport& sailing_report, // [OUT] | The list of sailing reports that were 
-                                       //         retrieved.
-        bool& is_successful,           // [OUT] | The outcome status of the operation,
-                                       //         indicating whether it was successful
-                                       //         or not.
-        std::string& outcome_message   // [OUT] | A descriptive message explaining the
-                                       //         result of the operation.
+        Sailing sailing,               // [IN]  | The sailing being targeted for reporting.
+        SailingReport& sailing_report, // [OUT] | The list of sailing reports that were retrieved.
+        bool& is_successful,           // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message   // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -465,14 +403,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void addReservation(
-        Sailing sailing,             // [IN]  | The sailing that the new reservation will
-                                     //         be associated to.
+        Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
         Vehicle vehicle,             // [IN]  | Data about the vehicle of the reservation.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful or 
-                                     //         not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -511,15 +445,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void removeReservation(
-        Sailing sailing,             // [IN]  | The sailing that the reservation is 
-                                     //         associated to.
-        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is 
-                                     //         associated to.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful 
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        Sailing sailing,             // [IN]  | The sailing that the reservation is associated to.
+        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -587,15 +516,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void completeBoarding(
-        Sailing sailing,             // [IN]  | The sailing that the reservation is 
-                                     //         associated to for completing the boarding.
-        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is 
-                                     //         associated to for completing the boarding.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful or
-                                     //         not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        Sailing sailing,             // [IN]  | The sailing that the reservation is associated to for completing the boarding.
+        Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to for completing the boarding.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -625,14 +549,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void addVehicle(
-        Vehicle vehicle,             // [IN]  | Data for the new vehicle that will be 
-                                     //         created.
+        Vehicle vehicle,             // [IN]  | Data for the new vehicle that will be created.
         int& vehicle_id,             // [OUT] | The returned ID of the new vehicle.
-        bool& is_successful,         // [OUT] | The outcome status of the operation, 
-                                     //         indicating whether it was successful 
-                                     //         or not.
-        std::string& outcome_message // [OUT] | A descriptive message explaining the 
-                                     //         result of the operation.
+        bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -665,14 +585,10 @@ public:
 
     // ----------------------------------------------------------------------------
     void getVehicleByID(
-        std::string license_plate,      // [IN]  | The license plate of the vehicle
-                                        //         targeted for search and retrieval.
+        std::string license_plate,      // [IN]  | The license plate of the vehicle targeted for search and retrieval.
         Vehicle& vehicle,               // [OUT] | The retrieved vehicle data.
-        bool& is_successful,            // [OUT] | The outcome status of the operation,
-                                        //         indicating whether it was successful
-                                        //         or not.
-        std::string& outcome_message    // [OUT] | A descriptive message explaining the
-                                        //         result of the operation.
+        bool& is_successful,            // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
+        std::string& outcome_message    // [OUT] | A descriptive message explaining the result of the operation.
         );
 
     /*
@@ -697,8 +613,7 @@ public:
     // ----------------------------------------------------------------------------
 
 private:
-    // The SQLite connection entity. (Used as a means to interact with the underlying
-    // database)
+    // The SQLite connection entity. (Used as a means to interact with the underlying database.
     sqlite3* m_sqlite3;
 };
 

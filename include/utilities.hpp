@@ -1,30 +1,17 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
 /*
- * [MODULE]
- *
- * Utilities Mdule
- *
- *
  * [FILE NAME]
  *
  * utilities.hpp
- *
  *
  * [REVISION HISTORY]
  *
  * Rev 1 - 2025/07/22 Original by Saviz Mohammadi, Henry Nguyen
  *
- *
  * [PURPOSE]
  *
- * This file is responsible for providing a variety of helper functions that are 
- * consistently used in other parts of the program
+ * This file is responsible for providing a variety of helper functions that are consistently used in other parts of the program.
 */
-
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 #ifndef UTILITIES_HPP
 #define UTILITIES_HPP
