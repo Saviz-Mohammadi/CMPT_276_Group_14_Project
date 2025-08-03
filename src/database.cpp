@@ -1641,8 +1641,16 @@ void Database::completeBoarding(
     // 5) Success: tell them exactly what just happened:
     const char* lane_str = (reserved_for_low_lane == 1) ? "low lane" : "high lane";
 
+    //format fare in $DD.CC
+    std::string fare = std::string("$") + std::to_string(amount / 100) + std::string(".");
+    if (amount % 100 < 10)
+    {
+        fare = fare + std::string("0");
+    }
+    fare = fare + std::to_string(amount % 100);
+
     is_successful = true;
-    outcome_message = std::string("Boarding complete: amount_paid = ") + std::to_string(amount) + " and reserved lane = " + lane_str + ".";
+    outcome_message = std::string("Boarding complete: fare is ") + fare + " and reserved lane is " + lane_str + ".";
 }
 
 // ----------------------------------------------------------------------------
