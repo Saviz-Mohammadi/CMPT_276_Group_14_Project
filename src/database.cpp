@@ -1325,7 +1325,7 @@ void Database::removeReservation(
 
     // 4) Success
     is_successful = true;
-    outcome_message = std::string("Reservation deletion succeeded: ") + "returned length = " + std::to_string(amount);
+    outcome_message = std::string("Reservation deletion succeeded!");
 }
 
 void Database::isBoarded(
@@ -1412,7 +1412,7 @@ void Database::isBoarded(
 
         is_successful = true;
 
-        outcome_message = payment_was_made ? std::string("Vehicle has already boarded (amount_paid = ") + std::to_string(paid_amount) + ")" : std::string("Reservation exists but vehicle has not yet boarded.");
+        outcome_message = payment_was_made ? std::string("Vehicle has already boarded.") : std::string("Reservation exists but vehicle has not yet boarded.");
     }
 
     else
