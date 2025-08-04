@@ -16,6 +16,8 @@
  *       - Changed logic for list scrolling on vessel list. No longer skips
  *         a page when scrolling to the end of the list then scrolling back. 
  *         Also immediately returns to the vessel menu when there are no vessels.
+ *       - Prompts for next/previous page in the sailing report now show correct
+ *         number
  *
  * [DESIGN NOTES]
  *
@@ -274,8 +276,8 @@ void VesselManagementState::listVessels()
         // ****************************************************************************
 
         std::cout <<
-            "<p> >> View the previous 5 vessels.\n"
-            "<n> >> View the next 5 vessels.\n"
+            "<p> >> View the previous " << std::to_string(g_list_length) << " vessels.\n" <<
+            "<n> >> View the next " << std::to_string(g_list_length) << " vessels.\n" <<
             "<e> >> Exit the list.\n"
             "\n";
 

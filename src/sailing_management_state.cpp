@@ -27,6 +27,8 @@
  *         Also immediately returns to the sailing menu when there are no sailings.
  *       - Fixed incorrect sailing report columns, spacing, and values displayed in
  *         the rows
+ *       - Prompts for next/previous page in the sailing report now show correct
+ *         number
  *
  * [DESIGN NOTES]
  *
@@ -449,8 +451,8 @@ void SailingManagementState::listSailingReports()
         // ****************************************************************************
 
         std::cout <<
-            "<p> >> View the previous 5 sailings.\n"
-            "<n> >> View the next 5 sailings.\n"
+            "<p> >> View the previous " << std::to_string(g_list_length) << " sailings.\n" <<
+            "<n> >> View the next " << std::to_string(g_list_length) << " sailings.\n" <<
             "<e> >> Exit the list.\n"
             "\n";
 
