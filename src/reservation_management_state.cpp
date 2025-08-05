@@ -195,7 +195,7 @@ void ReservationManagementState::createReservation()
 
         // Vehicle length [0–99.9]:
         continuouslyPromptForReal(
-            "Please enter the length of the vehicle [0-99.9]: ",
+            "Please enter the length of the vehicle [0-999.9]: ",
             g_vehicle_min_length,
             g_vehicle_max_length,
             vehicle.length
