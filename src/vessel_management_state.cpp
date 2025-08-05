@@ -131,16 +131,16 @@ void VesselManagementState::createVessel()
         );
 
     continuouslyPromptForReal(
-        "Please enter the high-ceiling lane length [0-1200]: ",
+        "Please enter the high-ceiling lane length [0-3600]: ",
         0,
-        1200,
+        3600,
         vessel.high_ceiling_lane_length
         );
 
     continuouslyPromptForReal(
-        "Please enter the low-ceiling lane length [0-1200]: ",
+        "Please enter the low-ceiling lane length [0-3600]: ",
         0,
-        1200,
+        3600,
         vessel.low_ceiling_lane_length
         );
 
