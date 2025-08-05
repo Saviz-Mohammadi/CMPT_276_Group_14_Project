@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
 [Dividers]
 
 -- We will use the following major divider per each file at the very top to explain the definition of the module:
-// ============================================================================
+// @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 -- We will use the following divider to seperate each function:
 // ****************************************************************************
