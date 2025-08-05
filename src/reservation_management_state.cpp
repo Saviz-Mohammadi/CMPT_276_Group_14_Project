@@ -350,11 +350,29 @@ void ReservationManagementState::deleteReservation()
     }
 
 
-    //TODO must check if vehicle is already boarded before cancelling reservation
+    // check if vehicle is already boarded
     // ----------------------------------------------------------------------------
 
+    bool is_boarded = false;
+    m_database->isBoarded(sailing, vehicle, is_boarded, g_is_successful, g_outcome_message);
 
+    if (!g_is_successful) 
+    {
+        std::cout << g_outcome_message << "\n\n";
 
+        m_state_manager->selectNextState(States::ReservationManagementState);
+
+        return;
+    }
+
+    if (is_boarded) 
+    {
+        std::cout << std::string("Cannot cancel a reservation for a vehicle that is already boarded!") << "\n\n";
+
+        m_state_manager->selectNextState(States::ReservationManagementState);
+
+        return;
+    }
 
 
     // Ask for confirmation and create reseravtion:
