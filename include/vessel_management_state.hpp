@@ -1,7 +1,5 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 /*
- * [FILE NAME]
- *
  * vessel_management_state.hpp
  *
  * [REVISION HISTORY]

@@ -1,7 +1,5 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 /*
- * [FILE NAME]
- *
  * sailing_management_state.hpp
  *
  * [REVISION HISTORY]

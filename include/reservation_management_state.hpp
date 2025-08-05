@@ -1,7 +1,5 @@
 // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 /*
- * [FILE NAME]
- *
  * reservation_management_state.hpp
  *
  * [REVISION HISTORY]
