@@ -19,7 +19,7 @@
 #include "database.hpp"
 #include "utilities.hpp"
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function works correctly", "[Vessel]")
 {
 
@@ -29,7 +29,7 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
 
     //  Database setup
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     Database database;
 
@@ -45,7 +45,7 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
 
     //  Making new vessel and checking it was created correctly
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     Vessel new_vessel;
 
@@ -85,7 +85,7 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
 
     // Attempt to create the same vessel again (This should return failure as a result)
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     database.addVessel(
         new_vessel,
@@ -100,7 +100,7 @@ TEST_CASE("Add vessel: Testing to make sure that the 'addVessel()' function work
 
 
     // Cleanup and Reset
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     database.cutConnection(is_successful, outcome_message);
 
@@ -134,7 +134,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     std::string outcome_message = "";
 
 
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
     INFO("Creating database for the test");
     Database database;
     // remove the .db if it exists
@@ -157,7 +157,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     REQUIRE(is_successful);
 
 
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
     INFO("Creating the vessel for the sailing");
     Vessel vessel(-1, "addSailing Test Vessel", 120, 85);
     int vessel_id_out = -1;
@@ -167,7 +167,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     std::cout << outcome_message << "\n";    
 
 
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
     INFO("Check if vessel id returned from addVessel is correct");
     Vessel vessel_out;
     database.getVesselByID(vessel.vessel_id, vessel_out, is_successful, outcome_message);
@@ -176,7 +176,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     REQUIRE(vessel.vessel_id == vessel_out.vessel_id);
 
 
-    // ****************************************************************************    
+    // ----------------------------------------------------------------------------    
     INFO("Creating the sailing record");
     Sailing sailing(-1, vessel.vessel_id, "ABC", 6, 12, vessel.low_ceiling_lane_length, vessel.high_ceiling_lane_length);
     database.addSailing(sailing, is_successful, outcome_message);
@@ -184,7 +184,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     REQUIRE(is_successful);
 
 
-    // ****************************************************************************    
+    // ----------------------------------------------------------------------------    
     INFO("Fetching the sailing record");
     Sailing sailing_out;
     database.getSailingByID(
@@ -199,7 +199,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     REQUIRE(is_successful);
 
 
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
     INFO("Check fetched record has correct information");
     REQUIRE(sailing_out.vessel_id == sailing.vessel_id);
     REQUIRE(sailing_out.departure_terminal == sailing.departure_terminal);
@@ -209,7 +209,7 @@ TEST_CASE("Add/Get Sailing: Test to make sure that 'addSailing()' works correctl
     REQUIRE(sailing_out.high_remaining_length == sailing.high_remaining_length);
 
 
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
     INFO("Cleanup");
     database.cutConnection(is_successful, outcome_message);
     std::cout << outcome_message << "\n";

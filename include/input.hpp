@@ -23,7 +23,7 @@
 #include <vector>
 #include <regex>
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void promptForInteger(
     const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
     int min,                         // [IN]  | The minimum acceptable integer value.
@@ -53,11 +53,11 @@ void promptForInteger(
 *       will terminate with a failure status and provide an appropriate error message
 *       saying "Input is out of range!".
 */
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 
 
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void promptForReal(
     const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
     double min,                      // [IN]  | The minimum acceptable real value.
@@ -87,11 +87,11 @@ void promptForReal(
 *       will terminate with a failure status and provide an appropriate error message
 *       saying "Input is out of range!".
 */
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 
 
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void promptForCharacter(
     const std::string& input_prompt,          // [IN]  | The message displayed when asking the user for input.
     const std::vector<char>& allowed_options, // [IN]  | The set of allowed characters to check against.
@@ -120,11 +120,11 @@ void promptForCharacter(
 *       the operation will terminate with a failure status and provide an appropriate 
 *       error message saying "Input is not a correct choice!".
 */
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 
 
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void promptForString(
     const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
     std::string& acquired_string,    // [OUT] | The string entered and obtained by the user.
@@ -144,11 +144,11 @@ void promptForString(
 *   [Errors]
 *   N/A
 */
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 
 
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void promptForString(
     const std::string& input_prompt, // [IN]  | The message displayed when asking the user for input.
     const std::regex& pattern,       // [IN]  | The pattern/format used to validate the string.
@@ -172,7 +172,7 @@ void promptForString(
 *       terminate with a failure status and provide an appropriate error message saying 
 *       "Input does not match required format!".
 */
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 
 
 // The following functions are the same as before, however, they are designed to retry execution until a successful outcome is achieved.

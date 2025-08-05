@@ -72,17 +72,17 @@
 #include "global.hpp"
 #include "utilities.hpp"
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 SailingManagementState::SailingManagementState()
 {
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 SailingManagementState::~SailingManagementState()
 {
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void SailingManagementState::onEnter()
 {
     std::cout <<
@@ -95,7 +95,7 @@ void SailingManagementState::onEnter()
         "\n";
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void SailingManagementState::onProcess()
 {   
     // Get input:
@@ -130,12 +130,12 @@ void SailingManagementState::onProcess()
     }
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void SailingManagementState::onExit()
 {
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 /* 
 Note (Henry) 1: 
 Duplicates or database errors will be checked by the database functions AFTER we have collected all parameters, 
@@ -151,7 +151,7 @@ Uncomment them and replace it with them if you want to
 void SailingManagementState::createSailing()
 {
     // Get vessel from user:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     // TODO (SAVIZ): One question: Should we abort the operation and let them start over if they fail to select a correct existing Vessel? Or just continue asking them for it even if they get stuck?
 
@@ -180,7 +180,7 @@ void SailingManagementState::createSailing()
 
 
     // Check if sailing already exists:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that already exists?
 
@@ -223,7 +223,7 @@ void SailingManagementState::createSailing()
     Sailing new_sailing(-1, vessel_id, departure_terminal, departure_day, departure_hour, found_vessel.low_ceiling_lane_length, found_vessel.high_ceiling_lane_length);
 
     // Prompting for confirmation and creating the sailing:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     char user_choice = '0';
 
@@ -260,11 +260,11 @@ void SailingManagementState::createSailing()
     std::cout << "\n";
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void SailingManagementState::deleteSailing()
 {
     // Get Sailing by ID:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that does not exist?
 
@@ -305,7 +305,7 @@ void SailingManagementState::deleteSailing()
 
 
     // Prompting for confirmation and deleting the sailing:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     char user_choice = '0';
 
@@ -339,7 +339,7 @@ void SailingManagementState::deleteSailing()
     std::cout << "\n";
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void SailingManagementState::listSailingReports()
 {
     // Offset the starting record by the length amount:
@@ -376,7 +376,7 @@ void SailingManagementState::listSailingReports()
             );
 
             // Edge cases:
-            // ****************************************************************************
+            // ----------------------------------------------------------------------------
 
             if (!g_is_successful)
             {
@@ -402,7 +402,7 @@ void SailingManagementState::listSailingReports()
             else
             {
                 // Print the report
-                // ****************************************************************************
+                // ----------------------------------------------------------------------------
 
                 // Report title:
                 std::cout << "Sailing Report" << std::string(45, ' ') << Utilities::getLocalDateAndTime() << "\n";
@@ -448,7 +448,7 @@ void SailingManagementState::listSailingReports()
         }
 
         // Prompt for input:
-        // ****************************************************************************
+        // ----------------------------------------------------------------------------
 
         std::cout <<
             "<p> >> View the previous " << std::to_string(g_list_length) << " sailings.\n" <<
@@ -465,7 +465,7 @@ void SailingManagementState::listSailingReports()
             );
 
         // Decide what to do next:
-        // ****************************************************************************
+        // ----------------------------------------------------------------------------
 
         bool user_wants_to_exit = false;
 
@@ -500,11 +500,11 @@ void SailingManagementState::listSailingReports()
     }
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void SailingManagementState::listSailingReport()
 {
     // Get Sailing by ID:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     // TODO (SAVIZ): Same here: Should we abort the operation and let them start over if they select a sailing that does not exist?
 
@@ -545,7 +545,7 @@ void SailingManagementState::listSailingReport()
     }
 
     // Get Sailing report and print it:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     SailingReport sailing_report;
 

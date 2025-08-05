@@ -54,7 +54,7 @@
 #include "vessel_management_state.hpp"
 #include "database.hpp"
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 VesselManagementState::VesselManagementState()
 {
 #ifdef DEBUG_MODE
@@ -62,12 +62,12 @@ VesselManagementState::VesselManagementState()
 #endif
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 VesselManagementState::~VesselManagementState()
 {
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void VesselManagementState::onEnter()
 {
     std::cout <<
@@ -78,7 +78,7 @@ void VesselManagementState::onEnter()
         "\n";
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void VesselManagementState::onProcess()
 {
     //Container for users choice from the list of menu operations
@@ -109,12 +109,12 @@ void VesselManagementState::onProcess()
     }
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void VesselManagementState::onExit()
 {
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 void VesselManagementState::createVessel()
 {
     //Container to hold users input vessel information
@@ -124,7 +124,7 @@ void VesselManagementState::createVessel()
     char user_choice = '\0';
 
     // Obtain input for new vessel:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     continuouslyPromptForString(
         "Please enter the name of the new vessel: ",
@@ -147,7 +147,7 @@ void VesselManagementState::createVessel()
         );
 
     // Confimration:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     std::cout << "\n";
 
@@ -159,7 +159,7 @@ void VesselManagementState::createVessel()
     std::cout << "\n";
 
     // Decide what to do based on input:
-    // ****************************************************************************
+    // ----------------------------------------------------------------------------
 
     int new_vessel_id = -1;
 
@@ -180,7 +180,7 @@ void VesselManagementState::createVessel()
     std::cout << "\n";
 }
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 //
 // Allow the offest to go one g_list_length past the ends of the list so when the user
 // goes back one page, they will be at the first/last page of the list.
@@ -220,7 +220,7 @@ void VesselManagementState::listVessels()
             );
 
             // Edge cases:
-            // ****************************************************************************
+            // ----------------------------------------------------------------------------
 
             if (!g_is_successful)
             {
@@ -246,7 +246,7 @@ void VesselManagementState::listVessels()
             else
             {
                 // Print the report
-                // ****************************************************************************
+                // ----------------------------------------------------------------------------
 
                 // Report title:
                 std::cout << "Vessel Report" << std::string(13, ' ') << Utilities::getLocalDateAndTime() << "\n";
@@ -273,7 +273,7 @@ void VesselManagementState::listVessels()
         }
 
         // Prompt for input:
-        // ****************************************************************************
+        // ----------------------------------------------------------------------------
 
         std::cout <<
             "<p> >> View the previous " << std::to_string(g_list_length) << " vessels.\n" <<
@@ -290,7 +290,7 @@ void VesselManagementState::listVessels()
             );
 
         // Decide what to do next:
-        // ****************************************************************************
+        // ----------------------------------------------------------------------------
 
         bool user_wants_to_exit = false;
 

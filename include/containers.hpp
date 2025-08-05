@@ -19,7 +19,7 @@
 
 #include <string>
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 struct Vessel
 {
 public:
@@ -38,7 +38,7 @@ public:
     double high_ceiling_lane_length;    //total combined length in meters of all high lanes
 };
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 struct Sailing
 {
 public:
@@ -64,7 +64,7 @@ public:
     double high_remaining_length;       //total combined length in meters of free space in high lanes
 };
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 struct Reservation
 {
 public:
@@ -84,7 +84,7 @@ public:
     bool reserved_for_low_lane;     //needed to check if a short vehicle is in a tall lane
 };
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 struct Vehicle
 {
 public:
@@ -105,7 +105,7 @@ public:
     double height;              //in meters
 };
 
-// ----------------------------------------------------------------------------
+// ****************************************************************************
 // A sailing report holds various details, so this struct was created to package and transfer them as one unit making the entire process easier.
 struct SailingReport
 {

@@ -38,7 +38,7 @@
 class Database
 {
 public:
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     explicit Database();
 
     /*
@@ -51,11 +51,11 @@ public:
     *   [Errors]
     *   N/A
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     ~Database();
 
     /*
@@ -68,10 +68,10 @@ public:
     *   [Errors]
     *   N/A
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 public:
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void openConnection(
         const std::string& path,     // [IN]  | The path to the database file where the connection is to be established.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
@@ -101,11 +101,11 @@ public:
     *       operation will terminate with a failure status and provide an appropriate 
     *       error message saying "Connection already exists!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void cutConnection(
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
         std::string& outcome_message // [OUT] | A descriptive message explaining the result of the operation.
@@ -126,11 +126,11 @@ public:
     *       terminate with a failure status and provide an appropriate error message 
     *       for diagnosis.
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void addVessel(
         Vessel vessel,               // [IN]  | Data for the new vessel that will be created.
         int& vessel_id,              // [OUT] | The returned ID of the new vessel.
@@ -162,11 +162,11 @@ public:
     *       the operation will terminate with a failure status and provide an
     *       appropriate error message for diagnosis.
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void getVesselByID(
         int vessel_id,               // [IN]  | The ID of vessel to be searched for.
         Vessel& vessel,              // [OUT] | The vessel that is found.
@@ -195,11 +195,11 @@ public:
     *       the operation will terminate with a failure status and provide an
     *       appropriate error message saying "Record does not exist!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void getVessels(
         int count,                    // [IN]  | The number of vessels to be retrieved.
         int offset,                   // [IN]  | Determines the starting point the retrieve query.
@@ -227,11 +227,11 @@ public:
     *       the returned list is empty, the operation will terminate with a failure
     *       status and provide an appropriate error message saying "Empty list!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void addSailing(
         Sailing sailing,             // [IN]  | Data for the new sailing that will be created.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
@@ -268,11 +268,11 @@ public:
     *       the operation will terminate with a failure status and provide an 
     *       appropriate error message for diagnosis.
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void removeSailing(
         Sailing sailing,             // [IN]  | The sailing being targeted for deletion.
         bool& is_successful,         // [OUT] | The outcome status of the operation, indicating whether it was successful or not.
@@ -302,11 +302,11 @@ public:
     *       will terminate with a failure status and provide an appropriate error
     *       message saying "Record does not exist!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void getSailingByID(
         std::string departure_terminal, // [IN]  | The departure terminal of the sailing in the form of 3 characters.
         int departure_day,              // [IN]  | The departure day of the sailing in  the form of 2 digits.
@@ -337,11 +337,11 @@ public:
     *       the operation will terminate with a failure status and provide an 
     *       appropriate error message saying "Record does not exist!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void getSailingReports(
         int count,                                   // [IN]  | The number of sailing reports to be retrieved.
         int offset,                                  // [IN]  | Determines the starting point the retrieve query.
@@ -369,11 +369,11 @@ public:
     *       and the returned list is empty, the operation will terminate with a failure 
     *       status and provide an appropriate error message saying "Empty list!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void getSailingReportByID(
         Sailing sailing,               // [IN]  | The sailing being targeted for reporting.
         SailingReport& sailing_report, // [OUT] | The list of sailing reports that were retrieved.
@@ -397,11 +397,11 @@ public:
     *       the operation will terminate with a failure status and provide an appropriate
     *       error message saying "No records available!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void addReservation(
         Sailing sailing,             // [IN]  | The sailing that the new reservation will be associated to.
         Vehicle vehicle,             // [IN]  | Data about the vehicle of the reservation.
@@ -439,11 +439,11 @@ public:
     *       the operation will terminate with a failure status and provide an 
     *       appropriate error message for diagnosis.
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void removeReservation(
         Sailing sailing,             // [IN]  | The sailing that the reservation is associated to.
         Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to.
@@ -477,10 +477,10 @@ public:
     *       will terminate with a failure status and provide an appropriate error 
     *       message saying "Record does not exist!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void isBoarded(
         Sailing sailing,             // [IN]  | The sailing that the reservation is associated to.
         Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to.
@@ -510,11 +510,11 @@ public:
     *       a failure status and provide an appropriate error message saying "Record
     *       does not exist!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void completeBoarding(
         Sailing sailing,             // [IN]  | The sailing that the reservation is associated to for completing the boarding.
         Vehicle vehicle,             // [IN]  | The vehicle that the reservation is associated to for completing the boarding.
@@ -543,11 +543,11 @@ public:
     *       a failure status and provide an appropriate error message saying "Record 
     *       does not exist!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void addVehicle(
         Vehicle vehicle,             // [IN]  | Data for the new vehicle that will be created.
         int& vehicle_id,             // [OUT] | The returned ID of the new vehicle.
@@ -579,11 +579,11 @@ public:
     *       the operation will terminate with a failure status and provide an 
     *       appropriate error message for diagnosis.
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 
 
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
     void getVehicleByID(
         std::string license_plate,      // [IN]  | The license plate of the vehicle targeted for search and retrieval.
         Vehicle& vehicle,               // [OUT] | The retrieved vehicle data.
@@ -610,7 +610,7 @@ public:
     *       terminate with a failure status and provide an appropriate error message
     *       saying "No records available!".
     */
-    // ----------------------------------------------------------------------------
+    // ****************************************************************************
 
 private:
     // The SQLite connection entity. (Used as a means to interact with the underlying database.
